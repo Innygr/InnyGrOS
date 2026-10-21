@@ -13,7 +13,7 @@ fi
 
 echo
 echo "InnyGrOS 0.1 — Desktop Edition"
-echo "This offers optional developer tools and the InnyGrOS color scheme."
+echo "This offers optional developer tools, a color scheme, and a user-scoped Welcome Center."
 echo "It will not repartition disks, change boot settings, or replace system files."
 read -r -p "Continue? [y/N] " answer
 case "${answer,,}" in y|yes) ;; *) echo "Cancelled."; exit 0 ;; esac
@@ -28,4 +28,10 @@ if [[ "${theme,,}" != "n" && "${theme,,}" != "no" ]]; then
   "${ROOT_DIR}/scripts/apply-theme.sh"
 fi
 
-echo "Setup steps finished. Some desktop changes may require logging out and back in."
+read -r -p "Install the graphical InnyGrOS Welcome Center? [Y/n] " welcome
+if [[ "${welcome,,}" != "n" && "${welcome,,}" != "no" ]]; then
+  "${ROOT_DIR}/scripts/install-welcome-center.sh"
+fi
+
+echo "Setup steps finished. Search for 'InnyGrOS' in the application launcher."
+echo "Some desktop changes may require logging out and back in."

@@ -6,7 +6,7 @@ command -v apt-get >/dev/null 2>&1 || { echo "APT not found; this script targets
 PACKAGES=(
   git curl wget build-essential cmake ninja-build pkg-config clang gdb
   python3 python3-venv python3-pip pipx nodejs npm sqlitebrowser
-  kate dolphin konsole plasma-discover plasma-systemmonitor fonts-firacode
+  kate dolphin konsole kdialog plasma-discover plasma-systemmonitor fonts-firacode
 )
 echo "Packages requested:"
 printf '  - %s\n' "${PACKAGES[@]}"

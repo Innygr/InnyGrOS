@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+DATA_DIR="${HOME}/.local/share/innygros"
+APP_DIR="${DATA_DIR}/apps/welcome-center"
+SCRIPT_DIR="${DATA_DIR}/scripts"
+THEME_FILE="${DATA_DIR}/config/themes/InnyGrOS.colors"
+BIN_DIR="${HOME}/.local/bin"
+mkdir -p "${BIN_DIR}"
+
+if ! command -v kdialog >/dev/null 2>&1; then
+  printf 'InnyGrOS Welcome Center needs kdialog. Install it with your graphical software center.\n' >&2
+  exit 1
+fi
+
+show_info() {
+  kdialog --title "InnyGrOS" --msgbox "$1"
+}
+
+open_app() {
+  local app="$1"
+  if command -v "$app" >/dev/null 2>&1; then
+    "$app" >/dev/null 2>&1 &
+  else
+    show_info "$2 is not installed. Open Discover to install it."
+  fi
+}
+
+apply_theme() {
+  if [[ ! -f "${THEME_FILE}" ]]; then
+    show_info "The InnyGrOS color scheme was not found. Re-run the InnyGrOS setup from its repository."
+    return
+  fi
+
+  local target="${HOME}/.local/share/color-schemes/InnyGrOS.colors"
+  mkdir -p "$(dirname -- "${target}")"
+  if [[ -f "${target}" ]]; then
+    cp -p "${target}" "${target}.backup.$(date +%Y%m%d-%H%M%S)"
+  fi
+  install -m 0644 "${THEME_FILE}" "${target}"
+
+  if command -v plasma-apply-colorscheme >/dev/null 2>&1 && plasma-apply-colorscheme InnyGrOS; then
+    show_info "InnyGrOS colors applied. Some applications may need to be restarted."
+  else
+    show_info "The color scheme is installed. Open System Settings → Colors & Themes → Colors and select InnyGrOS."
+  fi
+}
+
+show_diagnostics() {
+  local report
+  report="$(mktemp)"
+  {
+    echo "InnyGrOS system diagnostics"
+    echo "Generated: $(date)"
+    echo
+    echo "=== Operating system ==="
+    if [[ -r /etc/os-release ]]; then cat /etc/os-release; else echo "OS details unavailable"; fi
+    echo
+    echo "=== Kernel ==="
+    uname -a
+    echo
+    echo "=== CPU ==="
+    if command -v lscpu >/dev/null 2>&1; then lscpu; else echo "lscpu not installed"; fi
+    echo
+    echo "=== Memory ==="
+    if command -v free >/dev/null 2>&1; then free -h; else echo "free not installed"; fi
+    echo
+    echo "=== Storage ==="
+    if command -v df >/dev/null 2>&1; then df -h -x tmpfs -x devtmpfs; fi
+    echo
+    echo "=== Power profile ==="
+    if command -v powerprofilesctl >/dev/null 2>&1; then
+      powerprofilesctl get 2>&1 || true
+      echo
+      powerprofilesctl list 2>&1 || true
+    else
+      echo "power-profiles-daemon CLI not detected"
+    fi
+    echo
+    echo "This report only reads system information; it does not change settings."
+  } > "${report}"
+
+  kdialog --title "InnyGrOS System Diagnostics" --textbox "${report}" 760 560 || true
+  rm -f -- "${report}"
+}
+
+while true; do
+  choice="$(kdialog --title "InnyGrOS Welcome Center" --menu \
+    "Welcome to InnyGrOS. What would you like to do?" \
+    "settings" "Open System Settings" \
+    "discover" "Open Discover (software and updates)" \
+    "files" "Open File Manager" \
+    "theme" "Apply InnyGrOS colors" \
+    "diagnostics" "View system diagnostics" \
+    "repo" "Open InnyGrOS project page" \
+    "terminal" "Open Terminal (advanced)" \
+    "about" "About InnyGrOS" \
+    "quit" "Exit" 2>/dev/null)" || exit 0
+
+  case "${choice}" in
+    settings) open_app systemsettings "System Settings" ;;
+    discover) open_app plasma-discover "Discover" ;;
+    files) open_app dolphin "Dolphin File Manager" ;;
+    theme) apply_theme ;;
+    diagnostics) show_diagnostics ;;
+    repo)
+      if command -v xdg-open >/dev/null 2>&1; then
+        xdg-open "https://github.com/Innygr/InnyGrOS" >/dev/null 2>&1 &
+      else
+        show_info "Project: https://github.com/Innygr/InnyGrOS"
+      fi
+      ;;
+    terminal) open_app konsole "Konsole" ;;
+    about) show_info "InnyGrOS 0.1 — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools." ;;
+    quit) exit 0 ;;
+  esac
+done
