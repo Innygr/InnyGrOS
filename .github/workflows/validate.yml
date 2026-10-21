@@ -62,6 +62,29 @@ jobs:
           test "$(kreadconfig5 --file kdeglobals --group KDE --key SingleClick)" = false
           echo "Desktop profile round trip restored the original settings."
 
+      - name: Welcome Center smoke test with stub kdialog
+        shell: bash
+        run: |
+          set -euo pipefail
+          stub="$(mktemp -d)"
+          # Fake kdialog: picks "about", then "diagnostics", then "quit".
+          cat > "$stub/kdialog" <<'STUB'
+          #!/usr/bin/env bash
+          echo "kdialog $*" >> "$KDIALOG_LOG"
+          for arg in "$@"; do
+            if [[ "$arg" == --menu ]]; then
+              n=$(cat "$KDIALOG_STATE" 2>/dev/null || echo 0); echo $((n + 1)) > "$KDIALOG_STATE"
+              case "$n" in 0) echo about ;; 1) echo diagnostics ;; *) echo quit ;; esac
+            fi
+          done
+          STUB
+          chmod +x "$stub/kdialog"
+          export KDIALOG_LOG="$stub/log" KDIALOG_STATE="$stub/state" DISPLAY=:99
+          PATH="$stub:$PATH" timeout 60 ./apps/welcome-center/innygros-welcome
+          grep -q -- '--textbox' "$KDIALOG_LOG"
+          grep -q "Helpers: $PWD/scripts" "$KDIALOG_LOG"
+          echo "Welcome Center menu loop, About, and diagnostics ran without hanging."
+
       - name: Validate wallpaper SVG
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('branding/wallpaper/innygros-desktop.svg'); print('Wallpaper SVG is well-formed XML.')"
 
