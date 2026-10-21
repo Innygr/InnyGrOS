@@ -9,6 +9,7 @@ The first experimental graphical control center uses KDE's `kdialog`, so it does
 - Apply the InnyGrOS color scheme, wallpaper, or terminal theme individually
 - Check Minecraft / Windows game readiness (read-only)
 - View system diagnostics, a performance snapshot, and a laptop hardware check (all read-only)
+- Compare the last two saved performance snapshots
 - Open the project repository and show project information
 
 ## Install

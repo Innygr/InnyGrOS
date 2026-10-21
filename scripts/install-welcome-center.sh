@@ -11,7 +11,7 @@ DATA_DIR="${HOME}/.local/share/innygros"
 BIN_DIR="${HOME}/.local/bin"
 APPS_DIR="${HOME}/.local/share/applications"
 
-for required in apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg; do
+for required in apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh scripts/compare-reports.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg; do
   if [[ ! -f "${ROOT_DIR}/${required}" ]]; then
     echo "Required project file missing: ${required}"
     exit 1
@@ -28,6 +28,7 @@ install -m 0755 "${ROOT_DIR}/scripts/performance.sh" "${DATA_DIR}/scripts/perfor
 install -m 0755 "${ROOT_DIR}/scripts/performance-benchmark.sh" "${DATA_DIR}/scripts/performance-benchmark.sh"
 install -m 0755 "${ROOT_DIR}/scripts/desktop-profile.sh" "${DATA_DIR}/scripts/desktop-profile.sh"
 install -m 0755 "${ROOT_DIR}/scripts/hardware-check.sh" "${DATA_DIR}/scripts/hardware-check.sh"
+install -m 0755 "${ROOT_DIR}/scripts/compare-reports.sh" "${DATA_DIR}/scripts/compare-reports.sh"
 install -m 0644 "${ROOT_DIR}/config/themes/InnyGrOS.colors" "${DATA_DIR}/config/themes/InnyGrOS.colors"
 install -m 0644 "${ROOT_DIR}/config/konsole/InnyGrOS.profile" "${DATA_DIR}/config/konsole/InnyGrOS.profile"
 install -m 0644 "${ROOT_DIR}/config/konsole/InnyGrOS.colorscheme" "${DATA_DIR}/config/konsole/InnyGrOS.colorscheme"

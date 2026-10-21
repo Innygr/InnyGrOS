@@ -9,6 +9,6 @@ Use `scripts/performance-benchmark.sh` (or **Performance snapshot** in the Welco
 1. Reboot, log in, and wait about two minutes for startup tasks to settle.
 2. Run `./scripts/performance-benchmark.sh --text --save`.
 3. Apply one change, reboot, and repeat step 2.
-4. Compare the saved reports in `~/.local/share/innygros/reports` (for example with `diff` or Kompare).
+4. Compare the two most recent saved reports with `./scripts/compare-reports.sh` (or **Compare last two saved performance snapshots** in the Welcome Center). It shows boot time, RAM, load, battery draw and CPU timing side by side. Pass two file names to compare older reports. For everything else, use `diff` or Kompare on the files in `~/.local/share/innygros/reports`.
 
 Compare boot time, idle RAM use, load average, battery draw (on battery, screen brightness unchanged), and the median CPU timing. Run on the same power profile each time; the CPU timing is only meaningful on the same machine.

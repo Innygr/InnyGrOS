@@ -92,7 +92,7 @@ Record each prompt's answer and the final summary. Then, from the Welcome Center
 
 ## 5. After measurements
 
-Repeat section 3 exactly (same power state, brightness, waiting time, three runs). Compare with `diff` or Kompare on the saved reports. Only report a difference as an improvement if it is larger than the spread between the three runs.
+Repeat section 3 exactly (same power state, brightness, waiting time, three runs). Compare with `bash scripts/compare-reports.sh BEFORE.txt AFTER.txt` (key numbers side by side), and with `diff` or Kompare on the saved reports for everything else. Only report a difference as an improvement if it is larger than the spread between the three runs.
 
 ## 6. Minecraft and graphics
 

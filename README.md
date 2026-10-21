@@ -49,6 +49,8 @@ Also available in the Welcome Center. See [config/kde/README.md](config/kde/READ
 ./scripts/performance-benchmark.sh --text --save   # also keep a copy in ~/.local/share/innygros/reports
 ```
 
+`./scripts/compare-reports.sh` compares the two most recent saved snapshots side by side.
+
 It is also available from the Welcome Center. The report only reads system information. The CPU timing is a rough single-thread loop for comparing the same machine before and after a change; it is not a cross-machine score.
 
 ## Compatibility and safety

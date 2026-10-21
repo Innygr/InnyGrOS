@@ -161,7 +161,13 @@ report_boot() {
     printf '%s\n' "${out}"
     echo
     echo "Slowest units in the boot critical chain (top 5):"
-    run_limited 10 systemd-analyze blame --no-pager 2>/dev/null | head -n 5 || echo "  unavailable"
+    local blame
+    # Capture first: piping into head can SIGPIPE the producer under pipefail.
+    if blame="$(run_limited 10 systemd-analyze blame --no-pager 2>/dev/null)" && [[ -n "${blame}" ]]; then
+      head -n 5 <<<"${blame}"
+    else
+      echo "  unavailable"
+    fi
   else
     echo "Boot timing unavailable: ${out:-systemd-analyze returned an error}"
     echo "(This is expected in containers, some VMs, or while boot is still finishing.)"

@@ -121,6 +121,7 @@ while true; do
     "terminal" "Open Terminal (advanced)" \
     "diagnostics" "View system diagnostics" \
     "benchmark" "Performance snapshot (read-only)" \
+    "compare" "Compare last two saved performance snapshots" \
     "hardware" "Laptop hardware check (read-only)" \
     "repo" "Open InnyGrOS project page" \
     "about" "About InnyGrOS" \
@@ -141,6 +142,7 @@ while true; do
     terminal) open_app konsole "Konsole" ;;
     diagnostics) show_diagnostics ;;
     benchmark) run_helper "Performance snapshot" performance-benchmark.sh --gui ;;
+    compare) run_helper "Snapshot comparison" compare-reports.sh --gui ;;
     hardware) run_helper "Hardware check" hardware-check.sh --gui ;;
     repo)
       if has_command xdg-open; then xdg-open "${REPO_URL}" >/dev/null 2>&1 &
