@@ -31,17 +31,8 @@ install -m 0644 "${SCHEME_SOURCE}" "${SCHEME_TARGET}"
 echo "Installed the InnyGrOS Konsole profile and color scheme in ${KONSOLE_DIR}."
 
 if command -v konsole >/dev/null 2>&1; then
-  read -r -p "Open a terminal using the InnyGrOS profile now? [Y/n] " answer
-  case "${answer,,}" in
-    n|no) echo "Profile installed. Select InnyGrOS in Konsole → Settings → Manage Profiles." ;;
-    *)
-      if konsole --profile InnyGrOS >/dev/null 2>&1 & then
-        echo "Opened Konsole with the InnyGrOS profile."
-      else
-        echo "Profile installed. Open Konsole → Settings → Manage Profiles and select InnyGrOS."
-      fi
-      ;;
-  esac
+  konsole --profile InnyGrOS >/dev/null 2>&1 &
+  echo "Requested a Konsole window using the InnyGrOS profile."
 else
-  echo "Konsole is not installed. Install it from Discover, then select the InnyGrOS profile."
+  echo "Konsole is not installed. Install it from Discover, then select InnyGrOS in Konsole → Settings → Manage Profiles."
 fi
