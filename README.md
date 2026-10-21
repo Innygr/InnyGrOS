@@ -23,10 +23,13 @@ From the repository root on Kubuntu:
 
 ```bash
 chmod +x install.sh scripts/*.sh
+./install.sh --check   # optional: see whether this system is supported
 ./install.sh
 ```
 
-The installer asks before installing packages, applying the color scheme, or installing the Welcome Center. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
+To undo InnyGrOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
+
+The installer checks the distribution first, then asks before each step: package groups (required, diagnostics, KDE apps, developer tools), the Welcome Center, and the reversible desktop profile. It prints a summary of what was done, skipped, or failed. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
 
 ## Desktop profile
 
