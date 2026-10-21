@@ -6,7 +6,7 @@ TARGET_DIR="${HOME}/.local/share/color-schemes"
 TARGET_FILE="${TARGET_DIR}/InnyGrOS.colors"
 [[ -f "${SOURCE_FILE}" ]] || { echo "Missing color scheme: ${SOURCE_FILE}"; exit 1; }
 mkdir -p "${TARGET_DIR}"
-if [[ -f "${TARGET_FILE}" ]]; then
+if [[ -f "${TARGET_FILE}" ]] && ! cmp -s "${SOURCE_FILE}" "${TARGET_FILE}"; then
   backup="${TARGET_FILE}.backup.$(date +%Y%m%d-%H%M%S)"
   cp -p "${TARGET_FILE}" "${backup}"
   echo "Existing file backed up to ${backup}"

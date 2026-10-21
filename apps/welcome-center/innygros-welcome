@@ -1,42 +1,77 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+VERSION="0.4"
 DATA_DIR="${HOME}/.local/share/innygros"
-THEME_FILE="${DATA_DIR}/config/themes/InnyGrOS.colors"
-WALLPAPER_SCRIPT="${DATA_DIR}/scripts/apply-wallpaper.sh"
-TERMINAL_SCRIPT="${DATA_DIR}/scripts/apply-terminal-profile.sh"
-GAME_CHECK_SCRIPT="${DATA_DIR}/scripts/game-readiness.sh"
-DESKTOP_PROFILE_SCRIPT="${DATA_DIR}/scripts/desktop-profile.sh"
-BENCHMARK_SCRIPT="${DATA_DIR}/scripts/performance-benchmark.sh"
+LOG_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/innygros"
+LOG_FILE="${LOG_DIR}/welcome-center.log"
+REPO_URL="https://github.com/Innygr/InnyGrOS"
+
+# Use the helpers next to this file when it is run from a repository checkout,
+# otherwise the copies installed by scripts/install-welcome-center.sh.
+SELF_DIR="$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd)"
+if [[ "$(basename -- "${SELF_DIR}")" == welcome-center && -f "${SELF_DIR}/../../scripts/desktop-profile.sh" ]]; then
+  BASE_DIR="$(cd -- "${SELF_DIR}/../.." && pwd)"
+else
+  BASE_DIR="${DATA_DIR}"
+fi
+SCRIPTS_DIR="${BASE_DIR}/scripts"
 
 if ! command -v kdialog >/dev/null 2>&1; then
   printf 'InnyGrOS Welcome Center needs kdialog. Install it with your graphical software center.\n' >&2
   exit 1
 fi
+if [[ -z "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]]; then
+  printf 'InnyGrOS Welcome Center needs a graphical desktop session.\n' >&2
+  exit 1
+fi
 
-show_info() { kdialog --title "InnyGrOS" --msgbox "$1"; }
+has_command() { command -v "$1" >/dev/null 2>&1; }
 
-open_app() {
-  local app="$1"
-  if command -v "$app" >/dev/null 2>&1; then "$app" >/dev/null 2>&1 &
-  else show_info "$2 is not installed. Open Discover to install it."
+show_info() { kdialog --title "InnyGrOS" --msgbox "$1" >/dev/null 2>&1 || true; }
+
+# Show an error with the last lines of a helper's output as expandable details.
+show_error() {
+  local message="$1" details="${2:-}"
+  if [[ -n "${details}" ]]; then
+    kdialog --title "InnyGrOS" --detailederror "${message}" "${details}" >/dev/null 2>&1 || true
+  else
+    kdialog --title "InnyGrOS" --error "${message}" >/dev/null 2>&1 || true
   fi
 }
 
-apply_theme() {
-  if [[ ! -f "${THEME_FILE}" ]]; then
-    show_info "The InnyGrOS color scheme was not found. Re-run the InnyGrOS setup from its repository."
-    return
-  fi
-  local target="${HOME}/.local/share/color-schemes/InnyGrOS.colors"
-  mkdir -p "$(dirname -- "${target}")"
-  if [[ -f "${target}" ]]; then cp -p "${target}" "${target}.backup.$(date +%Y%m%d-%H%M%S)"; fi
-  install -m 0644 "${THEME_FILE}" "${target}"
-  if command -v plasma-apply-colorscheme >/dev/null 2>&1 && plasma-apply-colorscheme InnyGrOS; then
-    show_info "InnyGrOS colors applied. Some applications may need to be restarted."
+open_app() {
+  local app="$1" label="$2"
+  if has_command "${app}"; then
+    "${app}" >/dev/null 2>&1 </dev/null &
+    disown 2>/dev/null || true
   else
-    show_info "The color scheme is installed. Open System Settings → Colors & Themes → Colors and select InnyGrOS."
+    show_info "${label} is not installed. Open Discover to install it."
   fi
+}
+
+# Run a bundled helper script. Output goes to a log file (never a terminal
+# prompt), stdin is closed so nothing can wait for keyboard input, and a
+# failure is shown with the helper's last output lines.
+run_helper() {
+  local label="$1" script="${SCRIPTS_DIR}/$2"; shift 2
+  if [[ ! -f "${script}" ]]; then
+    show_error "${label}: helper not found.\n\nExpected: ${script}\n\nRe-run scripts/install-welcome-center.sh from the InnyGrOS repository."
+    return 0
+  fi
+  mkdir -p -- "${LOG_DIR}"
+  local output status=0
+  output="$(mktemp)"
+  bash -- "${script}" "$@" </dev/null >"${output}" 2>&1 || status=$?
+  {
+    printf '\n=== %s: %s %s (exit %s) ===\n' "$(date '+%F %T')" "$(basename -- "${script}")" "$*" "${status}"
+    cat -- "${output}"
+  } >> "${LOG_FILE}" 2>/dev/null || true
+  if ((status != 0)); then
+    show_error "${label} did not complete (exit code ${status}).\n\nFull log: ${LOG_FILE}" "$(tail -n 20 -- "${output}")"
+  fi
+  rm -f -- "${output}"
+  return 0
 }
 
 show_diagnostics() {
@@ -51,19 +86,23 @@ show_diagnostics() {
     echo
     echo "=== Kernel ==="; uname -a
     echo
-    echo "=== CPU ==="; if command -v lscpu >/dev/null 2>&1; then lscpu; else echo "lscpu not installed"; fi
+    echo "=== CPU ==="; if has_command lscpu; then lscpu; else echo "lscpu not installed"; fi
     echo
-    echo "=== Memory ==="; if command -v free >/dev/null 2>&1; then free -h; else echo "free not installed"; fi
+    echo "=== Memory ==="; if has_command free; then free -h; else echo "free not installed"; fi
     echo
-    echo "=== Storage ==="; if command -v df >/dev/null 2>&1; then df -h -x tmpfs -x devtmpfs; fi
+    echo "=== Storage ==="; if has_command df; then df -h -x tmpfs -x devtmpfs 2>/dev/null || true; fi
     echo
     echo "=== Power profile ==="
-    if command -v powerprofilesctl >/dev/null 2>&1; then powerprofilesctl get 2>&1 || true; echo; powerprofilesctl list 2>&1 || true
+    if has_command powerprofilesctl; then powerprofilesctl get 2>&1 || true; echo; powerprofilesctl list 2>&1 || true
     else echo "power-profiles-daemon CLI not detected"; fi
     echo
+    echo "=== InnyGrOS ==="
+    echo "Helpers: ${SCRIPTS_DIR}"
+    echo "Log: ${LOG_FILE}"
+    echo
     echo "This report only reads system information; it does not change settings."
-  } > "${report}"
-  kdialog --title "InnyGrOS System Diagnostics" --textbox "${report}" 760 560 || true
+  } > "${report}" 2>&1
+  kdialog --title "InnyGrOS System Diagnostics" --textbox "${report}" 760 560 >/dev/null 2>&1 || true
   rm -f -- "${report}"
 }
 
@@ -89,43 +128,24 @@ while true; do
     settings) open_app systemsettings "System Settings" ;;
     discover) open_app plasma-discover "Discover" ;;
     files) open_app dolphin "Dolphin File Manager" ;;
-    desktop-profile|desktop-restore)
-      if [[ -x "${DESKTOP_PROFILE_SCRIPT}" ]]; then
-        if [[ "${choice}" == desktop-profile ]]; then "${DESKTOP_PROFILE_SCRIPT}" apply --gui || true
-        else "${DESKTOP_PROFILE_SCRIPT}" restore --gui || true
-        fi
-      else show_info "Desktop profile tool missing. Re-run the InnyGrOS Welcome Center installer."
-      fi
+    desktop-profile) run_helper "Desktop profile" desktop-profile.sh apply --gui ;;
+    desktop-restore) run_helper "Desktop restore" desktop-profile.sh restore --gui ;;
+    theme)
+      run_helper "Color scheme" apply-theme.sh
+      show_info "The InnyGrOS color scheme is installed. If colors did not change, open System Settings → Colors & Themes → Colors and select InnyGrOS."
       ;;
-    theme) apply_theme ;;
-    wallpaper)
-      if [[ -x "${WALLPAPER_SCRIPT}" ]]; then "${WALLPAPER_SCRIPT}" || show_info "Wallpaper setup could not be completed. See the terminal output for details."
-      else show_info "Wallpaper helper missing. Re-run the InnyGrOS Welcome Center installer."
-      fi
-      ;;
-    terminal-profile)
-      if [[ -x "${TERMINAL_SCRIPT}" ]]; then "${TERMINAL_SCRIPT}" || show_info "Terminal profile setup did not complete. See the terminal output for details."
-      else show_info "Terminal profile helper missing. Re-run the InnyGrOS Welcome Center installer."
-      fi
-      ;;
-    game-readiness)
-      if [[ -x "${GAME_CHECK_SCRIPT}" ]]; then "${GAME_CHECK_SCRIPT}" || show_info "The game readiness check could not complete."
-      else show_info "Game readiness checker missing. Re-run the InnyGrOS Welcome Center installer."
-      fi
-      ;;
+    wallpaper) run_helper "Wallpaper setup" apply-wallpaper.sh ;;
+    terminal-profile) run_helper "Terminal theme setup" apply-terminal-profile.sh ;;
+    game-readiness) run_helper "Game readiness check" game-readiness.sh ;;
     terminal) open_app konsole "Konsole" ;;
     diagnostics) show_diagnostics ;;
-    benchmark)
-      if [[ -x "${BENCHMARK_SCRIPT}" ]]; then "${BENCHMARK_SCRIPT}" --gui || show_info "The performance snapshot could not complete."
-      else show_info "Performance snapshot tool missing. Re-run the InnyGrOS Welcome Center installer."
-      fi
-      ;;
+    benchmark) run_helper "Performance snapshot" performance-benchmark.sh --gui ;;
     repo)
-      if command -v xdg-open >/dev/null 2>&1; then xdg-open "https://github.com/Innygr/InnyGrOS" >/dev/null 2>&1 &
-      else show_info "Project: https://github.com/Innygr/InnyGrOS"
+      if has_command xdg-open; then xdg-open "${REPO_URL}" >/dev/null 2>&1 &
+      else show_info "Project: ${REPO_URL}"
       fi
       ;;
-    about) show_info "InnyGrOS 0.4 — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools." ;;
-    quit) exit 0 ;;
+    about) show_info "InnyGrOS ${VERSION} — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools.\n\nHelpers: ${SCRIPTS_DIR}\nLog: ${LOG_FILE}" ;;
+    quit|"") exit 0 ;;
   esac
 done
