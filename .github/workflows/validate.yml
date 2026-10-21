@@ -48,6 +48,9 @@ jobs:
       - name: Snapshot comparison
         run: ./tests/compare-reports-fixture.sh
 
+      - name: Power mode
+        run: ./tests/power-mode-fixture.sh
+
       - name: Game tool detection
         run: |
           ./tests/game-tools-fixture.sh
@@ -131,6 +134,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
+          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
           done

@@ -24,7 +24,7 @@ It restores desktop settings from the latest snapshot, then **moves** (does not 
 - `~/.local/share/color-schemes/InnyGrOS.colors`
 - `~/.local/share/wallpapers/InnyGrOS-Desktop.svg`
 - `~/.local/share/konsole/InnyGrOS.profile` and `InnyGrOS.colorscheme`
-- `~/.local/share/applications/innygros-welcome.desktop` and `~/.local/bin/innygros-welcome`
+- `~/.local/share/applications/innygros-welcome.desktop`, `~/.local/bin/innygros-welcome`, and `~/.config/autostart/innygros-welcome.desktop`
 - `~/.local/share/innygros/{apps,scripts,config,branding}`
 
 Snapshots and performance reports stay in `~/.local/share/innygros` so you can still compare or restore later. Delete that folder yourself when you no longer need them.
@@ -45,4 +45,6 @@ Packages installed by `install-apps.sh` are not removed. Remove them with Discov
 | Apply InnyGrOS colors | System Settings → Colors & Themes → Colors → pick another scheme |
 | Install / apply wallpaper | Right-click desktop → Configure Desktop and Wallpaper |
 | Install terminal theme | Konsole → Settings → Manage Profiles → pick another default; previous same-named files were saved as `*.backup.*` in `~/.local/share/konsole` |
+| Power mode | Choose another mode in the Welcome Center or from the battery icon in the panel |
+| Show Welcome Center at login | Select the same menu item again, or remove it in System Settings → Autostart |
 | Performance snapshot, game readiness, diagnostics | Read-only; nothing to undo (saved reports are in `~/.local/share/innygros/reports`) |

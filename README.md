@@ -13,6 +13,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Welcome Center for desktop settings, wallpaper, terminal setup, and read-only diagnostics
 - Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile) with snapshots and one-click restore
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
+- Power mode switcher (power saver / balanced / performance) using the standard power-profiles interface, and an optional "show Welcome Center at login" setting
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files

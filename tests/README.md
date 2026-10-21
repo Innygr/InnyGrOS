@@ -18,6 +18,8 @@
 - [ ] Desktop profile: "Restore previous desktop settings" returns the previous color scheme, wallpaper, and animation speed.
 - [ ] Desktop profile: `restore --files` brings back the saved config files and keeps a `before-restore-*` copy.
 - [ ] `hardware-check.sh` on the ThinkPad reports the right model, Wi-Fi driver, both batteries, backlight, touchpad and TrackPoint.
-- [ ] Automated (CI): `tests/hardware-check-fixture.sh`, `tests/compare-reports-fixture.sh`, `tests/game-tools-fixture.sh`.
+- [ ] Automated (CI): `tests/hardware-check-fixture.sh`, `tests/compare-reports-fixture.sh`, `tests/game-tools-fixture.sh`, `tests/power-mode-fixture.sh`.
+- [ ] Power mode from the Welcome Center changes the panel battery widget's profile, and back.
+- [ ] "Show Welcome Center at login" opens it after logging out and in, and turning it off stops that.
 - [ ] Game readiness on real hardware finds GDLauncher (AppImage or .deb), Prism/Sober Flatpaks, and the right GPU renderer.
 - [ ] Test in a Kubuntu VM before using on physical hardware.

@@ -6,6 +6,7 @@ DATA_DIR="${HOME}/.local/share/innygros"
 LOG_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/innygros"
 LOG_FILE="${LOG_DIR}/welcome-center.log"
 REPO_URL="https://github.com/Innygr/InnyGrOS"
+AUTOSTART_FILE="${XDG_CONFIG_HOME:-${HOME}/.config}/autostart/innygros-welcome.desktop"
 
 # Use the helpers next to this file when it is run from a repository checkout,
 # otherwise the copies installed by scripts/install-welcome-center.sh.
@@ -74,6 +75,34 @@ run_helper() {
   return 0
 }
 
+# Optional: open the Welcome Center when the user logs in. Only a file this
+# function created (marked X-InnyGrOS-Autostart) is ever removed.
+toggle_autostart() {
+  if [[ -f "${AUTOSTART_FILE}" ]]; then
+    if grep -q '^X-InnyGrOS-Autostart=true$' "${AUTOSTART_FILE}"; then
+      rm -f -- "${AUTOSTART_FILE}"
+      show_info "The Welcome Center will no longer open at login."
+    else
+      show_error "${AUTOSTART_FILE} was not created by InnyGrOS, so it was left unchanged."
+    fi
+    return 0
+  fi
+  local exec_path="${HOME}/.local/bin/innygros-welcome"
+  [[ -x "${exec_path}" ]] || exec_path="$(readlink -f -- "${BASH_SOURCE[0]}")"
+  mkdir -p -- "$(dirname -- "${AUTOSTART_FILE}")"
+  printf '%s\n' \
+    "[Desktop Entry]" \
+    "Type=Application" \
+    "Name=InnyGrOS Welcome Center" \
+    "Comment=Open the InnyGrOS Welcome Center at login" \
+    "Exec=${exec_path}" \
+    "Icon=preferences-desktop-theme" \
+    "Terminal=false" \
+    "X-InnyGrOS-Autostart=true" > "${AUTOSTART_FILE}"
+  chmod 0644 -- "${AUTOSTART_FILE}"
+  show_info "The Welcome Center will open each time you log in.\n\nTurn this off from the same menu item, or in System Settings → Autostart."
+}
+
 show_diagnostics() {
   local report
   report="$(mktemp)"
@@ -107,6 +136,8 @@ show_diagnostics() {
 }
 
 while true; do
+  if [[ -f "${AUTOSTART_FILE}" ]]; then autostart_label="Show Welcome Center at login: ON (select to turn off)"
+  else autostart_label="Show Welcome Center at login: OFF (select to turn on)"; fi
   choice="$(kdialog --title "InnyGrOS Welcome Center" --menu \
     "Welcome to InnyGrOS. What would you like to do?" \
     "settings" "Open System Settings" \
@@ -118,11 +149,13 @@ while true; do
     "wallpaper" "Install / apply InnyGrOS wallpaper" \
     "terminal-profile" "Install InnyGrOS terminal theme" \
     "game-readiness" "Check Minecraft / Windows game readiness" \
+    "power" "Power mode (battery saver / balanced / performance)" \
     "terminal" "Open Terminal (advanced)" \
     "diagnostics" "View system diagnostics" \
     "benchmark" "Performance snapshot (read-only)" \
     "compare" "Compare last two saved performance snapshots" \
     "hardware" "Laptop hardware check (read-only)" \
+    "autostart" "${autostart_label}" \
     "repo" "Open InnyGrOS project page" \
     "about" "About InnyGrOS" \
     "quit" "Exit" 2>/dev/null)" || exit 0
@@ -139,6 +172,8 @@ while true; do
     wallpaper) run_helper "Wallpaper setup" apply-wallpaper.sh ;;
     terminal-profile) run_helper "Terminal theme setup" apply-terminal-profile.sh ;;
     game-readiness) run_helper "Game readiness check" game-readiness.sh ;;
+    power) run_helper "Power mode" power-mode.sh choose --gui ;;
+    autostart) toggle_autostart ;;
     terminal) open_app konsole "Konsole" ;;
     diagnostics) show_diagnostics ;;
     benchmark) run_helper "Performance snapshot" performance-benchmark.sh --gui ;;

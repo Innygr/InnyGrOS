@@ -10,6 +10,8 @@ The first experimental graphical control center uses KDE's `kdialog`, so it does
 - Check Minecraft / Windows game readiness (read-only)
 - View system diagnostics, a performance snapshot, and a laptop hardware check (all read-only)
 - Compare the last two saved performance snapshots
+- Switch power mode (power saver / balanced / performance), the same setting as the panel battery icon
+- Turn "show Welcome Center at login" on or off (creates or removes only `~/.config/autostart/innygros-welcome.desktop`)
 - Open the project repository and show project information
 
 ## Install
