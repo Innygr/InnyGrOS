@@ -6,6 +6,7 @@ THEME_FILE="${DATA_DIR}/config/themes/InnyGrOS.colors"
 WALLPAPER_SCRIPT="${DATA_DIR}/scripts/apply-wallpaper.sh"
 TERMINAL_SCRIPT="${DATA_DIR}/scripts/apply-terminal-profile.sh"
 GAME_CHECK_SCRIPT="${DATA_DIR}/scripts/game-readiness.sh"
+BENCHMARK_SCRIPT="${DATA_DIR}/scripts/performance-benchmark.sh"
 
 if ! command -v kdialog >/dev/null 2>&1; then
   printf 'InnyGrOS Welcome Center needs kdialog. Install it with your graphical software center.\n' >&2
@@ -77,6 +78,7 @@ while true; do
     "game-readiness" "Check Minecraft / Windows game readiness" \
     "terminal" "Open Terminal (advanced)" \
     "diagnostics" "View system diagnostics" \
+    "benchmark" "Performance snapshot (read-only)" \
     "repo" "Open InnyGrOS project page" \
     "about" "About InnyGrOS" \
     "quit" "Exit" 2>/dev/null)" || exit 0
@@ -102,6 +104,11 @@ while true; do
       ;;
     terminal) open_app konsole "Konsole" ;;
     diagnostics) show_diagnostics ;;
+    benchmark)
+      if [[ -x "${BENCHMARK_SCRIPT}" ]]; then "${BENCHMARK_SCRIPT}" --gui || show_info "The performance snapshot could not complete."
+      else show_info "Performance snapshot tool missing. Re-run the InnyGrOS Welcome Center installer."
+      fi
+      ;;
     repo)
       if command -v xdg-open >/dev/null 2>&1; then xdg-open "https://github.com/Innygr/InnyGrOS" >/dev/null 2>&1 &
       else show_info "Project: https://github.com/Innygr/InnyGrOS"

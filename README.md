@@ -11,6 +11,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Original 1920×1080 vector wallpaper with InnyGr and Team Blacklight identity
 - Custom Konsole profile with Fira Code, violet/cyan terminal colors, and scrollback
 - Welcome Center for desktop settings, wallpaper, terminal setup, and read-only diagnostics
+- Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
@@ -26,6 +27,15 @@ chmod +x install.sh scripts/*.sh
 
 The installer asks before installing packages, applying the color scheme, or installing the Welcome Center. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
 
+## Performance snapshot
+
+```bash
+./scripts/performance-benchmark.sh --text          # print the report
+./scripts/performance-benchmark.sh --text --save   # also keep a copy in ~/.local/share/innygros/reports
+```
+
+It is also available from the Welcome Center. The report only reads system information. The CPU timing is a rough single-thread loop for comparing the same machine before and after a change; it is not a cross-machine score.
+
 ## Compatibility and safety
 - Experimental Kubuntu + KDE Plasma customization, not a standalone ISO yet.
 - Scripts need validation on real Kubuntu and Plasma versions.
@@ -40,6 +50,7 @@ The installer asks before installing packages, applying the color scheme, or ins
 - [x] Branded wallpaper and application helper
 - [x] Konsole profile and color scheme
 - [x] Game-readiness diagnostics
+- [x] Read-only performance snapshot
 - [x] Basic GitHub Actions validation workflow
 - [ ] Original logo and richer KDE desktop layout
 - [ ] Automated tests and Kubuntu VM validation

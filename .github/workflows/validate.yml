@@ -26,6 +26,17 @@ jobs:
             bash -n "${file}"
           done < <(find . -type f \( -name '*.sh' -o -path './apps/welcome-center/innygros-welcome' \) -print0)
 
+      - name: Run read-only performance snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Smoke test only: CI runners are not InnyGrOS hardware, so the numbers mean nothing.
+          ./scripts/performance-benchmark.sh --text --no-save --no-cpu
+          ./scripts/performance-benchmark.sh --help >/dev/null
+          if ./scripts/performance-benchmark.sh --not-an-option >/dev/null 2>&1; then
+            echo "Unknown options should be rejected"; exit 1
+          fi
+
       - name: Validate wallpaper SVG
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('branding/wallpaper/innygros-desktop.svg'); print('Wallpaper SVG is well-formed XML.')"
 
@@ -33,6 +44,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
+          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
           done
