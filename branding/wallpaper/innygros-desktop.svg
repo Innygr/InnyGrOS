@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#080b16"/><stop offset=".52" stop-color="#111025"/><stop offset="1" stop-color="#06131d"/></linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b18cff"/><stop offset="1" stop-color="#7651ff"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#77f7ff"/><stop offset="1" stop-color="#00bcd4"/></linearGradient>
+    <radialGradient id="glowA"><stop offset="0" stop-color="#7046ff" stop-opacity=".25"/><stop offset="1" stop-color="#7046ff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowB"><stop offset="0" stop-color="#00d9f5" stop-opacity=".18"/><stop offset="1" stop-color="#00d9f5" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#aab5ff" stroke-opacity=".07" stroke-width="1"/><circle cx="0" cy="0" r="1.5" fill="#9db5ff" fill-opacity=".2"/></pattern>
+    <filter id="soft"><feGaussianBlur stdDeviation="22"/></filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <ellipse cx="420" cy="420" rx="650" ry="560" fill="url(#glowA)"/><ellipse cx="1510" cy="680" rx="660" ry="570" fill="url(#glowB)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <path d="M0 820L560 520 880 690 1300 340 1920 620M0 900L540 600 900 760 1320 410 1920 690" fill="none" stroke="#a78bfa" stroke-opacity=".08" stroke-width="2"/>
+  <g transform="translate(150 350)">
+    <rect x="0" y="0" width="10" height="210" rx="5" fill="url(#violet)"/>
+    <text x="48" y="84" fill="#f5f2ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="76" font-weight="700" letter-spacing="-2">InnyGr</text>
+    <text x="52" y="133" fill="#b8a3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21" font-weight="600" letter-spacing="7">DEVELOPER EDITION</text>
+    <text x="52" y="182" fill="#8e91ac" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22">Build. Break. Improve.</text>
+    <path d="M52 220H390" stroke="url(#violet)" stroke-width="2" stroke-opacity=".8"/><circle cx="402" cy="220" r="4" fill="#a78bfa"/>
+  </g>
+  <g transform="translate(930 270)"><path d="M0 0V460" stroke="#d5d4f0" stroke-opacity=".22" stroke-width="2"/><path d="M0 0V460" stroke="#c4b5fd" stroke-opacity=".8" stroke-width="2" filter="url(#soft)"/><path d="M-14 230H14" stroke="#d8d7f5" stroke-opacity=".55" stroke-width="2"/></g>
+  <g transform="translate(1080 350)">
+    <path d="M0 0L55 0 90 35 90 125 55 160 0 160 0 125 40 125 55 110 55 50 40 35 0 35Z" fill="none" stroke="url(#cyan)" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M112 0H168V35H128V125H168V160H112L77 125V35Z" fill="none" stroke="url(#cyan)" stroke-width="8" stroke-linejoin="round" opacity=".9"/>
+    <text x="215" y="65" fill="#f1fcff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="47" font-weight="700" letter-spacing="2">TEAM</text>
+    <text x="215" y="119" fill="#77f7ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="47" font-weight="700" letter-spacing="2">BLACKLIGHT</text>
+    <text x="217" y="166" fill="#8ba7b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18" letter-spacing="5">RESEARCH · BUILD · CREATE</text>
+  </g>
+  <g transform="translate(150 930)"><circle cx="4" cy="0" r="4" fill="#a78bfa"/><text x="24" y="8" fill="#8f91ac" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" letter-spacing="3">INNYGROS / DESKTOP EDITION / 0.2</text></g>
+  <text x="1770" y="1000" text-anchor="end" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" letter-spacing="3">PERSONAL BUILD</text>
+</svg>
