@@ -18,5 +18,6 @@
 - [ ] Desktop profile: "Restore previous desktop settings" returns the previous color scheme, wallpaper, and animation speed.
 - [ ] Desktop profile: `restore --files` brings back the saved config files and keeps a `before-restore-*` copy.
 - [ ] `hardware-check.sh` on the ThinkPad reports the right model, Wi-Fi driver, both batteries, backlight, touchpad and TrackPoint.
-- [ ] Automated: `tests/hardware-check-fixture.sh` (runs in CI against a fake sysfs tree).
+- [ ] Automated (CI): `tests/hardware-check-fixture.sh`, `tests/compare-reports-fixture.sh`, `tests/game-tools-fixture.sh`.
+- [ ] Game readiness on real hardware finds GDLauncher (AppImage or .deb), Prism/Sober Flatpaks, and the right GPU renderer.
 - [ ] Test in a Kubuntu VM before using on physical hardware.

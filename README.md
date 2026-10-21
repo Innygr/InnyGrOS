@@ -58,7 +58,7 @@ It is also available from the Welcome Center. The report only reads system infor
 - Scripts need validation on real Kubuntu and Plasma versions.
 - Package installation uses APT and asks for confirmation.
 - Minecraft Java can run natively on Linux with a compatible launcher and Java runtime.
-- Roblox is not reliably supported on Linux; keep Windows available for dependable access.
+- Roblox has no official Linux client. The unofficial Sober client (Flathub) is detected but never installed; keep Windows available for dependable access. See [docs/compatibility.md](docs/compatibility.md).
 - Wine/Bottles/Steam detection is only a basic check, not a guarantee that any particular game will run.
 
 ## Roadmap
