@@ -33,6 +33,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
+          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
           done

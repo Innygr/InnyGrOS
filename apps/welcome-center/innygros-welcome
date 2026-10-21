@@ -5,6 +5,7 @@ DATA_DIR="${HOME}/.local/share/innygros"
 THEME_FILE="${DATA_DIR}/config/themes/InnyGrOS.colors"
 WALLPAPER_SCRIPT="${DATA_DIR}/scripts/apply-wallpaper.sh"
 TERMINAL_SCRIPT="${DATA_DIR}/scripts/apply-terminal-profile.sh"
+GAME_CHECK_SCRIPT="${DATA_DIR}/scripts/game-readiness.sh"
 
 if ! command -v kdialog >/dev/null 2>&1; then
   printf 'InnyGrOS Welcome Center needs kdialog. Install it with your graphical software center.\n' >&2
@@ -73,6 +74,7 @@ while true; do
     "theme" "Apply InnyGrOS colors" \
     "wallpaper" "Install / apply InnyGrOS wallpaper" \
     "terminal-profile" "Install InnyGrOS terminal theme" \
+    "game-readiness" "Check Minecraft / Windows game readiness" \
     "terminal" "Open Terminal (advanced)" \
     "diagnostics" "View system diagnostics" \
     "repo" "Open InnyGrOS project page" \
@@ -93,6 +95,11 @@ while true; do
       else show_info "Terminal profile helper missing. Re-run the InnyGrOS Welcome Center installer."
       fi
       ;;
+    game-readiness)
+      if [[ -x "${GAME_CHECK_SCRIPT}" ]]; then "${GAME_CHECK_SCRIPT}" || show_info "The game readiness check could not complete."
+      else show_info "Game readiness checker missing. Re-run the InnyGrOS Welcome Center installer."
+      fi
+      ;;
     terminal) open_app konsole "Konsole" ;;
     diagnostics) show_diagnostics ;;
     repo)
@@ -100,7 +107,7 @@ while true; do
       else show_info "Project: https://github.com/Innygr/InnyGrOS"
       fi
       ;;
-    about) show_info "InnyGrOS 0.3 — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools." ;;
+    about) show_info "InnyGrOS 0.4 — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools." ;;
     quit) exit 0 ;;
   esac
 done
