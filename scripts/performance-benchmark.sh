@@ -7,7 +7,7 @@
 # given, which stores the text report under ~/.local/share/innygros/reports.
 set -Eeuo pipefail
 
-VERSION="0.4"
+VERSION="$(head -n 1 "$(dirname -- "${BASH_SOURCE[0]}")/../VERSION" 2>/dev/null || echo unknown)"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPORT_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/innygros/reports"
 mode="auto"

@@ -12,7 +12,7 @@ set -Eeuo pipefail
 # INNYGROS_SYSFS lets tests point the checks at a fake /sys tree.
 SYS="${INNYGROS_SYSFS:-/sys}"
 
-VERSION="0.4"
+VERSION="$(head -n 1 "$(dirname -- "${BASH_SOURCE[0]}")/../VERSION" 2>/dev/null || echo unknown)"
 REPORT_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/innygros/reports"
 mode="auto"
 save="ask"

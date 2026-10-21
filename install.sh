@@ -4,7 +4,7 @@
 # show their own confirmation). A summary at the end lists what was done.
 set -Eeuo pipefail
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-VERSION="0.4"
+VERSION="$(head -n 1 "${ROOT_DIR}/VERSION" 2>/dev/null || echo unknown)"
 
 usage() {
   cat <<'EOF'

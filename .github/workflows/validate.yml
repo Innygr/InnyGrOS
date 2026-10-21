@@ -127,6 +127,19 @@ jobs:
           ls "$HOME"/.local/share/innygros/backups/removed-*/.local/bin/innygros-welcome
           echo "Recovery restored settings and moved InnyGrOS files into a backup."
 
+      - name: Version is consistent
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(head -n 1 VERSION)"
+          [[ "${version}" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo "VERSION is not a version number: ${version}"; exit 1; }
+          grep -q "^\*\*InnyGrOS ${version} " README.md || { echo "README header does not mention ${version}"; exit 1; }
+          grep -q "^## ${version} " CHANGELOG.md || { echo "CHANGELOG.md has no entry for ${version}"; exit 1; }
+          if grep -rnE 'VERSION="[0-9]' --include='*.sh' . apps/welcome-center/innygros-welcome; then
+            echo "Hard-coded version found; read the VERSION file instead"; exit 1
+          fi
+          echo "Version ${version} is consistent."
+
       - name: Validate wallpaper SVG
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('branding/wallpaper/innygros-desktop.svg'); print('Wallpaper SVG is well-formed XML.')"
 
@@ -134,6 +147,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
+          for file in VERSION CHANGELOG.md install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
           done

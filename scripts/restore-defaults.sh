@@ -32,6 +32,7 @@ OWNED=(
   "${INNYGROS_DATA}/scripts"
   "${INNYGROS_DATA}/config"
   "${INNYGROS_DATA}/branding"
+  "${INNYGROS_DATA}/VERSION"
 )
 
 usage() {

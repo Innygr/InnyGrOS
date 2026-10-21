@@ -1,0 +1,38 @@
+# Changelog
+
+All notable changes to InnyGrOS. The current version is in the `VERSION` file; scripts and the Welcome Center read it from there.
+
+Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
+
+## 0.5 — 2026-10-21
+
+### Added
+- `scripts/performance-benchmark.sh`: read-only performance snapshot (system, load, CPU and governor, memory, storage, boot timing, power profile, battery, graphics, Minecraft/Windows tools, rough CPU timing). Can save reports for before/after comparison.
+- `scripts/compare-reports.sh`: side-by-side comparison of two saved snapshots.
+- `scripts/desktop-profile.sh`: reversible KDE desktop profile (color scheme, wallpaper, animation speed, default Konsole profile) for Plasma 5 and 6, with per-key snapshots, `restore`, and `restore --files`.
+- `scripts/hardware-check.sh`: read-only laptop hardware detection, plus `docs/thinkpad-t580-test-plan.md`.
+- `scripts/power-mode.sh`: switch power profiles via `powerprofilesctl`.
+- `scripts/lib/game-tools.sh`: shared Minecraft launcher, Wine/Bottles/Steam, and Sober/Vinegar detection with Flatpak IDs checked on Flathub.
+- Welcome Center: desktop profile apply/restore, performance snapshot, snapshot comparison, hardware check, power mode, and an optional "show at login" toggle.
+- `docs/recovery.md`, `CHANGELOG.md`, and a single `VERSION` file.
+- CI: ShellCheck, a desktop profile apply/restore round trip using real KDE config tools, an install → recovery round trip, a Welcome Center smoke test, and fixture tests for the hardware, comparison, game-tool, and power-mode scripts.
+
+### Changed
+- `install.sh`: distribution and desktop checks, `--check`, no prompts without a terminal, a question per step, and a done/skipped/failed summary.
+- `scripts/install-apps.sh`: packages split into required, diagnostics, KDE apps, and developer groups, each confirmed separately; already-installed and unavailable packages are skipped.
+- `scripts/restore-defaults.sh`: restores desktop settings, then moves (not deletes) InnyGrOS files into a dated backup.
+- Welcome Center: helpers run without a terminal and log to `~/.cache/innygros/welcome-center.log`; failures show readable errors.
+- Game readiness: up-to-date Roblox guidance (no official Linux client; Sober is unofficial and closed source; Windows remains the dependable option).
+
+### Fixed
+- A guessed GDLauncher Flatpak ID was removed; GDLauncher is found through its command, desktop entry, or AppImage.
+- `apply-theme.sh` no longer makes a backup when the installed scheme is unchanged.
+
+## 0.4 and earlier
+
+- Konsole profile and color scheme with a desktop-safe installer.
+- Game compatibility readiness report.
+- GitHub Actions validation of shell syntax, the wallpaper SVG, and required files.
+- Hand-authored SVG wallpaper with InnyGr and Team Blacklight branding.
+- Graphical Welcome Center prototype (KDialog).
+- Initial desktop starter: installer, KDE color scheme, performance diagnostics, documentation.

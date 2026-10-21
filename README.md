@@ -1,6 +1,6 @@
 # InnyGrOS
 
-**InnyGrOS 0.4 — Desktop Edition**  
+**InnyGrOS 0.5 — Desktop Edition**  
 An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 
 > Early development: this repository is not yet a standalone operating system or installable ISO.
@@ -83,6 +83,9 @@ It is also available from the Welcome Center. The report only reads system infor
 3. Ask before installing packages or changing settings.
 4. Back up configuration before modifying it.
 5. Measure performance rather than promising arbitrary speed gains.
+
+## Changelog
+See [CHANGELOG.md](CHANGELOG.md). The current version is in [VERSION](VERSION).
 
 ## License
 MIT. See [LICENSE](LICENSE).
