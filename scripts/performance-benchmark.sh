@@ -8,6 +8,7 @@
 set -Eeuo pipefail
 
 VERSION="0.4"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPORT_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/innygros/reports"
 mode="auto"
 save="ask"
@@ -239,23 +240,14 @@ report_graphics() {
 
 report_compat_tools() {
   section "Minecraft and Windows compatibility tools"
-  local tool label
-  for tool in java:Java gdlauncher:GDLauncher prismlauncher:"Prism Launcher" minecraft-launcher:"Official Minecraft Launcher" \
-              wine:Wine bottles:Bottles steam:Steam; do
-    label="${tool#*:}"; tool="${tool%%:*}"
-    if has_command "${tool}"; then printf '%-28s found\n' "${label}:"; else printf '%-28s not found on PATH\n' "${label}:"; fi
-  done
-  if has_command flatpak; then
-    local apps
-    apps="$(flatpak list --app --columns=application 2>/dev/null || true)"
-    for tool in io.gdl.GDLauncher:"GDLauncher (Flatpak)" org.prismlauncher.PrismLauncher:"Prism Launcher (Flatpak)" \
-                com.usebottles.bottles:"Bottles (Flatpak)" com.valvesoftware.Steam:"Steam (Flatpak)"; do
-      label="${tool#*:}"; tool="${tool%%:*}"
-      grep -qx "${tool}" <<<"${apps}" && printf '%-28s found\n' "${label}:"
-    done
+  if [[ -r "${SCRIPT_DIR}/lib/game-tools.sh" ]]; then
+    # shellcheck source=lib/game-tools.sh
+    . "${SCRIPT_DIR}/lib/game-tools.sh"
+    game_tools_report
+  else
+    echo "Detection helper missing (${SCRIPT_DIR}/lib/game-tools.sh); re-run the installer."
   fi
-  echo "Note: Roblox is not reliably supported on Linux; keep Windows available for it."
-  return 0
+  echo "Note: Roblox has no official Linux client; see docs/compatibility.md."
 }
 
 # Rough single-thread timing: a fixed amount of pure-Bash integer work run
