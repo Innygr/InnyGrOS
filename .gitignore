@@ -1,0 +1,16 @@
+# Editor / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# Local builds and test artifacts
+dist/
+build/
+*.iso
+*.qcow2
+*.vdi
+*.vmdk
+*.log
