@@ -1,0 +1,38 @@
+name: Validate InnyGrOS scripts and assets
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate Bash syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "Checking ${file}"
+            bash -n "${file}"
+          done < <(find . -type f \( -name '*.sh' -o -path './apps/welcome-center/innygros-welcome' \) -print0)
+
+      - name: Validate wallpaper SVG
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('branding/wallpaper/innygros-desktop.svg'); print('Wallpaper SVG is well-formed XML.')"
+
+      - name: Check required starter files
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh apps/welcome-center/innygros-welcome; do
+            test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
+          done
