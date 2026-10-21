@@ -8,3 +8,5 @@ Roblox is not reliably supported as a native Linux desktop application. Keep Win
 
 ## ThinkPad T580
 Confirm the exact hardware before tuning it. Test Wi-Fi, audio, suspend/resume, brightness, touchpad, battery reporting, and external displays before considering the setup ready.
+
+Run `scripts/hardware-check.sh` (or **Laptop hardware check** in the Welcome Center) from a live USB first, and follow [thinkpad-t580-test-plan.md](thinkpad-t580-test-plan.md). No ThinkPad results have been recorded yet.

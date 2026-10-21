@@ -8,7 +8,7 @@ The first experimental graphical control center uses KDE's `kdialog`, so it does
 - Restore the desktop settings saved by the last profile apply
 - Apply the InnyGrOS color scheme, wallpaper, or terminal theme individually
 - Check Minecraft / Windows game readiness (read-only)
-- View system diagnostics and a performance snapshot (read-only)
+- View system diagnostics, a performance snapshot, and a laptop hardware check (all read-only)
 - Open the project repository and show project information
 
 ## Install
