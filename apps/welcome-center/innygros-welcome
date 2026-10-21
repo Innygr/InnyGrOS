@@ -4,6 +4,7 @@ set -Eeuo pipefail
 DATA_DIR="${HOME}/.local/share/innygros"
 THEME_FILE="${DATA_DIR}/config/themes/InnyGrOS.colors"
 WALLPAPER_SCRIPT="${DATA_DIR}/scripts/apply-wallpaper.sh"
+TERMINAL_SCRIPT="${DATA_DIR}/scripts/apply-terminal-profile.sh"
 
 if ! command -v kdialog >/dev/null 2>&1; then
   printf 'InnyGrOS Welcome Center needs kdialog. Install it with your graphical software center.\n' >&2
@@ -71,9 +72,10 @@ while true; do
     "files" "Open File Manager" \
     "theme" "Apply InnyGrOS colors" \
     "wallpaper" "Install / apply InnyGrOS wallpaper" \
+    "terminal-profile" "Install InnyGrOS terminal theme" \
+    "terminal" "Open Terminal (advanced)" \
     "diagnostics" "View system diagnostics" \
     "repo" "Open InnyGrOS project page" \
-    "terminal" "Open Terminal (advanced)" \
     "about" "About InnyGrOS" \
     "quit" "Exit" 2>/dev/null)" || exit 0
   case "${choice}" in
@@ -82,19 +84,23 @@ while true; do
     files) open_app dolphin "Dolphin File Manager" ;;
     theme) apply_theme ;;
     wallpaper)
-      if [[ -x "${WALLPAPER_SCRIPT}" ]]; then
-        "${WALLPAPER_SCRIPT}" || show_info "Wallpaper setup could not be completed. See the terminal output for details."
+      if [[ -x "${WALLPAPER_SCRIPT}" ]]; then "${WALLPAPER_SCRIPT}" || show_info "Wallpaper setup could not be completed. See the terminal output for details."
       else show_info "Wallpaper helper missing. Re-run the InnyGrOS Welcome Center installer."
       fi
       ;;
+    terminal-profile)
+      if [[ -x "${TERMINAL_SCRIPT}" ]]; then "${TERMINAL_SCRIPT}" || show_info "Terminal profile setup did not complete. See the terminal output for details."
+      else show_info "Terminal profile helper missing. Re-run the InnyGrOS Welcome Center installer."
+      fi
+      ;;
+    terminal) open_app konsole "Konsole" ;;
     diagnostics) show_diagnostics ;;
     repo)
       if command -v xdg-open >/dev/null 2>&1; then xdg-open "https://github.com/Innygr/InnyGrOS" >/dev/null 2>&1 &
       else show_info "Project: https://github.com/Innygr/InnyGrOS"
       fi
       ;;
-    terminal) open_app konsole "Konsole" ;;
-    about) show_info "InnyGrOS 0.2 — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools." ;;
+    about) show_info "InnyGrOS 0.3 — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools." ;;
     quit) exit 0 ;;
   esac
 done
