@@ -6,6 +6,7 @@ THEME_FILE="${DATA_DIR}/config/themes/InnyGrOS.colors"
 WALLPAPER_SCRIPT="${DATA_DIR}/scripts/apply-wallpaper.sh"
 TERMINAL_SCRIPT="${DATA_DIR}/scripts/apply-terminal-profile.sh"
 GAME_CHECK_SCRIPT="${DATA_DIR}/scripts/game-readiness.sh"
+DESKTOP_PROFILE_SCRIPT="${DATA_DIR}/scripts/desktop-profile.sh"
 BENCHMARK_SCRIPT="${DATA_DIR}/scripts/performance-benchmark.sh"
 
 if ! command -v kdialog >/dev/null 2>&1; then
@@ -72,6 +73,8 @@ while true; do
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
     "files" "Open File Manager" \
+    "desktop-profile" "Apply InnyGrOS desktop profile (reversible)" \
+    "desktop-restore" "Restore previous desktop settings" \
     "theme" "Apply InnyGrOS colors" \
     "wallpaper" "Install / apply InnyGrOS wallpaper" \
     "terminal-profile" "Install InnyGrOS terminal theme" \
@@ -86,6 +89,14 @@ while true; do
     settings) open_app systemsettings "System Settings" ;;
     discover) open_app plasma-discover "Discover" ;;
     files) open_app dolphin "Dolphin File Manager" ;;
+    desktop-profile|desktop-restore)
+      if [[ -x "${DESKTOP_PROFILE_SCRIPT}" ]]; then
+        if [[ "${choice}" == desktop-profile ]]; then "${DESKTOP_PROFILE_SCRIPT}" apply --gui || true
+        else "${DESKTOP_PROFILE_SCRIPT}" restore --gui || true
+        fi
+      else show_info "Desktop profile tool missing. Re-run the InnyGrOS Welcome Center installer."
+      fi
+      ;;
     theme) apply_theme ;;
     wallpaper)
       if [[ -x "${WALLPAPER_SCRIPT}" ]]; then "${WALLPAPER_SCRIPT}" || show_info "Wallpaper setup could not be completed. See the terminal output for details."

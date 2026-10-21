@@ -37,6 +37,31 @@ jobs:
             echo "Unknown options should be rejected"; exit 1
           fi
 
+      - name: Install KDE config tools for desktop profile test
+        run: sudo apt-get update -q && sudo apt-get install -y -q libkf5config-bin
+
+      - name: Desktop profile apply/restore round trip
+        shell: bash
+        run: |
+          set -euo pipefail
+          export HOME="$(mktemp -d)" XDG_CONFIG_HOME= XDG_DATA_HOME=
+          mkdir -p "$HOME/.config" "$HOME/.local/share/konsole"
+          printf '[General]\nColorScheme=BreezeDark\n\n[KDE]\nSingleClick=false\n' > "$HOME/.config/kdeglobals"
+          touch "$HOME/.local/share/konsole/InnyGrOS.profile"
+          ./scripts/desktop-profile.sh status
+          ./scripts/desktop-profile.sh apply --dry-run --animations faster
+          cmp "$HOME/.config/kdeglobals" <(printf '[General]\nColorScheme=BreezeDark\n\n[KDE]\nSingleClick=false\n')
+          ./scripts/desktop-profile.sh apply --yes --animations faster --no-wallpaper
+          test "$(kreadconfig5 --file kdeglobals --group General --key ColorScheme)" = InnyGrOS
+          test "$(kreadconfig5 --file kdeglobals --group KDE --key AnimationDurationFactor)" = 0.5
+          test "$(kreadconfig5 --file konsolerc --group 'Desktop Entry' --key DefaultProfile)" = InnyGrOS.profile
+          ./scripts/desktop-profile.sh restore --yes
+          test "$(kreadconfig5 --file kdeglobals --group General --key ColorScheme)" = BreezeDark
+          test -z "$(kreadconfig5 --file kdeglobals --group KDE --key AnimationDurationFactor)"
+          test -z "$(kreadconfig5 --file konsolerc --group 'Desktop Entry' --key DefaultProfile)"
+          test "$(kreadconfig5 --file kdeglobals --group KDE --key SingleClick)" = false
+          echo "Desktop profile round trip restored the original settings."
+
       - name: Validate wallpaper SVG
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('branding/wallpaper/innygros-desktop.svg'); print('Wallpaper SVG is well-formed XML.')"
 
@@ -44,6 +69,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
+          for file in install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
           done

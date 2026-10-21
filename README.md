@@ -11,6 +11,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Original 1920×1080 vector wallpaper with InnyGr and Team Blacklight identity
 - Custom Konsole profile with Fira Code, violet/cyan terminal colors, and scrollback
 - Welcome Center for desktop settings, wallpaper, terminal setup, and read-only diagnostics
+- Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile) with snapshots and one-click restore
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
@@ -26,6 +27,16 @@ chmod +x install.sh scripts/*.sh
 ```
 
 The installer asks before installing packages, applying the color scheme, or installing the Welcome Center. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
+
+## Desktop profile
+
+```bash
+./scripts/desktop-profile.sh status                      # what is set now
+./scripts/desktop-profile.sh apply --animations faster   # asks before changing anything
+./scripts/desktop-profile.sh restore                     # undo the most recent apply
+```
+
+Also available in the Welcome Center. See [config/kde/README.md](config/kde/README.md) for exactly what is changed and how restore works.
 
 ## Performance snapshot
 
@@ -51,6 +62,7 @@ It is also available from the Welcome Center. The report only reads system infor
 - [x] Konsole profile and color scheme
 - [x] Game-readiness diagnostics
 - [x] Read-only performance snapshot
+- [x] Reversible desktop profile with snapshot/restore
 - [x] Basic GitHub Actions validation workflow
 - [ ] Original logo and richer KDE desktop layout
 - [ ] Automated tests and Kubuntu VM validation
