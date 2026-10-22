@@ -57,7 +57,15 @@ jobs:
           ./scripts/game-readiness.sh
 
       - name: Install KDE config tools for desktop profile test
-        run: sudo apt-get update -q && sudo apt-get install -y -q libkf5config-bin
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libkf5config-bin
+          # Qt 6 and Qt 5 QML runtimes for the splash screen render test.
+          sudo apt-get install -y -q qml-qt6 qml6-module-qtquick qml6-module-qtquick-window qml6-module-qtqml-workerscript libqt6svg6 \
+            qmlscene qml-module-qtquick2 qml-module-qtquick-window2 libqt5svg5
+
+      - name: Splash screen renders with Qt 6 and Qt 5
+        run: ./tests/splash-render.sh
 
       - name: Desktop profile apply/restore round trip
         shell: bash
@@ -70,7 +78,9 @@ jobs:
           ./scripts/desktop-profile.sh status
           ./scripts/desktop-profile.sh apply --dry-run --animations faster
           cmp "$HOME/.config/kdeglobals" <(printf '[General]\nColorScheme=BreezeDark\n\n[KDE]\nSingleClick=false\n')
-          ./scripts/desktop-profile.sh apply --yes --animations faster --no-wallpaper
+          ./scripts/desktop-profile.sh apply --yes --animations faster --no-wallpaper --splash
+          test "$(kreadconfig5 --file ksplashrc --group KSplash --key Theme)" = org.innygros.splash
+          test -f "$HOME/.local/share/plasma/look-and-feel/org.innygros.splash/contents/splash/Splash.qml"
           test "$(kreadconfig5 --file kdeglobals --group General --key ColorScheme)" = InnyGrOS
           test "$(kreadconfig5 --file kdeglobals --group KDE --key AnimationDurationFactor)" = 0.5
           test "$(kreadconfig5 --file konsolerc --group 'Desktop Entry' --key DefaultProfile)" = InnyGrOS.profile
@@ -79,6 +89,7 @@ jobs:
           test -z "$(kreadconfig5 --file kdeglobals --group KDE --key AnimationDurationFactor)"
           test -z "$(kreadconfig5 --file konsolerc --group 'Desktop Entry' --key DefaultProfile)"
           test "$(kreadconfig5 --file kdeglobals --group KDE --key SingleClick)" = false
+          test -z "$(kreadconfig5 --file ksplashrc --group KSplash --key Theme)"
           echo "Desktop profile round trip restored the original settings."
 
       - name: Welcome Center smoke test with stub kdialog
@@ -155,6 +166,19 @@ jobs:
           fi
           echo "Version ${version} is consistent."
 
+      - name: Splash package metadata
+        run: |
+          python3 - <<'CHECK'
+          import json, filecmp
+          base = "branding/splash/org.innygros.splash"
+          meta = json.load(open(f"{base}/metadata.json"))
+          assert meta["KPackageStructure"] == "Plasma/LookAndFeel", meta
+          assert meta["KPlugin"]["Id"] == "org.innygros.splash", meta
+          assert "X-KDE-PluginInfo-Name=org.innygros.splash" in open(f"{base}/metadata.desktop").read()
+          assert filecmp.cmp(f"{base}/contents/splash/images/logo.svg", "branding/logo/innygros-logo.svg", shallow=False), "splash logo copy is out of date"
+          print("Splash package metadata OK")
+          CHECK
+
       - name: Validate SVG assets
         shell: bash
         run: |
@@ -168,6 +192,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in VERSION CHANGELOG.md branding/logo/innygros-logo.svg install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
+          for file in VERSION CHANGELOG.md branding/splash/org.innygros.splash/metadata.json branding/splash/org.innygros.splash/contents/splash/Splash.qml branding/logo/innygros-logo.svg install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
           done

@@ -20,10 +20,13 @@ WALLPAPER_SOURCE="${ROOT_DIR}/branding/wallpaper/innygros-desktop.svg"
 COLORS_TARGET="${DATA_HOME}/color-schemes/InnyGrOS.colors"
 WALLPAPER_TARGET="${DATA_HOME}/wallpapers/InnyGrOS-Desktop.svg"
 KONSOLE_PROFILE="${DATA_HOME}/konsole/InnyGrOS.profile"
+SPLASH_ID="org.innygros.splash"
+SPLASH_SOURCE="${ROOT_DIR}/branding/splash/${SPLASH_ID}"
+SPLASH_TARGET="${DATA_HOME}/plasma/look-and-feel/${SPLASH_ID}"
 APPLETS_RC="${CONFIG_HOME}/plasma-org.kde.plasma.desktop-appletsrc"
 UNSET="__INNYGROS_UNSET__"
 # Config files this tool may modify; copies are kept in every snapshot.
-TRACKED_FILES=(kdeglobals kwinrc konsolerc plasma-org.kde.plasma.desktop-appletsrc)
+TRACKED_FILES=(kdeglobals kwinrc konsolerc ksplashrc plasma-org.kde.plasma.desktop-appletsrc)
 
 has_command() { command -v "$1" >/dev/null 2>&1; }
 
@@ -42,6 +45,7 @@ Apply options:
   --no-colors                    Do not change the color scheme
   --no-wallpaper                 Do not change the wallpaper
   --no-konsole-default           Do not make InnyGrOS the default Konsole profile
+  --splash                       Also use the InnyGrOS startup splash (off by default)
   --dry-run                      Show what would change without changing anything
 
 Restore options:
@@ -196,7 +200,7 @@ install_if_changed() { # source target
 }
 
 cmd_apply() {
-  local animations=keep colors=1 wallpaper=1 konsole=1 dry_run=0
+  local animations=keep colors=1 wallpaper=1 konsole=1 splash=0 dry_run=0
   while (($#)); do
     case "$1" in
       --animations) animations="${2:-}"; shift ;;
@@ -204,6 +208,7 @@ cmd_apply() {
       --no-colors) colors=0 ;;
       --no-wallpaper) wallpaper=0 ;;
       --no-konsole-default) konsole=0 ;;
+      --splash) splash=1 ;;
       --dry-run) dry_run=1 ;;
       *) echo "Unknown apply option: $1" >&2; usage >&2; exit 2 ;;
     esac
@@ -219,11 +224,13 @@ cmd_apply() {
       "Choose what to apply. Your current settings are saved first and can be restored from the Welcome Center." \
       colors "InnyGrOS color scheme" "$( ((colors)) && echo on || echo off)" \
       wallpaper "InnyGrOS wallpaper" "$( ((wallpaper)) && echo on || echo off)" \
-      konsole "Use the InnyGrOS Konsole profile by default" "$( ((konsole)) && echo on || echo off)" 2>/dev/null)" || exit 0
-    colors=0; wallpaper=0; konsole=0
+      konsole "Use the InnyGrOS Konsole profile by default" "$( ((konsole)) && echo on || echo off)" \
+      splash "InnyGrOS startup splash after login (new, not yet tested on real Plasma)" "$( ((splash)) && echo on || echo off)" 2>/dev/null)" || exit 0
+    colors=0; wallpaper=0; konsole=0; splash=0
     grep -qx colors <<<"${picked}" && colors=1
     grep -qx wallpaper <<<"${picked}" && wallpaper=1
     grep -qx konsole <<<"${picked}" && konsole=1
+    grep -qx splash <<<"${picked}" && splash=1
     animations="$(kdialog --title "InnyGrOS Desktop Profile" --radiolist \
       "Animation speed. Faster or no animations can make the desktop feel snappier on older hardware; the effect on battery and CPU use is small and has not been measured by InnyGrOS yet." \
       keep "Keep current setting" on \
@@ -241,6 +248,7 @@ cmd_apply() {
 
   if ((colors)) && [[ ! -s "${COLORS_SOURCE}" ]]; then fail "Color scheme not found: ${COLORS_SOURCE}"; fi
   if ((wallpaper)) && [[ ! -s "${WALLPAPER_SOURCE}" ]]; then fail "Wallpaper not found: ${WALLPAPER_SOURCE}"; fi
+  if ((splash)) && [[ ! -s "${SPLASH_SOURCE}/contents/splash/Splash.qml" ]]; then fail "Splash screen not found: ${SPLASH_SOURCE}"; fi
   if ((konsole)) && [[ ! -f "${KONSOLE_PROFILE}" ]]; then
     echo "Skipping default Konsole profile: install the InnyGrOS terminal theme first." >&2
     konsole=0
@@ -251,6 +259,7 @@ cmd_apply() {
   ((wallpaper)) && plan+=("• Wallpaper → InnyGrOS desktop wallpaper")
   [[ -n "${factor}" ]] && plan+=("• Animation speed factor: $(read_key kdeglobals KDE AnimationDurationFactor | sed "s/${UNSET}/1/") → ${factor}")
   ((konsole)) && plan+=("• Default Konsole profile → InnyGrOS")
+  ((splash)) && plan+=("• Startup splash: $(read_key ksplashrc KSplash Theme | sed "s/${UNSET}/Plasma default/") → InnyGrOS")
   if ((${#plan[@]} == 0)); then say "Nothing selected; no settings were changed."; return 0; fi
 
   local summary
@@ -291,6 +300,17 @@ cmd_apply() {
     record konsolerc 'Desktop Entry' DefaultProfile
     write_key konsolerc 'Desktop Entry' DefaultProfile InnyGrOS.profile
     notes+=("New Konsole windows will use the InnyGrOS profile.")
+  fi
+  if ((splash)); then
+    record ksplashrc KSplash Engine
+    record ksplashrc KSplash Theme
+    # The package directory is InnyGrOS-owned, so it is replaced as a whole.
+    mkdir -p -- "$(dirname -- "${SPLASH_TARGET}")"
+    rm -rf -- "${SPLASH_TARGET}"
+    cp -R -- "${SPLASH_SOURCE}" "${SPLASH_TARGET}"
+    write_key ksplashrc KSplash Engine KSplashQML
+    write_key ksplashrc KSplash Theme "${SPLASH_ID}"
+    notes+=("InnyGrOS startup splash selected; you will see it at your next login.")
   fi
   trap - ERR
 
@@ -389,6 +409,7 @@ cmd_restore() {
     else notes+=("Animation speed restored; log out and back in for it to take full effect."); fi
   fi
   if grep -q $'^konsolerc\t' "${snapshot_dir}/settings.tsv" 2>/dev/null; then notes+=("Default Konsole profile restored."); fi
+  if grep -q $'^ksplashrc\t' "${snapshot_dir}/settings.tsv" 2>/dev/null; then notes+=("Startup splash restored (takes effect at next login)."); fi
 
   if [[ -n "${prev_wallpaper}" ]]; then
     local path="${prev_wallpaper#file://}"

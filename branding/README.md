@@ -5,6 +5,7 @@ All InnyGrOS artwork is hand-authored SVG (no generated images). Public-facing T
 | Asset | File | Used for |
 | --- | --- | --- |
 | Logo mark | `logo/innygros-logo.svg` | Welcome Center launcher, dialogs, and login autostart icon (installed as `~/.local/share/icons/hicolor/scalable/apps/innygros.svg`, icon name `innygros`) |
+| Startup splash | `splash/org.innygros.splash/` | Plasma splash screen shown after login (QtQuick only, works with Plasma 5 and 6); selected by `desktop-profile.sh apply --splash`. `contents/splash/images/logo.svg` must match the logo (checked in CI). |
 | Desktop wallpaper | `wallpaper/innygros-desktop.svg` | 1920×1080 wallpaper with InnyGr and Team Blacklight identity |
 
 ## Palette
@@ -18,4 +19,4 @@ All InnyGrOS artwork is hand-authored SVG (no generated images). Public-facing T
 
 The logo uses only paths and shapes (no fonts), so it looks the same on every system and stays legible down to 22 px. Keep new assets to this palette and add third-party assets only when their licenses permit redistribution.
 
-Planned: boot splash and login screen artwork.
+Planned: login screen (SDDM) artwork.

@@ -9,6 +9,7 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ### Added
 - Hand-authored InnyGrOS logo (`branding/logo/innygros-logo.svg`), installed as the `innygros` icon for the Welcome Center launcher, dialogs, and login autostart entry.
 - CI validates every SVG in the repository.
+- InnyGrOS startup splash for Plasma 5 and 6 (`branding/splash/org.innygros.splash`): logo, name, and a progress bar driven by the startup stages. Opt-in through the desktop profile (`--splash` or the checklist) and restored like other settings. CI renders it offscreen with Qt 6 and Qt 5.
 - `scripts/doctor.sh` and a Welcome Center item: read-only health check of the installation (version, installed files vs. checkout, launcher, menu entry, icon, PATH), required and optional tools, and desktop state, with a suggested fix for each problem.
 - Welcome Center first-steps guide on first launch (baseline snapshot and hardware check first, then optional desktop look, terminal theme, and login autostart); reopen it from the menu.
 

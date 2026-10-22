@@ -12,6 +12,7 @@ Each item is optional and you choose which to apply.
 | Wallpaper → InnyGrOS | `plasma-org.kde.plasma.desktop-appletsrc` | Applied with `plasma-apply-wallpaperimage`. |
 | Animation speed | `kdeglobals` `[KDE] AnimationDurationFactor` | `keep` (default), `faster` = 0.5, `off` = 0. Can make an older laptop feel more responsive; any CPU or battery effect is unmeasured. |
 | Default Konsole profile | `konsolerc` `[Desktop Entry] DefaultProfile` | Only if the InnyGrOS terminal theme is installed. |
+| Startup splash (opt-in, `--splash`) | `ksplashrc` `[KSplash] Engine`, `Theme` | Installs `branding/splash/org.innygros.splash` to `~/.local/share/plasma/look-and-feel/` and selects it. Seen at the next login. Off by default until tested on real Plasma. |
 
 ## Snapshots and restore
 
@@ -19,7 +20,7 @@ Before changing anything, `apply` creates `~/.local/share/innygros/backups/deskt
 
 - `settings.tsv`: the previous value of every key it is about to change (or a marker meaning "was not set")
 - `wallpaper`: the previous wallpaper path, if Plasma recorded one
-- `files/`: full copies of `kdeglobals`, `kwinrc`, `konsolerc`, and the Plasma desktop applets file as they were
+- `files/`: full copies of `kdeglobals`, `kwinrc`, `konsolerc`, `ksplashrc`, and the Plasma desktop applets file as they were
 
 `restore` (or **Restore previous desktop settings** in the Welcome Center) puts back only those keys and re-applies the previous color scheme and wallpaper, so other changes you made later are kept. `restore --files` copies the saved files back whole as a last resort; your current files are saved to `backups/before-restore-*` first.
 

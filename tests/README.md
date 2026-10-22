@@ -24,4 +24,5 @@
 - [ ] Game readiness on real hardware finds GDLauncher (AppImage or .deb), Prism/Sober Flatpaks, and the right GPU renderer.
 - [ ] First launch of the Welcome Center shows the first-steps guide once; the baseline snapshot is saved before the desktop look changes.
 - [ ] `doctor.sh` on a fresh Kubuntu install reports only expected warnings after setup.
+- [ ] Startup splash appears at the next login after `desktop-profile.sh apply --splash` on Plasma 5 and Plasma 6, and the previous splash returns after restore.
 - [ ] Test in a Kubuntu VM before using on physical hardware.

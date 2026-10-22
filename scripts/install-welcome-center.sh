@@ -12,7 +12,7 @@ BIN_DIR="${HOME}/.local/bin"
 APPS_DIR="${HOME}/.local/share/applications"
 ICON_DIR="${HOME}/.local/share/icons/hicolor/scalable/apps"
 
-for required in VERSION apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/lib/game-tools.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg branding/logo/innygros-logo.svg; do
+for required in VERSION apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/lib/game-tools.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg branding/logo/innygros-logo.svg branding/splash/org.innygros.splash/contents/splash/Splash.qml; do
   if [[ ! -f "${ROOT_DIR}/${required}" ]]; then
     echo "Required project file missing: ${required}"
     exit 1
@@ -38,6 +38,9 @@ install -m 0644 "${ROOT_DIR}/config/konsole/InnyGrOS.profile" "${DATA_DIR}/confi
 install -m 0644 "${ROOT_DIR}/config/konsole/InnyGrOS.colorscheme" "${DATA_DIR}/config/konsole/InnyGrOS.colorscheme"
 install -m 0644 "${ROOT_DIR}/branding/wallpaper/innygros-desktop.svg" "${DATA_DIR}/branding/wallpaper/innygros-desktop.svg"
 install -m 0644 "${ROOT_DIR}/VERSION" "${DATA_DIR}/VERSION"
+rm -rf -- "${DATA_DIR}/branding/splash"
+mkdir -p "${DATA_DIR}/branding/splash"
+cp -R "${ROOT_DIR}/branding/splash/org.innygros.splash" "${DATA_DIR}/branding/splash/"
 install -m 0644 "${ROOT_DIR}/branding/logo/innygros-logo.svg" "${ICON_DIR}/innygros.svg"
 install -m 0755 "${DATA_DIR}/apps/welcome-center/innygros-welcome" "${BIN_DIR}/innygros-welcome"
 

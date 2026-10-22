@@ -11,7 +11,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Original 1920×1080 vector wallpaper with InnyGr and Team Blacklight identity
 - Custom Konsole profile with Fira Code, violet/cyan terminal colors, and scrollback
 - Welcome Center for desktop settings, wallpaper, terminal setup, and read-only diagnostics
-- Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile) with snapshots and one-click restore
+- Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile, optional InnyGrOS startup splash) with snapshots and one-click restore
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
 - Power mode switcher (power saver / balanced / performance) using the standard power-profiles interface, and an optional "show Welcome Center at login" setting
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
