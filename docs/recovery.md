@@ -2,6 +2,14 @@
 
 InnyGrOS only changes files in your home folder, and every change has a way back. Start with the first option that applies.
 
+## 0. Find out what is wrong
+
+```bash
+./scripts/doctor.sh
+```
+
+It checks the installed files, the tools InnyGrOS needs, and the desktop state, and prints a fix for each problem. Nothing is changed. Also available in the Welcome Center as **Check InnyGrOS installation (doctor)**.
+
 ## 1. Undo the desktop profile
 
 - Welcome Center → **Restore previous desktop settings**, or

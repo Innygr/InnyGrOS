@@ -23,4 +23,5 @@
 - [ ] "Show Welcome Center at login" opens it after logging out and in, and turning it off stops that.
 - [ ] Game readiness on real hardware finds GDLauncher (AppImage or .deb), Prism/Sober Flatpaks, and the right GPU renderer.
 - [ ] First launch of the Welcome Center shows the first-steps guide once; the baseline snapshot is saved before the desktop look changes.
+- [ ] `doctor.sh` on a fresh Kubuntu install reports only expected warnings after setup.
 - [ ] Test in a Kubuntu VM before using on physical hardware.

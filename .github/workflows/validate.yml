@@ -124,6 +124,12 @@ jobs:
           printf '[General]\nColorScheme=BreezeDark\n' > "$HOME/.config/kdeglobals"
           ./scripts/install-welcome-center.sh
           ./scripts/desktop-profile.sh apply --yes --no-wallpaper --no-konsole-default
+          # The runner has no kdialog, so doctor reports a failure; check the rest of its report.
+          doctor="$(./scripts/doctor.sh || true)"
+          printf '%s\n' "$doctor"
+          grep -q '^OK    Installed version' <<<"$doctor"
+          grep -q '^OK    InnyGrOS icon installed' <<<"$doctor"
+          grep -q '^FAIL  kdialog not installed' <<<"$doctor"
           ./scripts/restore-defaults.sh --dry-run
           test -f "$HOME/.local/bin/innygros-welcome"
           grep -qx "Icon=innygros" "$HOME/.local/share/applications/innygros-welcome.desktop"
@@ -162,6 +168,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in VERSION CHANGELOG.md branding/logo/innygros-logo.svg install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
+          for file in VERSION CHANGELOG.md branding/logo/innygros-logo.svg install.sh README.md config/themes/InnyGrOS.colors scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/restore-defaults.sh scripts/install-apps.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/lib/game-tools.sh docs/thinkpad-t580-test-plan.md docs/recovery.md config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme apps/welcome-center/innygros-welcome; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
           done
