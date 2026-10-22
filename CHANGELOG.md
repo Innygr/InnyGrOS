@@ -4,6 +4,12 @@ All notable changes to InnyGrOS. The current version is in the `VERSION` file; s
 
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
+## Unreleased
+
+### Added
+- Hand-authored InnyGrOS logo (`branding/logo/innygros-logo.svg`), installed as the `innygros` icon for the Welcome Center launcher, dialogs, and login autostart entry.
+- CI validates every SVG in the repository.
+
 ## 0.5 — 2026-10-21
 
 ### Added

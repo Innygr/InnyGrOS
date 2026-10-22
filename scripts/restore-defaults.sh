@@ -27,6 +27,7 @@ OWNED=(
   "${DATA_HOME}/konsole/InnyGrOS.colorscheme"
   "${DATA_HOME}/applications/innygros-welcome.desktop"
   "${HOME}/.local/bin/innygros-welcome"
+  "${DATA_HOME}/icons/hicolor/scalable/apps/innygros.svg"
   "${XDG_CONFIG_HOME:-${HOME}/.config}/autostart/innygros-welcome.desktop"
   "${INNYGROS_DATA}/apps"
   "${INNYGROS_DATA}/scripts"

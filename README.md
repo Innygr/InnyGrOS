@@ -71,7 +71,8 @@ It is also available from the Welcome Center. The report only reads system infor
 - [x] Read-only performance snapshot
 - [x] Reversible desktop profile with snapshot/restore
 - [x] Basic GitHub Actions validation workflow
-- [ ] Original logo and richer KDE desktop layout
+- [x] Original logo (hand-authored SVG) used as the Welcome Center icon
+- [ ] Richer KDE desktop layout
 - [ ] Automated tests and Kubuntu VM validation
 - [x] Hardware check and ThinkPad T580 test plan ([docs/thinkpad-t580-test-plan.md](docs/thinkpad-t580-test-plan.md))
 - [ ] ThinkPad T580 validation on real hardware

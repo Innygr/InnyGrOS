@@ -24,7 +24,7 @@ It restores desktop settings from the latest snapshot, then **moves** (does not 
 - `~/.local/share/color-schemes/InnyGrOS.colors`
 - `~/.local/share/wallpapers/InnyGrOS-Desktop.svg`
 - `~/.local/share/konsole/InnyGrOS.profile` and `InnyGrOS.colorscheme`
-- `~/.local/share/applications/innygros-welcome.desktop`, `~/.local/bin/innygros-welcome`, and `~/.config/autostart/innygros-welcome.desktop`
+- `~/.local/share/applications/innygros-welcome.desktop`, `~/.local/bin/innygros-welcome`, and `~/.config/autostart/innygros-welcome.desktop`, and the `innygros` icon in `~/.local/share/icons`
 - `~/.local/share/innygros/{apps,scripts,config,branding}`
 
 Snapshots and performance reports stay in `~/.local/share/innygros` so you can still compare or restore later. Delete that folder yourself when you no longer need them.

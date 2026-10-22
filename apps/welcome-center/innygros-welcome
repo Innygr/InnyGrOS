@@ -29,7 +29,7 @@ fi
 
 has_command() { command -v "$1" >/dev/null 2>&1; }
 
-show_info() { kdialog --title "InnyGrOS" --msgbox "$1" >/dev/null 2>&1 || true; }
+show_info() { kdialog --title "InnyGrOS" --icon innygros --msgbox "$1" >/dev/null 2>&1 || true; }
 
 # Show an error with the last lines of a helper's output as expandable details.
 show_error() {
@@ -96,7 +96,7 @@ toggle_autostart() {
     "Name=InnyGrOS Welcome Center" \
     "Comment=Open the InnyGrOS Welcome Center at login" \
     "Exec=${exec_path}" \
-    "Icon=preferences-desktop-theme" \
+    "Icon=innygros" \
     "Terminal=false" \
     "X-InnyGrOS-Autostart=true" > "${AUTOSTART_FILE}"
   chmod 0644 -- "${AUTOSTART_FILE}"
@@ -138,7 +138,7 @@ show_diagnostics() {
 while true; do
   if [[ -f "${AUTOSTART_FILE}" ]]; then autostart_label="Show Welcome Center at login: ON (select to turn off)"
   else autostart_label="Show Welcome Center at login: OFF (select to turn on)"; fi
-  choice="$(kdialog --title "InnyGrOS Welcome Center" --menu \
+  choice="$(kdialog --title "InnyGrOS Welcome Center" --icon innygros --menu \
     "Welcome to InnyGrOS. What would you like to do?" \
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
