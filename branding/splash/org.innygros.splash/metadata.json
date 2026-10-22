@@ -1,0 +1,18 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "InnyGr"
+            }
+        ],
+        "Category": "",
+        "Description": "InnyGrOS startup splash screen",
+        "Id": "org.innygros.splash",
+        "License": "MIT",
+        "Name": "InnyGrOS Splash",
+        "Version": "1.0",
+        "Website": "https://github.com/Innygr/InnyGrOS"
+    },
+    "X-Plasma-APIVersion": "2"
+}

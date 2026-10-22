@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=InnyGrOS Splash
+Comment=InnyGrOS startup splash screen
+Type=Service
+X-KDE-ServiceTypes=Plasma/LookAndFeel
+X-KDE-PluginInfo-Author=InnyGr
+X-KDE-PluginInfo-Name=org.innygros.splash
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=https://github.com/Innygr/InnyGrOS
+X-KDE-PluginInfo-License=MIT
+X-Plasma-APIVersion=2
