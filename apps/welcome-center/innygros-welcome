@@ -5,6 +5,7 @@ DATA_DIR="${HOME}/.local/share/innygros"
 LOG_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/innygros"
 LOG_FILE="${LOG_DIR}/welcome-center.log"
 REPO_URL="https://github.com/Innygr/InnyGrOS"
+FIRST_RUN_MARKER="${XDG_STATE_HOME:-${HOME}/.local/state}/innygros/first-run-done"
 AUTOSTART_FILE="${XDG_CONFIG_HOME:-${HOME}/.config}/autostart/innygros-welcome.desktop"
 
 # Use the helpers next to this file when it is run from a repository checkout,
@@ -103,6 +104,30 @@ toggle_autostart() {
   show_info "The Welcome Center will open each time you log in.\n\nTurn this off from the same menu item, or in System Settings → Autostart."
 }
 
+# First-steps guide: offered once, on the first launch, and from the menu.
+# Steps run in a safe order: measure before changing anything.
+first_steps() {
+  kdialog --title "Welcome to InnyGrOS" --icon innygros --msgbox \
+    "Welcome to InnyGrOS ${VERSION}.\n\nThis short guide offers the usual first steps. Nothing changes without your choice, and every desktop change can be undone with \"Restore previous desktop settings\".\n\nYou can open this guide again from the menu at any time." >/dev/null 2>&1 || true
+  local picked
+  picked="$(kdialog --title "InnyGrOS first steps" --icon innygros --separate-output --checklist \
+    "Choose what to do now (in this order):" \
+    baseline "1. Save a baseline performance snapshot (read-only, before any changes)" on \
+    hardware "2. Run the laptop hardware check (read-only)" on \
+    profile "3. Apply the InnyGrOS desktop look (snapshot first, reversible)" on \
+    terminal "4. Install the InnyGrOS terminal theme" off \
+    autostart "5. Show the Welcome Center each time I log in" off 2>/dev/null)" || picked=""
+  mkdir -p -- "$(dirname -- "${FIRST_RUN_MARKER}")"
+  date '+%F %T' > "${FIRST_RUN_MARKER}" 2>/dev/null || true
+  [[ -n "${picked}" ]] || return 0
+  if grep -qx baseline <<<"${picked}"; then run_helper "Baseline performance snapshot" performance-benchmark.sh --gui --save; fi
+  if grep -qx hardware <<<"${picked}"; then run_helper "Hardware check" hardware-check.sh --gui; fi
+  if grep -qx profile <<<"${picked}"; then run_helper "Desktop profile" desktop-profile.sh apply --gui; fi
+  if grep -qx terminal <<<"${picked}"; then run_helper "Terminal theme setup" apply-terminal-profile.sh; fi
+  if grep -qx autostart <<<"${picked}" && [[ ! -f "${AUTOSTART_FILE}" ]]; then toggle_autostart; fi
+  show_info "First steps finished.\n\nNext ideas: \"Check Minecraft / Windows game readiness\", \"Power mode\", and after a few days of use, another performance snapshot to compare with your baseline."
+}
+
 show_diagnostics() {
   local report
   report="$(mktemp)"
@@ -135,11 +160,14 @@ show_diagnostics() {
   rm -f -- "${report}"
 }
 
+[[ -f "${FIRST_RUN_MARKER}" ]] || first_steps
+
 while true; do
   if [[ -f "${AUTOSTART_FILE}" ]]; then autostart_label="Show Welcome Center at login: ON (select to turn off)"
   else autostart_label="Show Welcome Center at login: OFF (select to turn on)"; fi
   choice="$(kdialog --title "InnyGrOS Welcome Center" --icon innygros --menu \
     "Welcome to InnyGrOS. What would you like to do?" \
+    "first-steps" "First steps guide" \
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
     "files" "Open File Manager" \
@@ -160,6 +188,7 @@ while true; do
     "about" "About InnyGrOS" \
     "quit" "Exit" 2>/dev/null)" || exit 0
   case "${choice}" in
+    first-steps) first_steps ;;
     settings) open_app systemsettings "System Settings" ;;
     discover) open_app plasma-discover "Discover" ;;
     files) open_app dolphin "Dolphin File Manager" ;;

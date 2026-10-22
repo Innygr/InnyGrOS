@@ -9,6 +9,7 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ### Added
 - Hand-authored InnyGrOS logo (`branding/logo/innygros-logo.svg`), installed as the `innygros` icon for the Welcome Center launcher, dialogs, and login autostart entry.
 - CI validates every SVG in the repository.
+- Welcome Center first-steps guide on first launch (baseline snapshot and hardware check first, then optional desktop look, terminal theme, and login autostart); reopen it from the menu.
 
 ## 0.5 — 2026-10-21
 

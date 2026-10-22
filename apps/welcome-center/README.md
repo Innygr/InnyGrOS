@@ -2,6 +2,10 @@
 
 The first experimental graphical control center uses KDE's `kdialog`, so it does not need a separate Python GUI framework.
 
+## First launch
+
+The first time it opens, the Welcome Center offers a short **first steps** guide: save a baseline performance snapshot and run the hardware check (both read-only, done first so you have numbers from before any change), then optionally apply the desktop look, install the terminal theme, and show the Welcome Center at login. It is shown once (remembered in `~/.local/state/innygros/first-run-done`) and can be reopened from **First steps guide** in the menu.
+
 ## Current actions
 - Open System Settings, Discover (software and updates), Dolphin, or Konsole
 - Apply the InnyGrOS desktop profile (color scheme, wallpaper, animation speed, default Konsole profile), with a snapshot taken first

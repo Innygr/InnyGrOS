@@ -98,10 +98,16 @@ jobs:
           done
           STUB
           chmod +x "$stub/kdialog"
-          export KDIALOG_LOG="$stub/log" KDIALOG_STATE="$stub/state" DISPLAY=:99
+          export KDIALOG_LOG="$stub/log" KDIALOG_STATE="$stub/state" DISPLAY=:99 HOME="$(mktemp -d)" XDG_STATE_HOME=
           PATH="$stub:$PATH" timeout 60 ./apps/welcome-center/innygros-welcome
           grep -q -- '--textbox' "$KDIALOG_LOG"
           grep -q "Helpers: $PWD/scripts" "$KDIALOG_LOG"
+          # First launch shows the first-steps guide once, then remembers it.
+          grep -q "InnyGrOS first steps" "$KDIALOG_LOG"
+          test -f "$HOME/.local/state/innygros/first-run-done"
+          : > "$KDIALOG_LOG"; rm -f "$KDIALOG_STATE"
+          PATH="$stub:$PATH" timeout 60 ./apps/welcome-center/innygros-welcome
+          if grep -q "InnyGrOS first steps" "$KDIALOG_LOG"; then echo "First-steps guide shown twice"; exit 1; fi
           echo "Welcome Center menu loop, About, and diagnostics ran without hanging."
 
       - name: Installer checks and recovery round trip
