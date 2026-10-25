@@ -55,6 +55,16 @@ Also available in the Welcome Center. See [config/kde/README.md](config/kde/READ
 
 It is also available from the Welcome Center. The report only reads system information. The CPU timing is a rough single-thread loop for comparing the same machine before and after a change; it is not a cross-machine score.
 
+## Network & VPN report
+
+Run a local, read-only report from the repository checkout:
+
+```bash
+bash scripts/network-check.sh --text
+```
+
+It checks NetworkManager, IP addresses, the default route, DNS, nearby Wi-Fi metadata, and available Tailscale/WireGuard/VPN status. The report stays on your machine and does not change settings. Review it before sharing because it can include local addresses and network names.
+
 ## Compatibility and safety
 - Experimental Kubuntu + KDE Plasma customization, not a standalone ISO yet.
 - Scripts need validation on real Kubuntu and Plasma versions.
