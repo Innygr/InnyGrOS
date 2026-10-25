@@ -1,6 +1,6 @@
 # InnyGrOS
 
-**InnyGrOS 0.5 — Desktop Edition**  
+**InnyGrOS 0.6 — Desktop Edition**  
 An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 
 > Early development: this repository is not yet a standalone operating system or installable ISO.
@@ -15,6 +15,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
 - Power mode switcher (power saver / balanced / performance) using the standard power-profiles interface, and an optional "show Welcome Center at login" setting
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
+- Read-only network report for NetworkManager, IP addresses, default route, DNS, nearby Wi-Fi metadata, and detected VPN/overlay interfaces (including Tailscale and WireGuard when installed)
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
@@ -74,7 +75,8 @@ It is also available from the Welcome Center. The report only reads system infor
 - [x] Original logo (hand-authored SVG) used as the Welcome Center icon
 - [ ] Richer KDE desktop layout
 - [ ] Automated tests and Kubuntu VM validation
-- [x] Hardware check and ThinkPad T580 test plan ([docs/thinkpad-t580-test-plan.md](docs/thinkpad-t580-test-plan.md))
+- [x] Hardware check and ThinkPad T580 test plan
+- [x] Network & VPN diagnostics in the Welcome Center ([docs/thinkpad-t580-test-plan.md](docs/thinkpad-t580-test-plan.md))
 - [ ] ThinkPad T580 validation on real hardware
 - [ ] Reproducible ISO build
 
