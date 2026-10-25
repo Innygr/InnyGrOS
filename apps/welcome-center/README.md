@@ -14,7 +14,7 @@ The first time it opens, the Welcome Center offers a short **first steps** guide
 - Check Minecraft / Windows game readiness (read-only)
 - View system diagnostics, a performance snapshot, and a laptop hardware check (all read-only)
 - Compare the last two saved performance snapshots
-- Check the InnyGrOS installation (doctor): installed files, required and optional tools, desktop state, with a fix for each problem
+- Run a quick connectivity and Tailscale service check (read-only), or a battery/power health report (read-only; serial numbers omitted)\n- Check the InnyGrOS installation (doctor): installed files, required and optional tools, desktop state, with a fix for each problem
 - Switch power mode (power saver / balanced / performance), the same setting as the panel battery icon
 - Turn "show Welcome Center at login" on or off (creates or removes only `~/.config/autostart/innygros-welcome.desktop`)
 - Open the project repository and show project information
