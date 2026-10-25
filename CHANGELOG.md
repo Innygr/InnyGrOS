@@ -9,7 +9,7 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ## 0.6 — 2026-10-24
 
 ### Added
-- Read-only Network & VPN report available from the Welcome Center and as `scripts/network-check.sh --text`.
+- Read-only Network & VPN report available from the Welcome Center and as `bash scripts/network-check.sh --text`.
 - Reports NetworkManager state, local IP addresses, default route, DNS configuration, nearby Wi-Fi metadata, and available Tailscale/WireGuard/active VPN status.
 - Report is local-only, makes no network configuration changes, and warns that local network names and addresses should be reviewed before sharing.
 - CI smoke test for the network report and option handling.
