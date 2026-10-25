@@ -6,6 +6,14 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 
 ## Unreleased
 
+## 0.6 — 2026-10-24
+
+### Added
+- Read-only Network & VPN report available from the Welcome Center and as `scripts/network-check.sh --text`.
+- Reports NetworkManager state, local IP addresses, default route, DNS configuration, nearby Wi-Fi metadata, and available Tailscale/WireGuard/active VPN status.
+- Report is local-only, makes no network configuration changes, and warns that local network names and addresses should be reviewed before sharing.
+- CI smoke test for the network report and option handling.
+
 ### Added
 - Hand-authored InnyGrOS logo (`branding/logo/innygros-logo.svg`), installed as the `innygros` icon for the Welcome Center launcher, dialogs, and login autostart entry.
 - CI validates every SVG in the repository.
