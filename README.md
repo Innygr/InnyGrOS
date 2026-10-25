@@ -16,6 +16,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Power mode switcher (power saver / balanced / performance) using the standard power-profiles interface, and an optional "show Welcome Center at login" setting
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
 - Read-only network report for NetworkManager, IP addresses, default route, DNS, nearby Wi-Fi metadata, and detected VPN/overlay interfaces (including Tailscale and WireGuard when installed)
+- Read-only battery and power report for battery status, estimated design-capacity remaining when exposed by firmware, power profile, and optional temperature sensor output
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
@@ -65,6 +66,16 @@ bash scripts/network-check.sh --text
 ```
 
 It checks NetworkManager, IP addresses, the default route, DNS, nearby Wi-Fi metadata, and available Tailscale/WireGuard/VPN status. The report stays on your machine and does not change settings. Review it before sharing because it can include local addresses and network names.
+
+## Battery & power report
+
+Run a local, read-only battery and power report:
+
+```bash
+bash scripts/battery-power-report.sh
+```
+
+It reports battery status and capacity where the laptop firmware exposes those values, the current power profile, and temperature data if `lm-sensors` is already installed. It does not change power settings or charging thresholds, and it omits battery serial numbers. Capacity estimates are approximate.
 
 ## InnyGrOS Boot Manager (experimental)
 
