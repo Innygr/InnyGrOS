@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: Network diagnostics smoke test
-        run: ./tests/network-check-fixture.sh
+        run: bash ./tests/network-check-fixture.sh
 
       - name: Hardware check against a fake ThinkPad sysfs tree
         run: |
