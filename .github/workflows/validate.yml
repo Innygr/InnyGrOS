@@ -43,6 +43,18 @@ jobs:
       - name: Network diagnostics smoke test
         run: bash ./tests/network-check-fixture.sh
 
+      - name: Quick network and battery report smoke tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          network_report="$(timeout 20 bash ./scripts/network-health.sh)"
+          grep -q 'InnyGrOS Network Health' <<<"$network_report"
+          grep -q 'made no configuration changes' <<<"$network_report"
+          battery_report="$(timeout 20 bash ./scripts/battery-power-report.sh)"
+          grep -q 'InnyGrOS Battery & Power' <<<"$battery_report"
+          grep -q 'No battery serial numbers are printed' <<<"$battery_report"
+          echo "Quick network and battery reports completed without changing settings."
+
       - name: Boot manager syntax and safety smoke test
         run: bash ./tests/boot-manager-fixture.sh
 
