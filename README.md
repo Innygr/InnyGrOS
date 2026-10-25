@@ -68,7 +68,7 @@ It checks NetworkManager, IP addresses, the default route, DNS, nearby Wi-Fi met
 
 ## InnyGrOS Boot Manager (experimental)
 
-Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. To install the optional GRUB theme and Random Boot shutdown hook, use `sudo bash scripts/boot-manager.sh install` and type `INSTALL` when prompted. Read [docs/boot-manager.md](docs/boot-manager.md) first. This changes system boot configuration, has not been validated on the laptop, and should only be enabled after reviewing the detected entries and confirming a recovery path.
+Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. To install the optional GRUB theme and Random Boot shutdown hook, use `sudo bash scripts/boot-manager.sh install` and type `INSTALL` when prompted. Random Boot is off by default; enable it with `sudo bash scripts/boot-manager.sh random-on` and disable it with `sudo bash scripts/boot-manager.sh random-off`. Read [docs/boot-manager.md](docs/boot-manager.md) first. This changes system boot configuration, has not been validated on the laptop, and should only be enabled after reviewing the detected entries and confirming a recovery path.
 
 ## Compatibility and safety
 - Experimental Kubuntu + KDE Plasma customization, not a standalone ISO yet.
