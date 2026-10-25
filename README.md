@@ -17,6 +17,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
 - Read-only network report for NetworkManager, IP addresses, default route, DNS, nearby Wi-Fi metadata, and detected VPN/overlay interfaces (including Tailscale and WireGuard when installed)
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
+- Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
 
@@ -65,6 +66,10 @@ bash scripts/network-check.sh --text
 
 It checks NetworkManager, IP addresses, the default route, DNS, nearby Wi-Fi metadata, and available Tailscale/WireGuard/VPN status. The report stays on your machine and does not change settings. Review it before sharing because it can include local addresses and network names.
 
+## InnyGrOS Boot Manager (experimental)
+
+Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. To install the optional GRUB theme and Random Boot shutdown hook, use `sudo bash scripts/boot-manager.sh install` and type `INSTALL` when prompted. Read [docs/boot-manager.md](docs/boot-manager.md) first. This changes system boot configuration, has not been validated on the laptop, and should only be enabled after reviewing the detected entries and confirming a recovery path.
+
 ## Compatibility and safety
 - Experimental Kubuntu + KDE Plasma customization, not a standalone ISO yet.
 - Scripts need validation on real Kubuntu and Plasma versions.
@@ -89,6 +94,7 @@ It checks NetworkManager, IP addresses, the default route, DNS, nearby Wi-Fi met
 - [x] Network & VPN diagnostics in the Welcome Center ([docs/thinkpad-t580-test-plan.md](docs/thinkpad-t580-test-plan.md))
 - [ ] ThinkPad T580 validation on real hardware
 - [ ] Reproducible ISO build
+- [x] Experimental GRUB Boot Manager prototype; real-hardware boot validation still required
 
 ## Development principles
 1. Prefer graphical tools for ordinary tasks.
