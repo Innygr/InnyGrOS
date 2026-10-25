@@ -12,7 +12,7 @@ BIN_DIR="${HOME}/.local/bin"
 APPS_DIR="${HOME}/.local/share/applications"
 ICON_DIR="${HOME}/.local/share/icons/hicolor/scalable/apps"
 
-for required in VERSION apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/lib/game-tools.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg branding/logo/innygros-logo.svg branding/splash/org.innygros.splash/contents/splash/Splash.qml; do
+for required in VERSION apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/network-check.sh scripts/lib/game-tools.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg branding/logo/innygros-logo.svg branding/splash/org.innygros.splash/contents/splash/Splash.qml; do
   if [[ ! -f "${ROOT_DIR}/${required}" ]]; then
     echo "Required project file missing: ${required}"
     exit 1
@@ -32,6 +32,7 @@ install -m 0755 "${ROOT_DIR}/scripts/hardware-check.sh" "${DATA_DIR}/scripts/har
 install -m 0755 "${ROOT_DIR}/scripts/compare-reports.sh" "${DATA_DIR}/scripts/compare-reports.sh"
 install -m 0755 "${ROOT_DIR}/scripts/power-mode.sh" "${DATA_DIR}/scripts/power-mode.sh"
 install -m 0755 "${ROOT_DIR}/scripts/doctor.sh" "${DATA_DIR}/scripts/doctor.sh"
+install -m 0755 "${ROOT_DIR}/scripts/network-check.sh" "${DATA_DIR}/scripts/network-check.sh"
 install -m 0644 "${ROOT_DIR}/scripts/lib/game-tools.sh" "${DATA_DIR}/scripts/lib/game-tools.sh"
 install -m 0644 "${ROOT_DIR}/config/themes/InnyGrOS.colors" "${DATA_DIR}/config/themes/InnyGrOS.colors"
 install -m 0644 "${ROOT_DIR}/config/konsole/InnyGrOS.profile" "${DATA_DIR}/config/konsole/InnyGrOS.profile"
