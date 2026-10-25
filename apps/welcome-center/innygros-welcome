@@ -184,6 +184,8 @@ while true; do
     "compare" "Compare last two saved performance snapshots" \
     "hardware" "Laptop hardware check (read-only)" \
     "network" "Network & VPN report (read-only)" \
+    "network-health" "Quick connectivity & Tailscale check (read-only)" \
+    "battery" "Battery & power health report (read-only)" \
     "autostart" "${autostart_label}" \
     "repo" "Open InnyGrOS project page" \
     "doctor" "Check InnyGrOS installation (doctor)" \
