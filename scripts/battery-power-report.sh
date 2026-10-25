@@ -3,7 +3,6 @@
 set -u
 
 section() { printf '\n\033[1;36m== %s ==\033[0m\n' "$1"; }
-found=0
 section "InnyGrOS Battery & Power"
 printf 'Generated: %s\n' "$(date '+%Y-%m-%d %H:%M:%S %Z' 2>/dev/null || date)"
 printf 'Host: %s\n' "$(hostname 2>/dev/null || echo unknown)"
@@ -12,7 +11,6 @@ if command -v upower >/dev/null 2>&1; then
   section "UPower devices"
   upower -e 2>/dev/null | while IFS= read -r dev; do
     [[ "$dev" == *battery* ]] || continue
-    found=1
     echo "-- $dev"
     upower -i "$dev" 2>/dev/null | awk -F: '
       /^[[:space:]]*(vendor|model|serial|state|warning-level|percentage|capacity|energy-full|energy-full-design|energy-rate|time to empty|time to full)[[:space:]]*:/ {
@@ -27,7 +25,6 @@ fi
 section "Kernel battery data"
 for bat in /sys/class/power_supply/BAT*; do
   [[ -d "$bat" ]] || continue
-  found=1
   echo "-- $(basename "$bat")"
   for key in manufacturer model_name status capacity cycle_count; do
     file="$bat/$key"
