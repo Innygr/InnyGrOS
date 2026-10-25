@@ -26,7 +26,11 @@ PY
 }
 status() {
   echo "InnyGrOS Boot Manager"
-  [[ -f "$CONFIG_FILE" ]] && echo "GRUB customization: installed" || echo "GRUB customization: not installed"
+  if [[ -f "$CONFIG_FILE" ]]; then
+    echo "GRUB customization: installed"
+  else
+    echo "GRUB customization: not installed"
+  fi
   systemctl is-enabled innygros-random-boot.service >/dev/null 2>&1 && echo "Random Boot hook: enabled" || echo "Random Boot hook: not enabled"
   echo "Eligible top-level GRUB entries (title<TAB>entry-id):"
   list_entries
@@ -48,7 +52,10 @@ PY
 }
 install_manager() {
   [[ "$EUID" -eq 0 ]] || { echo "Install requires sudo/root." >&2; exit 1; }
-  [[ -f "$GRUB_CFG" ]] && command -v update-grub >/dev/null 2>&1 && command -v grub-reboot >/dev/null 2>&1 || { echo "Ubuntu/Kubuntu GRUB tools/config not found." >&2; exit 1; }
+  if [[ ! -f "$GRUB_CFG" ]] || ! command -v update-grub >/dev/null 2>&1 || ! command -v grub-reboot >/dev/null 2>&1; then
+    echo "Ubuntu/Kubuntu GRUB tools/config not found." >&2
+    exit 1
+  fi
   command -v python3 >/dev/null 2>&1 || { echo "Python 3 is required." >&2; exit 1; }
   for file in "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
     [[ ! -e "$file" ]] || { echo "Refusing to overwrite existing file: $file" >&2; exit 1; }
