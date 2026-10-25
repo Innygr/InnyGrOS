@@ -3,12 +3,12 @@ set -Eeuo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 script="${ROOT}/scripts/network-check.sh"
 bash -n "$script"
-"$script" --help >/dev/null
-if "$script" --not-an-option >/dev/null 2>&1; then
+bash "$script" --help >/dev/null
+if bash "$script" --not-an-option >/dev/null 2>&1; then
   echo "Unknown options should be rejected" >&2
   exit 1
 fi
-report="$("$script" --text)"
+report="$(bash "$script" --text)"
 grep -q '^InnyGrOS Network & VPN Report$' <<<"$report"
 grep -q '^=== Network manager ===$' <<<"$report"
 grep -q '^=== IP addresses ===$' <<<"$report"
