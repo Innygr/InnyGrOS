@@ -15,8 +15,8 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
 - Power mode switcher (power saver / balanced / performance) using the standard power-profiles interface, and an optional "show Welcome Center at login" setting
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
-- Read-only network report for NetworkManager, IP addresses, default route, DNS, nearby Wi-Fi metadata, and detected VPN/overlay interfaces (including Tailscale and WireGuard when installed)
-- Read-only battery and power report for battery status, estimated design-capacity remaining when exposed by firmware, power profile, and optional temperature sensor output
+- Read-only network report for NetworkManager, IP addresses, default route, DNS, nearby Wi-Fi metadata, and detected VPN/overlay interfaces (including Tailscale and WireGuard when installed), plus a quick connectivity/Tailscale health check in the Welcome Center
+- Read-only battery and power report for battery status, estimated design-capacity remaining when exposed by firmware, power profile, and optional temperature sensor output; available from the Welcome Center
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
