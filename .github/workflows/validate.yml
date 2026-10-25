@@ -40,6 +40,9 @@ jobs:
             echo "Unknown options should be rejected"; exit 1
           fi
 
+      - name: Network diagnostics smoke test
+        run: ./tests/network-check-fixture.sh
+
       - name: Hardware check against a fake ThinkPad sysfs tree
         run: |
           ./scripts/hardware-check.sh --text --no-save
