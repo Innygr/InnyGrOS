@@ -7,6 +7,9 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ## Unreleased
 
 ### Added
+- `scripts/battery-power-report.sh`: read-only battery/power diagnostics, including status, approximate design-capacity remaining when available, active power profile, and optional temperature sensor output. Omits battery serial numbers and makes no configuration changes.
+- `scripts/network-health.sh`: standalone read-only connectivity and Tailscale service check for quick troubleshooting; the existing richer Welcome Center network report remains available through `scripts/network-check.sh`.
+
 - Experimental `scripts/boot-manager.sh` for Ubuntu/Kubuntu GRUB: OS-entry preview, violet/cyan theme setup, explicit install/uninstall confirmation, and a shutdown hook that selects a random eligible top-level OS entry for the next normal boot.
 - `docs/boot-manager.md` and a CI smoke test for the boot-manager helper. Not validated on real hardware; see documented limitations before installing.
 
