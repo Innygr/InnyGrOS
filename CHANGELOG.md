@@ -6,6 +6,10 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 
 ## Unreleased
 
+### Added
+- Experimental `scripts/boot-manager.sh` for Ubuntu/Kubuntu GRUB: OS-entry preview, violet/cyan theme setup, explicit install/uninstall confirmation, and a shutdown hook that selects a random eligible top-level OS entry for the next normal boot.
+- `docs/boot-manager.md` and a CI smoke test for the boot-manager helper. Not validated on real hardware; see documented limitations before installing.
+
 ## 0.6 — 2026-10-24
 
 ### Added
