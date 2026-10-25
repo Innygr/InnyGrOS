@@ -40,7 +40,7 @@ choose_random() {
   command -v grub-reboot >/dev/null 2>&1 || { echo "grub-reboot not found" >&2; return 1; }
   local ids=()
   mapfile -t ids < <(list_entries | cut -f2)
-  ( ( ${#ids[@]} > 0 ) ) || { echo "No eligible OS entries; leaving selection unchanged." >&2; return 1; }
+  (( ${#ids[@]} > 0 )) || { echo "No eligible OS entries; leaving selection unchanged." >&2; return 1; }
   local pick
   pick="$(python3 - "${ids[@]}" <<'PY'
 import secrets, sys
