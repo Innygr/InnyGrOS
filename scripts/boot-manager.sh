@@ -120,15 +120,13 @@ HELPER
 [Unit]
 Description=Choose a random OS for the next InnyGrOS boot
 DefaultDependencies=no
-Before=shutdown.target reboot.target halt.target
+Before=reboot.target poweroff.target halt.target
 ConditionPathExists=/boot/grub/grub.cfg
 [Service]
 Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/bin/true
-ExecStop=/usr/local/sbin/innygros-random-boot
+ExecStart=/usr/local/sbin/innygros-random-boot
 [Install]
-WantedBy=multi-user.target
+WantedBy=reboot.target poweroff.target halt.target
 UNIT
   if ! update-grub; then
     echo "update-grub failed; removing newly-created files." >&2
