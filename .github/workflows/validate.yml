@@ -37,6 +37,9 @@ jobs:
 
       - name: Image viewer integration smoke test
         run: bash ./tests/image-viewer-fixture.sh
+
+      - name: Blacklight Matrix boot-theme smoke test
+        run: bash ./tests/boot-animation-smoke.sh
       - name: Run read-only performance snapshot
         shell: bash
         run: |
