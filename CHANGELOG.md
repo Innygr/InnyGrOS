@@ -1,6 +1,8 @@
-# Changelog
+# IntegerOS — Changelog
 
-All notable changes to InnyGrOS. The current version is in the `VERSION` file; scripts and the Welcome Center read it from there.
+> Public-facing product name: IntegerOS. Internal project identifiers and repository paths may still use InnyGrOS.
+
+All notable changes to IntegerOS. The current version is in the `VERSION` file; scripts and the Welcome Center read it from there.
 
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
@@ -17,7 +19,7 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 - Optional SDDM Blacklight Matrix login theme with animated green code rain, an authentication panel, and session selection.
 - Guarded `scripts/login-theme.sh` installer/uninstaller; it refuses to overwrite existing theme files/configuration and only removes its own dedicated config drop-in.
 - `docs/login-theme.md` and a login-theme smoke test. Actual SDDM/Qt greeter rendering remains to be validated on a real Kubuntu login screen.
-- Optional native Plymouth Blacklight Matrix boot theme with animated green code rain, InnyGrOS/Blacklight branding, progress indicator, and password-prompt callback.
+- Optional native Plymouth Blacklight Matrix boot theme with animated green code rain, IntegerOS/Blacklight branding, progress indicator, and password-prompt callback.
 - Guarded `scripts/boot-animation.sh` installer/uninstaller that backs up the previous Plymouth theme, requires explicit confirmation, and rebuilds initramfs after changes.
 - `docs/boot-animation.md` and a boot-theme smoke test. The theme remains experimental pending real-hardware validation.
 
