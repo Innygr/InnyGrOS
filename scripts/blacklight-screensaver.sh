@@ -22,6 +22,11 @@ status() {
   echo "InnyGrOS Blacklight Matrix screensaver"
   [[ -f "${APP}" ]] && echo "Visual: available" || echo "Visual: missing"
   command -v python3 >/dev/null 2>&1 && echo "Python 3: available" || echo "Python 3: missing"
+  if command -v python3 >/dev/null 2>&1 && python3 -c "import tkinter" >/dev/null 2>&1; then
+    echo "Tkinter: available"
+  else
+    echo "Tkinter: missing (install with: sudo apt install python3-tk)"
+  fi
   command -v xautolock >/dev/null 2>&1 && echo "xautolock: available" || echo "xautolock: not installed"
   echo "Session type: ${XDG_SESSION_TYPE:-unknown}"
   [[ -f "${AUTOSTART_FILE}" ]] && echo "Idle activation: enabled" || echo "Idle activation: disabled"
@@ -77,11 +82,23 @@ disable_idle() {
   echo "Idle activation disabled. The manual application launcher is left in place."
 }
 
+check_tkinter() {
+  command -v python3 >/dev/null 2>&1 || {
+    echo "Python 3 is required. Install it with: sudo apt install python3" >&2
+    exit 1
+  }
+  python3 -c "import tkinter" >/dev/null 2>&1 || {
+    echo "Python Tkinter is missing. On Kubuntu/Ubuntu, install it with:" >&2
+    echo "  sudo apt update && sudo apt install python3-tk" >&2
+    exit 1
+  }
+}
+
 case "${1:-}" in
   status) status ;;
   enable) enable_idle ;;
   disable) disable_idle ;;
-  run) exec python3 "${APP}" ;;
+  run) check_tkinter; exec python3 "${APP}" ;;
   -h|--help) usage ;;
   *) usage >&2; exit 2 ;;
 esac
