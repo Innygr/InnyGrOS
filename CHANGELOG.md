@@ -5,6 +5,9 @@ All notable changes to InnyGrOS. The current version is in the `VERSION` file; s
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
 ## Unreleased
+- Added a Blacklight Matrix wallpaper for KDE's native lock screen, with a reversible wallpaper-setting helper.
+- Updated X11 idle activation to invoke KDE's secure lock screen through `loginctl lock-session` instead of presenting the unauthenticated visual as a lock.
+- Documented Wayland's use of KDE's built-in automatic screen-lock setting.
 
 ### Added
 - Optional fullscreen Blacklight Matrix visual screensaver with manual launch and opt-in X11 idle activation; KDE's security lock remains separate.
