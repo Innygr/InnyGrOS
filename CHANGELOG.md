@@ -11,6 +11,7 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ### Added
 - Graphical software updater (`scripts/software-updater-gui.sh`) integrated into the Welcome Center. It checks source updates, displays installed/latest versions and commit count, requires confirmation before a fast-forward-only update, logs results, and keeps APT upgrades separate in a terminal workflow.
 - Welcome Center installation now deploys the graphical and CLI updater helpers.
+- After a successful source update, the GUI offers to refresh the installed Welcome Center and helper scripts separately; it never reapplies the desktop profile automatically.
 - CI smoke coverage for the graphical updater shell syntax and safety checks.
 
 ### Safety
