@@ -7,6 +7,11 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ## Unreleased
 
 ### Added
+- Optional native Plymouth Blacklight Matrix boot theme with animated green code rain, InnyGrOS/Blacklight branding, progress indicator, and password-prompt callback.
+- Guarded `scripts/boot-animation.sh` installer/uninstaller that backs up the previous Plymouth theme, requires explicit confirmation, and rebuilds initramfs after changes.
+- `docs/boot-animation.md` and a boot-theme smoke test. The theme remains experimental pending real-hardware validation.
+
+### Added
 - Read-only image-viewer compatibility report (`scripts/image-viewer-report.sh`) available in the Welcome Center. It inventories Gwenview, relevant installed packages, and Qt image-format plugin directories without claiming that a format has been tested.
 - Image-viewer integration smoke test now checks the report and its Welcome Center entry.
 - Welcome Center installer now deploys the image-viewer report helper, so the menu action works after installation as well as from a repository checkout.
