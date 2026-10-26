@@ -22,6 +22,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
 - Optional native Plymouth **Blacklight Matrix** boot animation with animated code rain, boot-progress indicator, and a guarded installer/uninstaller ([docs](docs/boot-animation.md))
+- Optional **Blacklight Matrix SDDM login theme** with animated code rain, green authentication panel, session selection, and guarded install/uninstall ([docs](docs/login-theme.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
 - 0.8 planned: broad-format image viewing, including animated formats where the selected viewer/backend supports them ([image viewer plan](docs/IMAGE-VIEWER.md), [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md))
@@ -86,6 +87,10 @@ It reports battery status and capacity where the laptop firmware exposes those v
 ## Blacklight Matrix boot animation (experimental)
 
 Check the current Plymouth theme with `bash scripts/boot-animation.sh status`. To install the optional native splash theme, use `sudo bash scripts/boot-animation.sh install` and type `INSTALL` when prompted. Restore the previously selected theme with `sudo bash scripts/boot-animation.sh uninstall` and type `REMOVE`. The helper backs up the previous theme and rebuilds initramfs; read [docs/boot-animation.md](docs/boot-animation.md) first. Real-hardware visual and boot validation is still required.
+
+## Blacklight Matrix login theme (experimental)
+
+Check the SDDM theme helper with `bash scripts/login-theme.sh status`. To install the optional green-on-black login screen, run `sudo bash scripts/login-theme.sh install` and type `INSTALL` when prompted. To remove it, run `sudo bash scripts/login-theme.sh uninstall` and type `REMOVE`. This is for SDDM systems such as Kubuntu; it does not apply to GDM. Read [docs/login-theme.md](docs/login-theme.md) first and keep a recovery path available. The installer does not restart SDDM, so log out only when ready to test.
 
 ## InnyGrOS Boot Manager (experimental)
 
