@@ -49,7 +49,7 @@ if [[ "${mode}" == choose ]]; then
     exit 1
   fi
   selected_file="$(kdialog --title "Choose InnyGrOS wallpaper" --getopenfilename "${HOME}" \
-    'Images (*.jpg *.jpeg *.png *.gif *.webp *.apng *.bmp *.tif *.tiff *.svg *.svgz *.avif *.heic *.heif *.jxl *.jp2 *.xbm *.xpm *.raw *.dng *.cr2 *.cr3 *.nef *.arw *.orf *.rw2 *.raf)' 2>/dev/null)" || {
+    'Images (*.jpg *.jpeg *.jpe *.png *.gif *.webp *.apng *.bmp *.tif *.tiff *.svg *.svgz *.avif *.heic *.heif *.jxl *.jp2 *.j2k *.pbm *.pgm *.ppm *.pnm *.xbm *.xpm *.raw *.dng *.cr2 *.cr3 *.nef *.arw *.orf *.rw2 *.raf)' 2>/dev/null)" || {
       echo "Wallpaper selection cancelled."
       exit 0
     }
