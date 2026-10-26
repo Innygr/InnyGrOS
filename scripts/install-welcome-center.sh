@@ -33,6 +33,8 @@ install -m 0755 "${ROOT_DIR}/scripts/compare-reports.sh" "${DATA_DIR}/scripts/co
 install -m 0755 "${ROOT_DIR}/scripts/power-mode.sh" "${DATA_DIR}/scripts/power-mode.sh"
 install -m 0755 "${ROOT_DIR}/scripts/doctor.sh" "${DATA_DIR}/scripts/doctor.sh"
 install -m 0755 "${ROOT_DIR}/scripts/network-check.sh" "${DATA_DIR}/scripts/network-check.sh"
+install -m 0755 "${ROOT_DIR}/scripts/software-updater.sh" "${DATA_DIR}/scripts/software-updater.sh"
+install -m 0755 "${ROOT_DIR}/scripts/software-updater-gui.sh" "${DATA_DIR}/scripts/software-updater-gui.sh"
 install -m 0644 "${ROOT_DIR}/scripts/lib/game-tools.sh" "${DATA_DIR}/scripts/lib/game-tools.sh"
 install -m 0644 "${ROOT_DIR}/config/themes/InnyGrOS.colors" "${DATA_DIR}/config/themes/InnyGrOS.colors"
 install -m 0644 "${ROOT_DIR}/config/konsole/InnyGrOS.profile" "${DATA_DIR}/config/konsole/InnyGrOS.profile"
