@@ -5,7 +5,7 @@ SERVICE_FILE="/etc/systemd/system/innygros-random-boot.service"
 HELPER_FILE="/usr/local/sbin/innygros-random-boot"
 THEME_DIR="/boot/grub/themes/innygros"
 GRUB_CFG="/boot/grub/grub.cfg"
-usage() { echo "Usage: bash scripts/boot-manager.sh status | sudo bash scripts/boot-manager.sh install | choose-random | uninstall"; }
+usage() { echo "Usage: bash scripts/boot-manager.sh status | sudo bash scripts/boot-manager.sh install | choose-random | random-on | random-off | uninstall"; }
 list_entries() {
   [[ -r "$GRUB_CFG" ]] || { echo "Cannot read $GRUB_CFG" >&2; return 1; }
   python3 - "$GRUB_CFG" <<'PY'
@@ -31,7 +31,7 @@ status() {
   else
     echo "GRUB customization: not installed"
   fi
-  systemctl is-enabled innygros-random-boot.service >/dev/null 2>&1 && echo "Random Boot hook: enabled" || echo "Random Boot hook: not enabled"
+  systemctl is-enabled innygros-random-boot.service >/dev/null 2>&1 && echo "Random Boot: ON" || echo "Random Boot: OFF"
   echo "Eligible top-level GRUB entries (title<TAB>entry-id):"
   list_entries
 }
@@ -144,8 +144,9 @@ UNIT
     rm -f "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; rm -rf "$THEME_DIR"; update-grub || true; exit 1
   fi
   systemctl daemon-reload
-  systemctl enable innygros-random-boot.service
-  echo "Installed. Review entries with: sudo bash scripts/boot-manager.sh status"
+  systemctl disable innygros-random-boot.service >/dev/null 2>&1 || true
+  echo "Installed with Random Boot OFF. Review entries with: sudo bash scripts/boot-manager.sh status"
+  echo "Enable with: sudo bash scripts/boot-manager.sh random-on"
   echo "Undo with: sudo bash scripts/boot-manager.sh uninstall"
 }
 uninstall_manager() {
@@ -158,11 +159,25 @@ uninstall_manager() {
   update-grub
   echo "Removed InnyGrOS files and regenerated GRUB."
 }
+random_on() {
+  [[ "$EUID" -eq 0 ]] || { echo "Random Boot changes require sudo/root." >&2; exit 1; }
+  [[ -f "$SERVICE_FILE" ]] || { echo "Boot Manager is not installed." >&2; exit 1; }
+  systemctl enable innygros-random-boot.service
+  echo "Random Boot is ON for normal shutdown/reboot."
+}
+random_off() {
+  [[ "$EUID" -eq 0 ]] || { echo "Random Boot changes require sudo/root." >&2; exit 1; }
+  [[ -f "$SERVICE_FILE" ]] || { echo "Boot Manager is not installed." >&2; exit 1; }
+  systemctl disable --now innygros-random-boot.service
+  echo "Random Boot is OFF."
+}
 case "${1:---help}" in
   --help|-h|help) usage ;;
   status) status ;;
   install) install_manager ;;
   uninstall) uninstall_manager ;;
   choose-random) [[ "$EUID" -eq 0 ]] || { echo "Requires sudo/root." >&2; exit 1; }; choose_random ;;
+  random-on) random_on ;;
+  random-off) random_off ;;
   *) usage >&2; exit 2 ;;
 esac
