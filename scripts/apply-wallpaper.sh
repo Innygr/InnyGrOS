@@ -27,7 +27,7 @@ while (($#)); do
   case "$1" in
     --choose) mode=choose ;;
     --default) mode=default ;;
-    --file) mode=file; selected_file="${2:-}"; shift ;;
+    --file) mode="file"; selected_file="${2:-}"; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
   esac
