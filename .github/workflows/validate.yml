@@ -35,6 +35,8 @@ jobs:
       - name: Wallpaper chooser smoke test
         run: bash ./tests/wallpaper-fixture.sh
 
+      - name: Image viewer integration smoke test
+        run: bash ./tests/image-viewer-fixture.sh
       - name: Run read-only performance snapshot
         shell: bash
         run: |
