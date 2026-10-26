@@ -1,19 +1,19 @@
-# InnyGrOS
+# IntegerOS
 
-**InnyGrOS 0.7 — Desktop Edition**  
+**IntegerOS 0.7 — Desktop Edition**  
 An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 
 > Early development: this repository is not yet a standalone operating system or installable ISO.
 
 ## Current features
 - Guided setup script and optional developer-tool installer
-- Graphical software updater in the Welcome Center for InnyGrOS source updates, with a separate terminal workflow for user-approved Ubuntu/Kubuntu APT upgrades
+- Graphical software updater in the Welcome Center for IntegerOS source updates, with a separate terminal workflow for user-approved Ubuntu/Kubuntu APT upgrades
 - Dark violet/cyan KDE color scheme
 - Original 1920×1080 vector wallpaper with InnyGr and Team Blacklight identity
 - Custom Konsole profile with Fira Code, violet/cyan terminal colors, and scrollback
 - Welcome Center for desktop settings, wallpaper, terminal setup, and read-only diagnostics
 - Image-viewer compatibility report available from the Welcome Center, with a local inventory of Gwenview, image-format packages, and Qt plugins (not a substitute for visual format testing)
-- Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile, optional InnyGrOS startup splash) with snapshots and one-click restore
+- Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile, optional IntegerOS startup splash) with snapshots and one-click restore
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
 - Power mode switcher (power saver / balanced / performance) using the standard power-profiles interface, and an optional "show Welcome Center at login" setting
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
@@ -39,9 +39,9 @@ chmod +x install.sh scripts/*.sh
 ./install.sh
 ```
 
-Open the Welcome Center and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the Welcome Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. InnyGrOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.
+Open the Welcome Center and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the Welcome Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. IntegerOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.
 
-To undo InnyGrOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
+To undo IntegerOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
 
 The installer checks the distribution first, then asks before each step: package groups (required, diagnostics, KDE apps, developer tools), the Welcome Center, and the reversible desktop profile. It prints a summary of what was done, skipped, or failed. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
 
@@ -98,7 +98,7 @@ Run the animated visual with `python3 apps/blacklight-screensaver/blacklight-mat
 
 Check the SDDM theme helper with `bash scripts/login-theme.sh status`. To install the optional green-on-black login screen, run `sudo bash scripts/login-theme.sh install` and type `INSTALL` when prompted. To remove it, run `sudo bash scripts/login-theme.sh uninstall` and type `REMOVE`. This is for SDDM systems such as Kubuntu; it does not apply to GDM. Read [docs/login-theme.md](docs/login-theme.md) first and keep a recovery path available. The installer does not restart SDDM, so log out only when ready to test.
 
-## InnyGrOS Boot Manager (experimental)
+## IntegerOS Boot Manager (experimental)
 
 Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. To install the optional GRUB theme and Random Boot shutdown hook, use `sudo bash scripts/boot-manager.sh install` and type `INSTALL` when prompted. Random Boot is off by default; enable it with `sudo bash scripts/boot-manager.sh random-on` and disable it with `sudo bash scripts/boot-manager.sh random-off`. Read [docs/boot-manager.md](docs/boot-manager.md) first. This changes system boot configuration, has not been validated on the laptop, and should only be enabled after reviewing the detected entries and confirming a recovery path.
 
@@ -112,7 +112,7 @@ Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. T
 
 ## Roadmap
 - [ ] **0.8:** broad image-format support with animated GIF/WebP/APNG testing; see the [image viewer plan](docs/IMAGE-VIEWER.md) and [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md)
-- [ ] **December 2026–January 2027:** bootable InnyGrOS ISO or equivalent; see [ISO roadmap](docs/ISO-ROADMAP.md)
+- [ ] **December 2026–January 2027:** bootable IntegerOS ISO or equivalent; see [ISO roadmap](docs/ISO-ROADMAP.md)
 - [x] Initial scaffold, KDE color scheme, and performance diagnostics
 - [x] Graphical Welcome Center prototype
 - [x] Branded wallpaper and application helper
