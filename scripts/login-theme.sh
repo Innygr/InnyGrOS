@@ -11,9 +11,10 @@ CONFIG_FILE="${CONFIG_DIR}/90-innygros-blacklight.conf"
 
 usage() {
   cat <<'USAGE'
-Usage: bash scripts/login-theme.sh status | install | uninstall
+Usage: bash scripts/login-theme.sh status | install | update | uninstall
   status     Show whether the Blacklight login theme is installed
   install    Install and select the optional SDDM theme (requires sudo)
+  update     Refresh installed theme files from this repository (requires sudo)
   uninstall  Remove this theme's config and files (requires sudo)
 USAGE
 }
@@ -102,6 +103,24 @@ CONF
   echo "To remove it: sudo bash scripts/login-theme.sh uninstall"
 }
 
+update_theme() {
+  require_root
+  [[ -d "${THEME_DEST}" ]] || {
+    echo "Blacklight theme is not installed at ${THEME_DEST}; use install instead." >&2
+    exit 1
+  }
+  [[ -f "${THEME_SOURCE}/metadata.desktop" && -f "${THEME_SOURCE}/Main.qml" ]] || {
+    echo "Theme source files are missing: ${THEME_SOURCE}" >&2
+    exit 1
+  }
+  echo "This updates only the installed Blacklight theme files; it does not change display-manager settings."
+  read -r -p "Type UPDATE to continue: " answer
+  [[ "${answer}" == "UPDATE" ]] || { echo "Cancelled; no changes made."; exit 0; }
+  install -m 0644 "${THEME_SOURCE}/metadata.desktop" "${THEME_DEST}/metadata.desktop"
+  install -m 0644 "${THEME_SOURCE}/Main.qml" "${THEME_DEST}/Main.qml"
+  echo "Blacklight theme files updated. Log out to test the greeter."
+}
+
 uninstall_theme() {
   require_root
   if [[ ! -e "${CONFIG_FILE}" && ! -e "${THEME_DEST}" ]]; then
@@ -131,6 +150,7 @@ uninstall_theme() {
 case "${1:-}" in
   status) status ;;
   install) install_theme ;;
+  update) update_theme ;;
   uninstall) uninstall_theme ;;
   -h|--help) usage ;;
   *) usage >&2; exit 2 ;;
