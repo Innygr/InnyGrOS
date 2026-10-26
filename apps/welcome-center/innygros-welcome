@@ -213,6 +213,8 @@ while true; do
     compare) run_helper "Snapshot comparison" compare-reports.sh --gui ;;
     hardware) run_helper "Hardware check" hardware-check.sh --gui ;;
     network) run_helper "Network & VPN report" network-check.sh --gui ;;
+    network-health) run_helper "Network health" network-health.sh ;;
+    battery) run_helper "Battery & power report" battery-power-report.sh ;;
     repo)
       if has_command xdg-open; then xdg-open "${REPO_URL}" >/dev/null 2>&1 &
       else show_info "Project: ${REPO_URL}"
