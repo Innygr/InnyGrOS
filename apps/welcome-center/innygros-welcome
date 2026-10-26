@@ -199,7 +199,8 @@ while true; do
     settings) open_app systemsettings "System Settings" ;;
     discover) open_app plasma-discover "Discover" ;;
     updater) run_helper "Software updater" software-updater-gui.sh ;;
-    images) open_app gwenview "Gwenview image viewer" ;;\n    image-report) run_helper "Image viewer report" image-viewer-report.sh --gui ;;
+    images) open_app gwenview "Gwenview image viewer" ;;
+    image-report) run_helper "Image viewer report" image-viewer-report.sh --gui ;;
     files) open_app dolphin "Dolphin File Manager" ;;
     desktop-profile) run_helper "Desktop profile" desktop-profile.sh apply --gui ;;
     desktop-restore) run_helper "Desktop restore" desktop-profile.sh restore --gui ;;
