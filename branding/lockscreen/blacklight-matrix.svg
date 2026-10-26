@@ -2,45 +2,73 @@
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#010402"/>
-      <stop offset=".48" stop-color="#06170d"/>
+      <stop offset=".5" stop-color="#06170d"/>
       <stop offset="1" stop-color="#010302"/>
     </linearGradient>
     <radialGradient id="glow">
-      <stop offset="0" stop-color="#0c6b35" stop-opacity=".32"/>
+      <stop offset="0" stop-color="#0c6b35" stop-opacity=".3"/>
       <stop offset="1" stop-color="#020805" stop-opacity="0"/>
     </radialGradient>
-    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
-      <path d="M64 0H0V64" fill="none" stroke="#1c7540" stroke-opacity=".2" stroke-width="1"/>
-    </pattern>
-    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
-      <stop stop-color="#37ff87" stop-opacity="0"/>
-      <stop offset=".5" stop-color="#37ff87" stop-opacity=".8"/>
-      <stop offset="1" stop-color="#37ff87" stop-opacity="0"/>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#06180e" stop-opacity=".94"/>
+      <stop offset="1" stop-color="#020805" stop-opacity=".96"/>
     </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#39ff83" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#39ff83" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#39ff83" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#1c7540" stroke-opacity=".18" stroke-width="1"/>
+    </pattern>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
   </defs>
   <rect width="1920" height="1080" fill="url(#bg)"/>
   <rect width="1920" height="1080" fill="url(#glow)"/>
   <rect width="1920" height="1080" fill="url(#grid)"/>
-  <g fill="#39ff83" font-family="monospace" font-size="22" opacity=".16">
-    <text x="80" y="130">01011001</text><text x="80" y="165">10100110</text><text x="80" y="200">11001010</text><text x="80" y="235">00110101</text><text x="80" y="270">10110100</text><text x="80" y="305">01001011</text><text x="80" y="340">11100101</text><text x="80" y="375">01011010</text><text x="80" y="410">10010110</text><text x="80" y="445">01101001</text><text x="80" y="480">10100101</text><text x="80" y="515">01011100</text>
-    <text x="1510" y="250">00110101</text><text x="1510" y="285">11001010</text><text x="1510" y="320">01011001</text><text x="1510" y="355">10100110</text><text x="1510" y="390">01101001</text><text x="1510" y="425">11010100</text><text x="1510" y="460">00101110</text><text x="1510" y="495">10110100</text><text x="1510" y="530">01001011</text><text x="1510" y="565">11100101</text><text x="1510" y="600">01011010</text><text x="1510" y="635">10010110</text>
+
+  <!-- Decorative binary streams stay near the edges, leaving the unlock area calm. -->
+  <g fill="#39ff83" font-family="monospace" font-size="21" opacity=".15">
+    <text x="82" y="145">01011001</text><text x="82" y="180">10100110</text><text x="82" y="215">11001010</text><text x="82" y="250">00110101</text><text x="82" y="285">10110100</text><text x="82" y="320">01001011</text><text x="82" y="355">11100101</text><text x="82" y="390">01011010</text><text x="82" y="425">10010110</text><text x="82" y="460">01101001</text><text x="82" y="495">10100101</text><text x="82" y="530">01011100</text><text x="82" y="565">11100010</text><text x="82" y="600">00101101</text>
+    <text x="1515" y="330">00110101</text><text x="1515" y="365">11001010</text><text x="1515" y="400">01011001</text><text x="1515" y="435">10100110</text><text x="1515" y="470">01101001</text><text x="1515" y="505">11010100</text><text x="1515" y="540">00101110</text><text x="1515" y="575">10110100</text><text x="1515" y="610">01001011</text><text x="1515" y="645">11100101</text><text x="1515" y="680">01011010</text><text x="1515" y="715">10010110</text>
   </g>
-  <g fill="none" stroke="#39ff83" stroke-width="2">
-    <path d="M60 60H230M60 60V150M1860 60H1690M1860 60V150M60 1020H230M60 1020V930M1860 1020H1690M1860 1020V930" opacity=".8"/>
-    <path d="M500 330H1420M500 750H1420" stroke="url(#line)" opacity=".7"/>
-    <path d="M560 355H700M1220 725H1360" opacity=".45"/>
+
+  <!-- Central secure-session frame: the actual password controls remain KDE-rendered. -->
+  <rect x="560" y="175" width="800" height="730" rx="8" fill="#39ff83" opacity=".07" filter="url(#softGlow)"/>
+  <path d="M600 190H1320L1345 215V865L1320 890H600L575 865V215Z" fill="url(#panel)" stroke="#39ff83" stroke-opacity=".42" stroke-width="1.5"/>
+  <path d="M600 190H850M1070 190H1320M575 260V345M575 735V820M1345 260V345M1345 735V820" fill="none" stroke="#39ff83" stroke-width="2" opacity=".85"/>
+  <path d="M620 215H790M1130 215H1300M620 865H790M1130 865H1300" stroke="url(#edge)" stroke-width="2" fill="none"/>
+
+  <!-- Brand header sits above the native authentication controls. -->
+  <g text-anchor="middle" font-family="monospace">
+    <text x="960" y="285" fill="#39ff83" font-size="18" letter-spacing="8">INNYGRCORP  /  IDENTITY GATEWAY</text>
+    <text x="960" y="365" fill="#baffd1" font-size="62" font-weight="bold" letter-spacing="7">BLACKLIGHT</text>
+    <text x="960" y="410" fill="#39ff83" font-size="19" letter-spacing="9">SECURE SESSION</text>
+    <path d="M720 445H1200" stroke="url(#edge)" stroke-width="2"/>
+    <text x="960" y="482" fill="#7eae8e" font-size="15" letter-spacing="3">AUTHENTICATION REQUIRED</text>
+  </g>
+
+  <!-- Open, quiet center area intentionally reserved for the real KDE unlock prompt. -->
+  <g fill="none" stroke="#39ff83" stroke-opacity=".32" stroke-width="1.5">
+    <path d="M700 520H735M700 520V555M1220 520H1185M1220 520V555"/>
+    <path d="M700 735H735M700 735V700M1220 735H1185M1220 735V700"/>
+  </g>
+  <g fill="#39ff83" opacity=".75">
+    <circle cx="700" cy="520" r="3"/><circle cx="1220" cy="520" r="3"/>
+    <circle cx="700" cy="735" r="3"/><circle cx="1220" cy="735" r="3"/>
   </g>
   <g text-anchor="middle" font-family="monospace">
-    <text x="960" y="410" fill="#39ff83" font-size="24" letter-spacing="10">INNYGRCORP</text>
-    <text x="960" y="525" fill="#baffd1" font-size="78" font-weight="bold" letter-spacing="8">BLACKLIGHT</text>
-    <text x="960" y="590" fill="#39ff83" font-size="26" letter-spacing="14">M A T R I X</text>
-    <text x="960" y="665" fill="#7eae8e" font-size="17" letter-spacing="5">SECURE SESSION  //  AUTHENTICATION REQUIRED</text>
+    <text x="960" y="785" fill="#4c9b68" font-size="13" letter-spacing="4">LOCAL AUTHENTICATION  //  SESSION LOCKED</text>
+    <text x="960" y="820" fill="#2b7044" font-size="12" letter-spacing="3">CREDENTIALS ARE HANDLED BY KDE</text>
   </g>
-  <g fill="#39ff83">
-    <circle cx="480" cy="480" r="4"/><circle cx="1440" cy="480" r="4"/><circle cx="480" cy="600" r="4"/><circle cx="1440" cy="600" r="4"/>
+
+  <g fill="none" stroke="#39ff83" stroke-width="2">
+    <path d="M60 60H230M60 60V150M1860 60H1690M1860 60V150M60 1020H230M60 1020V930M1860 1020H1690M1860 1020V930" opacity=".8"/>
   </g>
   <g fill="#4c8b61" font-family="monospace" font-size="13" letter-spacing="2">
-    <text x="80" y="980">NODE: LOCAL</text><text x="80" y="1005">SECURITY: ACTIVE</text>
-    <text x="1840" y="980" text-anchor="end">INNYGROS // BLACKLIGHT</text><text x="1840" y="1005" text-anchor="end">LOCKED SESSION</text>
+    <text x="80" y="970">NODE: LOCAL</text><text x="80" y="1005">SECURITY: ACTIVE</text>
+    <text x="1840" y="970" text-anchor="end">INNYGROS // BLACKLIGHT</text><text x="1840" y="1005" text-anchor="end">LOCKED SESSION</text>
   </g>
 </svg>
