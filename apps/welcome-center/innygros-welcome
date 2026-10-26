@@ -20,11 +20,11 @@ SCRIPTS_DIR="${BASE_DIR}/scripts"
 VERSION="$(head -n 1 "${BASE_DIR}/VERSION" 2>/dev/null || echo unknown)"
 
 if ! command -v kdialog >/dev/null 2>&1; then
-  printf 'InnyGrOS Welcome Center needs kdialog. Install it with your graphical software center.\n' >&2
+  printf 'IntegerOS Welcome Center needs kdialog. Install it with your graphical software center.\n' >&2
   exit 1
 fi
 if [[ -z "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]]; then
-  printf 'InnyGrOS Welcome Center needs a graphical desktop session.\n' >&2
+  printf 'IntegerOS Welcome Center needs a graphical desktop session.\n' >&2
   exit 1
 fi
 
@@ -58,7 +58,7 @@ open_app() {
 run_helper() {
   local label="$1" script="${SCRIPTS_DIR}/$2"; shift 2
   if [[ ! -f "${script}" ]]; then
-    show_error "${label}: helper not found.\n\nExpected: ${script}\n\nRe-run scripts/install-welcome-center.sh from the InnyGrOS repository."
+    show_error "${label}: helper not found.\n\nExpected: ${script}\n\nRe-run scripts/install-welcome-center.sh from the IntegerOS repository."
     return 0
   fi
   mkdir -p -- "${LOG_DIR}"
@@ -94,8 +94,8 @@ toggle_autostart() {
   printf '%s\n' \
     "[Desktop Entry]" \
     "Type=Application" \
-    "Name=InnyGrOS Welcome Center" \
-    "Comment=Open the InnyGrOS Welcome Center at login" \
+    "Name=IntegerOS Welcome Center" \
+    "Comment=Open the IntegerOS Welcome Center at login" \
     "Exec=${exec_path}" \
     "Icon=innygros" \
     "Terminal=false" \
@@ -107,14 +107,14 @@ toggle_autostart() {
 # First-steps guide: offered once, on the first launch, and from the menu.
 # Steps run in a safe order: measure before changing anything.
 first_steps() {
-  kdialog --title "Welcome to InnyGrOS" --icon innygros --msgbox \
-    "Welcome to InnyGrOS ${VERSION}.\n\nThis short guide offers the usual first steps. Nothing changes without your choice, and every desktop change can be undone with \"Restore previous desktop settings\".\n\nYou can open this guide again from the menu at any time." >/dev/null 2>&1 || true
+  kdialog --title "Welcome to IntegerOS" --icon innygros --msgbox \
+    "Welcome to IntegerOS ${VERSION}.\n\nThis short guide offers the usual first steps. Nothing changes without your choice, and every desktop change can be undone with \"Restore previous desktop settings\".\n\nYou can open this guide again from the menu at any time." >/dev/null 2>&1 || true
   local picked
-  picked="$(kdialog --title "InnyGrOS first steps" --icon innygros --separate-output --checklist \
+  picked="$(kdialog --title "IntegerOS first steps" --icon innygros --separate-output --checklist \
     "Choose what to do now (in this order):" \
     baseline "1. Save a baseline performance snapshot (read-only, before any changes)" on \
     hardware "2. Run the laptop hardware check (read-only)" on \
-    profile "3. Apply the InnyGrOS desktop look (snapshot first, reversible)" on \
+    profile "3. Apply the IntegerOS desktop look (snapshot first, reversible)" on \
     terminal "4. Install the InnyGrOS terminal theme" off \
     autostart "5. Show the Welcome Center each time I log in" off 2>/dev/null)" || picked=""
   mkdir -p -- "$(dirname -- "${FIRST_RUN_MARKER}")"
@@ -165,8 +165,8 @@ show_diagnostics() {
 while true; do
   if [[ -f "${AUTOSTART_FILE}" ]]; then autostart_label="Show Welcome Center at login: ON (select to turn off)"
   else autostart_label="Show Welcome Center at login: OFF (select to turn on)"; fi
-  choice="$(kdialog --title "InnyGrOS Welcome Center" --icon innygros --menu \
-    "Welcome to InnyGrOS. What would you like to do?" \
+  choice="$(kdialog --title "IntegerOS Welcome Center" --icon innygros --menu \
+    "Welcome to IntegerOS. What would you like to do?" \
     "first-steps" "First steps guide" \
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
@@ -174,7 +174,7 @@ while true; do
     "files" "Open File Manager" \
     "images" "Open image viewer (Gwenview)" \
     "image-report" "Image viewer compatibility report (read-only)" \
-    "desktop-profile" "Apply InnyGrOS desktop profile (reversible)" \
+    "desktop-profile" "Apply IntegerOS desktop profile (reversible)" \
     "desktop-restore" "Restore previous desktop settings" \
     "theme" "Apply InnyGrOS colors" \
     "wallpaper" "Choose any supported image as wallpaper" \
@@ -227,7 +227,7 @@ while true; do
       fi
       ;;
     doctor) run_helper "InnyGrOS doctor" doctor.sh --gui ;;
-    about) show_info "InnyGrOS ${VERSION} — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools.\n\nHelpers: ${SCRIPTS_DIR}\nLog: ${LOG_FILE}" ;;
+    about) show_info "IntegerOS ${VERSION} — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools.\n\nHelpers: ${SCRIPTS_DIR}\nLog: ${LOG_FILE}" ;;
     quit|"") exit 0 ;;
   esac
 done
