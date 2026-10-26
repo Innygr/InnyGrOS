@@ -1,0 +1,139 @@
+# InnyGrOS Blacklight Matrix — native Plymouth script theme.
+# The animation is intentionally self-contained: no network, shell commands,
+# external images, or user-specific information are used during boot.
+
+Window.SetBackgroundTopColor(0.0, 0.0, 0.0);
+Window.SetBackgroundBottomColor(0.0, 0.0, 0.0);
+
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+columns = 34;
+rows = 7;
+frame = 0;
+boot_progress = 0.0;
+status_text = "INITIALIZING SYSTEM SERVICES";
+
+# Pre-render glyphs once; each frame only swaps small text images.
+glyph_chars[0] = "0";
+glyph_chars[1] = "1";
+glyph_chars[2] = "X";
+glyph_chars[3] = "7";
+glyph_chars[4] = "A";
+glyph_chars[5] = "F";
+glyph_chars[6] = "+";
+glyph_chars[7] = "/";
+glyph_chars[8] = "2";
+glyph_chars[9] = "9";
+glyph_chars[10] = "C";
+glyph_chars[11] = "E";
+glyph_chars[12] = "*";
+glyph_chars[13] = "=";
+glyph_chars[14] = "5";
+glyph_chars[15] = "B";
+
+for (i = 0; i < 16; i++) {
+    glyph_bright[i] = Image.Text(glyph_chars[i], 0.40, 1.00, 0.70);
+    glyph_dim[i] = Image.Text(glyph_chars[i], 0.04, 0.28, 0.14);
+    glyph_mid[i] = Image.Text(glyph_chars[i], 0.08, 0.55, 0.25);
+}
+
+for (c = 0; c < columns; c++) {
+    rain_x[c] = Math.Int(c * screen_w / columns);
+    rain_offset[c] = Math.Int((c * 37) % (screen_h + 160));
+    for (r = 0; r < rows; r++) {
+        rain_sprite[c][r] = Sprite();
+        rain_sprite[c][r].SetImage(glyph_dim[(c + r) % 16]);
+        rain_sprite[c][r].SetPosition(rain_x[c], rain_offset[c] - r * 24, 1);
+    }
+}
+
+title_image = Image.Text("INNYGR // BLACKLIGHT", 0.72, 0.48, 1.00);
+title_sprite = Sprite(title_image);
+title_sprite.SetZ(100);
+title_sprite.SetPosition(screen_w / 2 - title_image.GetWidth() / 2, screen_h * 0.34, 100);
+
+subtitle_image = Image.Text("SYSTEM INITIALIZATION", 0.22, 0.86, 0.48);
+subtitle_sprite = Sprite(subtitle_image);
+subtitle_sprite.SetZ(100);
+subtitle_sprite.SetPosition(screen_w / 2 - subtitle_image.GetWidth() / 2, screen_h * 0.34 + 38, 100);
+
+status_sprite = Sprite();
+status_sprite.SetZ(100);
+status_sprite.SetPosition(screen_w / 2 - 180, screen_h * 0.63, 100);
+
+bar_sprite = Sprite();
+bar_sprite.SetZ(100);
+bar_sprite.SetPosition(screen_w / 2 - 180, screen_h * 0.63 + 30, 100);
+
+footer_image = Image.Text("INNYGROS DESKTOP EDITION  //  TEAM BLACKLIGHT", 0.30, 0.30, 0.40);
+footer_sprite = Sprite(footer_image);
+footer_sprite.SetZ(100);
+footer_sprite.SetPosition(screen_w / 2 - footer_image.GetWidth() / 2, screen_h * 0.82, 100);
+
+fun update_status() {
+    if (boot_progress < 0.18) status_text = "INITIALIZING KERNEL";
+    else if (boot_progress < 0.42) status_text = "LOADING SYSTEM SERVICES";
+    else if (boot_progress < 0.68) status_text = "PREPARING USER SESSION";
+    else if (boot_progress < 0.90) status_text = "STARTING DESKTOP ENVIRONMENT";
+    else status_text = "HANDING OFF TO INNYGROS";
+    status_image = Image.Text(status_text, 0.38, 0.95, 0.62);
+    status_sprite.SetImage(status_image);
+    bar_text = "[";
+    for (b = 0; b < 32; b++) {
+        if (b < Math.Int(boot_progress * 32)) bar_text = bar_text + "#";
+        else bar_text = bar_text + "-";
+    }
+    bar_text = bar_text + "]";
+    bar_image = Image.Text(bar_text, 0.46, 0.90, 0.62);
+    bar_sprite.SetImage(bar_image);
+}
+
+fun refresh_callback() {
+    frame++;
+    for (c = 0; c < columns; c++) {
+        rain_offset[c] = rain_offset[c] + 3 + Math.Int(c % 3);
+        if (rain_offset[c] > screen_h + rows * 24) {
+            rain_offset[c] = 0;
+        }
+        for (r = 0; r < rows; r++) {
+            glyph_index = Math.Int((frame + c * 7 + r * 3) % 16);
+            if (r == 0) rain_sprite[c][r].SetImage(glyph_bright[glyph_index]);
+            else if (r < 3) rain_sprite[c][r].SetImage(glyph_mid[glyph_index]);
+            else rain_sprite[c][r].SetImage(glyph_dim[glyph_index]);
+            rain_sprite[c][r].SetPosition(rain_x[c], rain_offset[c] - r * 24, 1);
+        }
+    }
+}
+
+fun progress_callback(duration, progress) {
+    boot_progress = Math.Clamp(progress, 0.0, 1.0);
+    update_status();
+}
+
+fun message_callback(message) {
+    status_image = Image.Text(message, 0.35, 0.90, 0.55);
+    status_sprite.SetImage(status_image);
+}
+
+fun display_password_callback(prompt, bullets) {
+    prompt_image = Image.Text(prompt, 0.80, 0.80, 1.00);
+    prompt_sprite = Sprite(prompt_image);
+    prompt_sprite.SetPosition(screen_w / 2 - prompt_image.GetWidth() / 2, screen_h * 0.70, 200);
+    bullet_text = "";
+    for (i = 0; i < bullets; i++) bullet_text = bullet_text + "*";
+    bullet_image = Image.Text(bullet_text, 0.80, 0.80, 1.00);
+    bullet_sprite = Sprite(bullet_image);
+    bullet_sprite.SetPosition(screen_w / 2 - bullet_image.GetWidth() / 2, screen_h * 0.70 + 28, 200);
+}
+
+fun display_normal_callback() {
+    prompt_sprite = null;
+    bullet_sprite = null;
+}
+
+update_status();
+Plymouth.SetRefreshFunction(refresh_callback);
+Plymouth.SetBootProgressFunction(progress_callback);
+Plymouth.SetMessageFunction(message_callback);
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
