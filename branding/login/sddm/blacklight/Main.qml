@@ -124,7 +124,7 @@ Item {
             }
         }
         Text {
-            text: "INNYGRCORP  //  BLACKLIGHT SECURE NODE"
+            text: "INTEGEROS  //  BLACKLIGHT SECURE NODE"
             color: root.paleNeon
             font.family: "monospace"
             font.pixelSize: 12
@@ -161,7 +161,7 @@ Item {
         }
         Rectangle { width: 150; height: 1; color: root.dimNeon; opacity: 0.8 }
         Text {
-            text: "SYS://INNYGROS"
+            text: "SYS://INTEGEROS"
             color: "#447858"
             font.family: "monospace"
             font.pixelSize: 10
