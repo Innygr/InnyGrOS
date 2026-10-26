@@ -34,10 +34,12 @@ status() {
   else
     echo "Theme override: not installed"
   fi
-  if command -v sddm-greeter >/dev/null 2>&1; then
-    echo "SDDM greeter: available"
+  if command -v sddm-greeter >/dev/null 2>&1 || command -v sddm-greeter-qt6 >/dev/null 2>&1 \
+      || [[ -x /usr/lib/sddm/sddm-greeter ]] || [[ -x /usr/lib/sddm/sddm-greeter-qt6 ]] \
+      || { command -v dpkg-query >/dev/null 2>&1 && dpkg-query -W -f='${Status}' sddm 2>/dev/null | grep -q 'install ok installed'; }; then
+    echo "SDDM: detected"
   else
-    echo "SDDM greeter: not found on PATH"
+    echo "SDDM: not detected (greeter executable may have a versioned name)"
   fi
 }
 
@@ -47,9 +49,22 @@ install_theme() {
     echo "Theme source files are missing: ${THEME_SOURCE}" >&2
     exit 1
   }
-  command -v sddm-greeter >/dev/null 2>&1 || {
-    echo "SDDM does not appear to be installed (sddm-greeter not found)." >&2
-    echo "This theme is for SDDM, not GDM or other display managers." >&2
+  # Greeter executable names differ between SDDM/Qt builds and are not always on PATH.
+  # Prefer package/service evidence, then known binary names; do not require the legacy name.
+  sddm_available=false
+  if command -v sddm-greeter >/dev/null 2>&1 || command -v sddm-greeter-qt6 >/dev/null 2>&1 \
+      || [[ -x /usr/lib/sddm/sddm-greeter ]] || [[ -x /usr/lib/sddm/sddm-greeter-qt6 ]]; then
+    sddm_available=true
+  elif command -v dpkg-query >/dev/null 2>&1 \
+      && dpkg-query -W -f='${Status}' sddm 2>/dev/null | grep -q 'install ok installed'; then
+    sddm_available=true
+  elif command -v systemctl >/dev/null 2>&1 \
+      && systemctl list-unit-files sddm.service --no-legend 2>/dev/null | grep -q 'sddm.service'; then
+    sddm_available=true
+  fi
+  [[ "${sddm_available}" == true ]] || {
+    echo "SDDM could not be detected. This theme requires SDDM (not GDM)." >&2
+    echo "Check 'dpkg -l sddm' and '/usr/share/sddm/themes' before retrying." >&2
     exit 1
   }
   [[ -d /usr/share/sddm/themes ]] || {
