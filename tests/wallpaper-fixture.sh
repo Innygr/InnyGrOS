@@ -7,6 +7,13 @@ WELCOME="${ROOT_DIR}/apps/welcome-center/innygros-welcome"
 bash -n "${SCRIPT}"
 grep -q 'apply-wallpaper.sh --choose' "${WELCOME}"
 grep -q 'plasma-apply-wallpaperimage' "${SCRIPT}"
+# Ensure the graphical filter exposes the same less-common extensions accepted by validation.
+for extension in jpe svgz j2k pbm pgm ppm pnm; do
+  grep -q "*.${extension}" "${SCRIPT}" || {
+    echo "Wallpaper chooser filter is missing .${extension}." >&2
+    exit 1
+  }
+done
 
 tmp="$(mktemp -d)"
 trap 'rm -rf -- "${tmp}"' EXIT
