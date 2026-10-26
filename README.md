@@ -21,6 +21,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Read-only battery and power report for battery status, estimated design-capacity remaining when exposed by firmware, power profile, and optional temperature sensor output; available from the Welcome Center
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
 - Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
+- Optional native Plymouth **Blacklight Matrix** boot animation with animated code rain, boot-progress indicator, and a guarded installer/uninstaller ([docs](docs/boot-animation.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
 - 0.8 planned: broad-format image viewing, including animated formats where the selected viewer/backend supports them ([image viewer plan](docs/IMAGE-VIEWER.md), [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md))
@@ -82,6 +83,10 @@ bash scripts/battery-power-report.sh
 
 It reports battery status and capacity where the laptop firmware exposes those values, the current power profile, and temperature data if `lm-sensors` is already installed. It does not change power settings or charging thresholds, and it omits battery serial numbers. Capacity estimates are approximate.
 
+## Blacklight Matrix boot animation (experimental)
+
+Check the current Plymouth theme with `bash scripts/boot-animation.sh status`. To install the optional native splash theme, use `sudo bash scripts/boot-animation.sh install` and type `INSTALL` when prompted. Restore the previously selected theme with `sudo bash scripts/boot-animation.sh uninstall` and type `REMOVE`. The helper backs up the previous theme and rebuilds initramfs; read [docs/boot-animation.md](docs/boot-animation.md) first. Real-hardware visual and boot validation is still required.
+
 ## InnyGrOS Boot Manager (experimental)
 
 Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. To install the optional GRUB theme and Random Boot shutdown hook, use `sudo bash scripts/boot-manager.sh install` and type `INSTALL` when prompted. Random Boot is off by default; enable it with `sudo bash scripts/boot-manager.sh random-on` and disable it with `sudo bash scripts/boot-manager.sh random-off`. Read [docs/boot-manager.md](docs/boot-manager.md) first. This changes system boot configuration, has not been validated on the laptop, and should only be enabled after reviewing the detected entries and confirming a recovery path.
@@ -125,4 +130,4 @@ Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. T
 See [CHANGELOG.md](CHANGELOG.md). The current version is in [VERSION](VERSION).
 
 ## License
-MIT. See [LICENSE](LICENSE).
+GNU General Public License v2.0. See [LICENSE](LICENSE).
