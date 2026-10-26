@@ -24,6 +24,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Optional native Plymouth **Blacklight Matrix** boot animation with animated code rain, boot-progress indicator, and a guarded installer/uninstaller ([docs](docs/boot-animation.md))
 - Optional **Blacklight Matrix SDDM login theme** with animated code rain, green authentication panel, session selection, and guarded install/uninstall ([docs](docs/login-theme.md))
 - Optional fullscreen **Blacklight Matrix screensaver** with animated code rain; manual launcher works independently, and automatic five-minute idle activation is opt-in for X11 sessions only ([docs](docs/blacklight-screensaver.md))
+- Experimental, reversible **native Plasma lock-screen Matrix overlay** that adds animated code rain and disables the wallpaper blur/fader while preserving KDE's native authentication ([docs](docs/blacklight-lockscreen.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
 - 0.8 planned: broad-format image viewing, including animated formats where the selected viewer/backend supports them ([image viewer plan](docs/IMAGE-VIEWER.md), [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md))
@@ -93,7 +94,7 @@ Check the current Plymouth theme with `bash scripts/boot-animation.sh status`. T
 
 Run the animated visual with `python3 apps/blacklight-screensaver/blacklight-matrix.py`, or use `bash scripts/blacklight-screensaver.sh status`. Set the Blacklight wallpaper on KDE's native lock screen with `bash scripts/blacklight-screensaver.sh lockscreen`; restore the previous wallpaper with `restore-wallpaper`. On X11, install `xautolock` and run `bash scripts/blacklight-screensaver.sh enable` to invoke KDE's secure lock screen after five idle minutes; use `disable` to remove the watcher. On Wayland, set the automatic lock timeout in KDE System Settings. The animated visual itself is not a security lock. See [docs/blacklight-screensaver.md](docs/blacklight-screensaver.md).
 
-## Blacklight Matrix login theme (experimental)
+## Blacklight Matrix native lock screen (experimental)\n\nFor the in-session lock screen, check compatibility with `bash scripts/blacklight-lockscreen.sh status`. To install animated Matrix rain and remove the blurred wallpaper layer, run `sudo bash scripts/blacklight-lockscreen.sh install`; restore the original Plasma QML with `sudo bash scripts/blacklight-lockscreen.sh restore`. This is a reversible system-level patch, so keep a recovery path and read [docs/blacklight-lockscreen.md](docs/blacklight-lockscreen.md) first. KDE's original authentication UI is retained.\n\n## Blacklight Matrix login theme (experimental)
 
 Check the SDDM theme helper with `bash scripts/login-theme.sh status`. To install the optional green-on-black login screen, run `sudo bash scripts/login-theme.sh install` and type `INSTALL` when prompted. To remove it, run `sudo bash scripts/login-theme.sh uninstall` and type `REMOVE`. This is for SDDM systems such as Kubuntu; it does not apply to GDM. Read [docs/login-theme.md](docs/login-theme.md) first and keep a recovery path available. The installer does not restart SDDM, so log out only when ready to test.
 
