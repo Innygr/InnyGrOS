@@ -12,7 +12,7 @@ BIN_DIR="${HOME}/.local/bin"
 APPS_DIR="${HOME}/.local/share/applications"
 ICON_DIR="${HOME}/.local/share/icons/hicolor/scalable/apps"
 
-for required in VERSION apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/network-check.sh scripts/lib/game-tools.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg branding/logo/innygros-logo.svg branding/splash/org.innygros.splash/contents/splash/Splash.qml; do
+for required in VERSION apps/welcome-center/innygros-welcome scripts/apply-theme.sh scripts/apply-wallpaper.sh scripts/apply-terminal-profile.sh scripts/game-readiness.sh scripts/performance.sh scripts/performance-benchmark.sh scripts/desktop-profile.sh scripts/hardware-check.sh scripts/compare-reports.sh scripts/power-mode.sh scripts/doctor.sh scripts/network-check.sh scripts/software-updater.sh scripts/software-updater-gui.sh scripts/lib/game-tools.sh config/themes/InnyGrOS.colors config/konsole/InnyGrOS.profile config/konsole/InnyGrOS.colorscheme branding/wallpaper/innygros-desktop.svg branding/logo/innygros-logo.svg branding/splash/org.innygros.splash/contents/splash/Splash.qml; do
   if [[ ! -f "${ROOT_DIR}/${required}" ]]; then
     echo "Required project file missing: ${required}"
     exit 1
