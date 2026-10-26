@@ -22,6 +22,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
+- 0.8 planned: broad-format image viewing, including animated formats where the selected viewer/backend supports them ([image viewer plan](docs/IMAGE-VIEWER.md))
 
 ## Quick start on Kubuntu
 
@@ -91,6 +92,8 @@ Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. T
 - Wine/Bottles/Steam detection is only a basic check, not a guarantee that any particular game will run.
 
 ## Roadmap
+- [ ] **0.8:** broad image-format support with animated GIF/WebP/APNG testing; see [image viewer plan](docs/IMAGE-VIEWER.md)
+- [ ] **December 2026–January 2027:** bootable InnyGrOS ISO or equivalent; see [ISO roadmap](docs/ISO-ROADMAP.md)
 - [x] Initial scaffold, KDE color scheme, and performance diagnostics
 - [x] Graphical Welcome Center prototype
 - [x] Branded wallpaper and application helper
