@@ -3,7 +3,6 @@
 # It never runs as root, never changes boot configuration, and refuses dirty Git trees.
 set -Eeuo pipefail
 
-REPO_URL="https://github.com/Innygr/InnyGrOS.git"
 VERSION_URL="https://raw.githubusercontent.com/Innygr/InnyGrOS/main/VERSION"
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 MODE="${1:-interactive}"
@@ -70,10 +69,15 @@ check_innygros() {
     echo "Local edits or untracked files detected. Commit or back them up before updating."
     return 2
   fi
-  if ! git -C "${ROOT_DIR}" remote get-url origin >/dev/null 2>&1; then
+  local origin_url
+  if ! origin_url="$(git -C "${ROOT_DIR}" remote get-url origin 2>/dev/null)"; then
     echo "No Git origin configured; refusing to guess the source repository."
     return 2
   fi
+  case "${origin_url}" in
+    https://github.com/Innygr/InnyGrOS.git|https://github.com/Innygr/InnyGrOS|git@github.com:Innygr/InnyGrOS.git|git@github.com:Innygr/InnyGrOS) ;;
+    *) echo "Git origin is not the official InnyGrOS repository; refusing automatic updates." >&2; return 2 ;;
+  esac
   git -C "${ROOT_DIR}" fetch --quiet origin main || { echo "Could not fetch the latest GitHub changes."; return 2; }
   local behind
   behind="$(git -C "${ROOT_DIR}" rev-list --count HEAD..origin/main)"
