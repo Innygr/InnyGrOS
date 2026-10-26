@@ -172,6 +172,7 @@ while true; do
     "discover" "Open Discover (software and updates)" \
     "updater" "Software updater (InnyGrOS / system packages)" \
     "files" "Open File Manager" \
+    "images" "Open image viewer (Gwenview)" \
     "desktop-profile" "Apply InnyGrOS desktop profile (reversible)" \
     "desktop-restore" "Restore previous desktop settings" \
     "theme" "Apply InnyGrOS colors" \
@@ -197,6 +198,7 @@ while true; do
     settings) open_app systemsettings "System Settings" ;;
     discover) open_app plasma-discover "Discover" ;;
     updater) run_helper "Software updater" software-updater-gui.sh ;;
+    images) open_app gwenview "Gwenview image viewer" ;;
     files) open_app dolphin "Dolphin File Manager" ;;
     desktop-profile) run_helper "Desktop profile" desktop-profile.sh apply --gui ;;
     desktop-restore) run_helper "Desktop restore" desktop-profile.sh restore --gui ;;
