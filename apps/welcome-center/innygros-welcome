@@ -175,7 +175,7 @@ while true; do
     "desktop-profile" "Apply InnyGrOS desktop profile (reversible)" \
     "desktop-restore" "Restore previous desktop settings" \
     "theme" "Apply InnyGrOS colors" \
-    "wallpaper" "Install / apply InnyGrOS wallpaper" \
+    "wallpaper" "Choose any supported image as wallpaper" \
     "terminal-profile" "Install InnyGrOS terminal theme" \
     "game-readiness" "Check Minecraft / Windows game readiness" \
     "power" "Power mode (battery saver / balanced / performance)" \
@@ -204,7 +204,7 @@ while true; do
       run_helper "Color scheme" apply-theme.sh
       show_info "The InnyGrOS color scheme is installed. If colors did not change, open System Settings → Colors & Themes → Colors and select InnyGrOS."
       ;;
-    wallpaper) run_helper "Wallpaper setup" apply-wallpaper.sh ;;
+    wallpaper) run_helper "Wallpaper setup" apply-wallpaper.sh --choose ;;
     terminal-profile) run_helper "Terminal theme setup" apply-terminal-profile.sh ;;
     game-readiness) run_helper "Game readiness check" game-readiness.sh ;;
     power) run_helper "Power mode" power-mode.sh choose --gui ;;
