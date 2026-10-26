@@ -1,0 +1,15 @@
+[SddmGreeterTheme]
+Name=InnyGrOS Blacklight Matrix
+Description=Black and green InnyGrOS login theme
+Author=InnyGrOS contributors
+Copyright=Copyright (C) InnyGrOS contributors
+License=GPL-2.0-or-later
+Type=sddm-theme
+Version=1.0
+Website=https://github.com/Innygr/InnyGrOS
+Screenshot=
+MainScript=Main.qml
+ConfigFile=
+TranslationsDirectory=translations
+Theme-Id=blacklight
+Theme-API=2.0
