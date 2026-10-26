@@ -146,7 +146,7 @@ overlay = '''
 '''
 # DropShadow is an established point after WallpaperFader in Plasma 6's
 # lock-screen UI. Keep the overlay before the rest of the unlock UI.
-updated_dropshadow = list(re.finditer(r"(?m)^\\s*DropShadow\\s*\\{", text))
+updated_dropshadow = list(re.finditer(r"(?m)^\s*DropShadow\s*\{", text))
 if not updated_dropshadow:
     print("DropShadow anchor disappeared after wallpaper edit; refusing to patch.", file=sys.stderr)
     raise SystemExit(2)
