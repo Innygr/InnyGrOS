@@ -23,6 +23,18 @@ Prefer integrating a maintained KDE image viewer such as Gwenview with supported
 
 Keep the default install reasonably small. Make bulky camera RAW support and less-common codecs optional where appropriate. Never fetch codecs or plugins from untrusted sources.
 
+## Local diagnostic workflow
+
+From a checkout of the repository on the target Kubuntu machine, run:
+
+```bash
+bash scripts/image-viewer-report.sh
+```
+
+Or launch the same read-only report from the Welcome Center. It records the OS release, Gwenview version, selected package inventory, and common Qt image-plugin directories. Save the output alongside the test date and InnyGrOS commit when sharing results. Review it before posting publicly because OS details and installed package versions may identify aspects of your setup.
+
+The report is only a starting point: it does not open sample images, prove decoding or animation works, install codecs, or change settings. Record visual results in [the compatibility ledger](IMAGE-VIEWER-RESULTS.md).
+
 ## Test matrix
 
 Create small, legally redistributable fixtures for:
