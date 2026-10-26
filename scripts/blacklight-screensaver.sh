@@ -58,8 +58,8 @@ EOF
 
 enable_idle() {
   [[ -f "${APP}" ]] || { echo "Screensaver program missing: ${APP}" >&2; exit 1; }
-  [[ "${XDG_SESSION_TYPE:-}" != "wayland" ]] || {
-    echo "This xautolock helper is for X11 only; it will not configure Wayland idle locking." >&2
+  [[ "${XDG_SESSION_TYPE:-}" == "x11" ]] || {
+    echo "This xautolock helper requires an X11 Plasma session (detected: ${XDG_SESSION_TYPE:-unknown})." >&2
     echo "On Wayland, use System Settings > Security & Privacy > Screen Locking to enable automatic locking." >&2
     exit 1
   }
