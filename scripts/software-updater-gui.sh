@@ -4,8 +4,6 @@
 set -Eeuo pipefail
 
 TITLE="InnyGrOS Software Updater"
-REPO_URL="https://github.com/Innygr/InnyGrOS"
-DATA_DIR="${HOME}/.local/share/innygros"
 LOG_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/innygros"
 LOG_FILE="${LOG_DIR}/software-updater.log"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
