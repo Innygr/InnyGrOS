@@ -56,6 +56,7 @@ class BlacklightMatrix:
         if not self.running:
             return
         self.canvas.delete("rain")
+        self.canvas.delete("overlay")
         glyphs = "01アイウエオカキクケコサシスセソ"
         for col_index, col in enumerate(self.columns):
             x = col_index * self.font_size
