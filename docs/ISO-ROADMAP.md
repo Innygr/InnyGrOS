@@ -1,6 +1,6 @@
 # InnyGrOS ISO Roadmap
 
-**Target:** a tested bootable InnyGrOS image during December 2026  
+**Target:** a tested bootable InnyGrOS ISO or equivalent during December 2026–January 2027  
 **Relationship to 1.0:** the November 14 desktop edition remains the stable customization project. The ISO is a separate deliverable and will not be called release-ready until it passes the checks below.
 
 ## Recommended approach
@@ -16,7 +16,7 @@ Prefer a reproducible, documented build process over a one-off manually modified
 - **Nov 15–21 — image build proof of concept:** select the supported base, document prerequisites, automate branding/package configuration, and produce a bootable test image.
 - **Nov 22–26 — live session:** test booting in a VM, desktop branding, networking, display scaling, user session startup, and Welcome Center.
 - **Nov 27–30 — installation gate:** if the live image is stable, test installation in a VM, reboot, updates, and recovery. Otherwise, release the live image only as an explicitly non-installing preview.
-- **December — hardware and release testing:** test on the ThinkPad T580 without touching its existing Windows/Kubuntu installation, verify checksums, publish known limitations and recovery instructions, and only then publish the image.
+- **December–January — hardware and release testing:** test on the ThinkPad T580 without touching its existing Windows/Kubuntu installation, verify checksums, publish known limitations and recovery instructions, and only then publish the image. January is the fallback window if live-session, installer, or hardware checks need more time.
 
 ## Release gates
 
@@ -38,3 +38,7 @@ Prefer a reproducible, documented build process over a one-off manually modified
 ## Current status
 
 Planning only. This document does not claim that an ISO has been built or tested yet.
+
+## 0.8 image-viewer track
+
+In parallel with ISO planning, 0.8 targets a broad-format image-viewing experience, including animated formats. See [Image Viewer Compatibility](IMAGE-VIEWER.md) for scope and test gates. The ISO should include the same tested viewer setup, but the image build is not blocked on supporting every obscure format.
