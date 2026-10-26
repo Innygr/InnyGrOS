@@ -23,6 +23,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
 - Optional native Plymouth **Blacklight Matrix** boot animation with animated code rain, boot-progress indicator, and a guarded installer/uninstaller ([docs](docs/boot-animation.md))
 - Optional **Blacklight Matrix SDDM login theme** with animated code rain, green authentication panel, session selection, and guarded install/uninstall ([docs](docs/login-theme.md))
+- Optional fullscreen **Blacklight Matrix screensaver** with animated code rain; manual launcher works independently, and automatic five-minute idle activation is opt-in for X11 sessions only ([docs](docs/blacklight-screensaver.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
 - 0.8 planned: broad-format image viewing, including animated formats where the selected viewer/backend supports them ([image viewer plan](docs/IMAGE-VIEWER.md), [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md))
@@ -87,6 +88,10 @@ It reports battery status and capacity where the laptop firmware exposes those v
 ## Blacklight Matrix boot animation (experimental)
 
 Check the current Plymouth theme with `bash scripts/boot-animation.sh status`. To install the optional native splash theme, use `sudo bash scripts/boot-animation.sh install` and type `INSTALL` when prompted. Restore the previously selected theme with `sudo bash scripts/boot-animation.sh uninstall` and type `REMOVE`. The helper backs up the previous theme and rebuilds initramfs; read [docs/boot-animation.md](docs/boot-animation.md) first. Real-hardware visual and boot validation is still required.
+
+## Blacklight Matrix screensaver (optional)
+
+Run the visual immediately with `python3 apps/blacklight-screensaver/blacklight-matrix.py`, or use `bash scripts/blacklight-screensaver.sh status`. To enable automatic activation after five idle minutes in an X11 session, install `xautolock` if needed and run `bash scripts/blacklight-screensaver.sh enable`. Use `disable` to remove its dedicated autostart watcher. Automatic idle detection is deliberately not configured on Wayland; manual launch still works. This visual is not a security lock—leave KDE's normal screen lock enabled. See [docs/blacklight-screensaver.md](docs/blacklight-screensaver.md).
 
 ## Blacklight Matrix login theme (experimental)
 
