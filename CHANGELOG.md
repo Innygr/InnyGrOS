@@ -6,6 +6,11 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 
 ## Unreleased
 
+### Added
+- Read-only image-viewer compatibility report (`scripts/image-viewer-report.sh`) available in the Welcome Center. It inventories Gwenview, relevant installed packages, and Qt image-format plugin directories without claiming that a format has been tested.
+- Image-viewer integration smoke test now checks the report and its Welcome Center entry.
+
+
 ## 0.7 — 2026-10-25
 
 ### Added
