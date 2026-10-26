@@ -40,6 +40,10 @@ jobs:
 
       - name: Blacklight Matrix boot-theme smoke test
         run: bash ./tests/boot-animation-smoke.sh
+
+      - name: Blacklight Matrix login-theme smoke test
+        run: bash ./tests/login-theme-smoke.sh
+
       - name: Run read-only performance snapshot
         shell: bash
         run: |
@@ -59,12 +63,11 @@ jobs:
         run: |
           set -euo pipefail
           network_report="$(timeout 20 bash ./scripts/network-health.sh)"
-          grep -q 'InnyGrOS Network Health' <<<"$network_report"
-          grep -q 'made no configuration changes' <<<"$network_report"
+          grep -q 'InnyGrOS Network Health' <<<"${network_report}"
+          grep -q 'made no configuration changes' <<<"${network_report}"
           battery_report="$(timeout 20 bash ./scripts/battery-power-report.sh)"
-          grep -q 'InnyGrOS Battery & Power' <<<"$battery_report"
-          grep -q 'No battery serial numbers are printed' <<<"$battery_report"
-          echo "Quick network and battery reports completed without changing settings."
+          grep -q 'InnyGrOS Battery & Power' <<<"${battery_report}"
+          grep -q 'No battery serial numbers are printed' <<<"${battery_report}"
 
       - name: Boot manager syntax and safety smoke test
         run: bash ./tests/boot-manager-fixture.sh
@@ -126,7 +129,6 @@ jobs:
         run: |
           set -euo pipefail
           stub="$(mktemp -d)"
-          # Fake kdialog: picks "about", then "diagnostics", then "quit".
           cat > "$stub/kdialog" <<'STUB'
           #!/usr/bin/env bash
           echo "kdialog $*" >> "$KDIALOG_LOG"
@@ -142,20 +144,17 @@ jobs:
           PATH="$stub:$PATH" timeout 60 ./apps/welcome-center/innygros-welcome
           grep -q -- '--textbox' "$KDIALOG_LOG"
           grep -q "Helpers: $PWD/scripts" "$KDIALOG_LOG"
-          # First launch shows the first-steps guide once, then remembers it.
           grep -q "InnyGrOS first steps" "$KDIALOG_LOG"
           test -f "$HOME/.local/state/innygros/first-run-done"
           : > "$KDIALOG_LOG"; rm -f "$KDIALOG_STATE"
           PATH="$stub:$PATH" timeout 60 ./apps/welcome-center/innygros-welcome
           if grep -q "InnyGrOS first steps" "$KDIALOG_LOG"; then echo "First-steps guide shown twice"; exit 1; fi
-          echo "Welcome Center menu loop, About, and diagnostics ran without hanging."
 
       - name: Installer checks and recovery round trip
         shell: bash
         run: |
           set -euo pipefail
           ./install.sh --check
-          # Without a terminal the installer must refuse before changing anything.
           if ./install.sh </dev/null; then echo "install.sh should refuse without a terminal"; exit 1; fi
           ./scripts/install-apps.sh --list </dev/null
 
@@ -164,7 +163,6 @@ jobs:
           printf '[General]\nColorScheme=BreezeDark\n' > "$HOME/.config/kdeglobals"
           ./scripts/install-welcome-center.sh
           ./scripts/desktop-profile.sh apply --yes --no-wallpaper --no-konsole-default
-          # The runner has no kdialog, so doctor reports a failure; check the rest of its report.
           doctor="$(./scripts/doctor.sh || true)"
           printf '%s\n' "$doctor"
           grep -q '^OK    Installed version' <<<"$doctor"
@@ -180,7 +178,6 @@ jobs:
           test ! -e "$HOME/.local/share/icons/hicolor/scalable/apps/innygros.svg"
           test ! -e "$HOME/.local/share/innygros/scripts"
           ls "$HOME"/.local/share/innygros/backups/removed-*/.local/bin/innygros-welcome
-          echo "Recovery restored settings and moved InnyGrOS files into a backup."
 
       - name: Version is consistent
         shell: bash
@@ -193,7 +190,6 @@ jobs:
           if grep -rnE 'VERSION="[0-9]' --include='*.sh' . apps/welcome-center/innygros-welcome; then
             echo "Hard-coded version found; read the VERSION file instead"; exit 1
           fi
-          echo "Version ${version} is consistent."
 
       - name: Splash package metadata
         run: |
@@ -214,7 +210,6 @@ jobs:
           set -euo pipefail
           for svg in $(git ls-files '*.svg'); do
             python3 -c "import sys, xml.etree.ElementTree as ET; ET.parse(sys.argv[1])" "$svg"
-            echo "Well-formed: $svg"
           done
 
       - name: Check required starter files
