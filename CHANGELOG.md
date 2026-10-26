@@ -7,6 +7,8 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ## Unreleased
 
 ### Added
+- Optional fullscreen Blacklight Matrix visual screensaver with manual launch and opt-in X11 idle activation; KDE's security lock remains separate.
+- SDDM detection now accepts versioned greeter binaries and installed-package evidence instead of requiring the legacy `sddm-greeter` command name.
 - Optional SDDM Blacklight Matrix login theme with animated green code rain, an authentication panel, and session selection.
 - Guarded `scripts/login-theme.sh` installer/uninstaller; it refuses to overwrite existing theme files/configuration and only removes its own dedicated config drop-in.
 - `docs/login-theme.md` and a login-theme smoke test. Actual SDDM/Qt greeter rendering remains to be validated on a real Kubuntu login screen.
