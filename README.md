@@ -34,7 +34,9 @@ chmod +x install.sh scripts/*.sh
 ./install.sh
 ```
 
-Open the Welcome Center and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the Welcome Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. InnyGrOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.\n\nTo undo InnyGrOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
+Open the Welcome Center and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the Welcome Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. InnyGrOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.
+
+To undo InnyGrOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
 
 The installer checks the distribution first, then asks before each step: package groups (required, diagnostics, KDE apps, developer tools), the Welcome Center, and the reversible desktop profile. It prints a summary of what was done, skipped, or failed. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
 
