@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#010402"/>
+      <stop offset=".48" stop-color="#06170d"/>
+      <stop offset="1" stop-color="#010302"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#0c6b35" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#020805" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#1c7540" stroke-opacity=".2" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#37ff87" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#37ff87" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#37ff87" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <g fill="#39ff83" font-family="monospace" font-size="22" opacity=".16">
+    <text x="80" y="130">01011001</text><text x="80" y="165">10100110</text><text x="80" y="200">11001010</text><text x="80" y="235">00110101</text><text x="80" y="270">10110100</text><text x="80" y="305">01001011</text><text x="80" y="340">11100101</text><text x="80" y="375">01011010</text><text x="80" y="410">10010110</text><text x="80" y="445">01101001</text><text x="80" y="480">10100101</text><text x="80" y="515">01011100</text>
+    <text x="1510" y="250">00110101</text><text x="1510" y="285">11001010</text><text x="1510" y="320">01011001</text><text x="1510" y="355">10100110</text><text x="1510" y="390">01101001</text><text x="1510" y="425">11010100</text><text x="1510" y="460">00101110</text><text x="1510" y="495">10110100</text><text x="1510" y="530">01001011</text><text x="1510" y="565">11100101</text><text x="1510" y="600">01011010</text><text x="1510" y="635">10010110</text>
+  </g>
+  <g fill="none" stroke="#39ff83" stroke-width="2">
+    <path d="M60 60H230M60 60V150M1860 60H1690M1860 60V150M60 1020H230M60 1020V930M1860 1020H1690M1860 1020V930" opacity=".8"/>
+    <path d="M500 330H1420M500 750H1420" stroke="url(#line)" opacity=".7"/>
+    <path d="M560 355H700M1220 725H1360" opacity=".45"/>
+  </g>
+  <g text-anchor="middle" font-family="monospace">
+    <text x="960" y="410" fill="#39ff83" font-size="24" letter-spacing="10">INNYGRCORP</text>
+    <text x="960" y="525" fill="#baffd1" font-size="78" font-weight="bold" letter-spacing="8">BLACKLIGHT</text>
+    <text x="960" y="590" fill="#39ff83" font-size="26" letter-spacing="14">M A T R I X</text>
+    <text x="960" y="665" fill="#7eae8e" font-size="17" letter-spacing="5">SECURE SESSION  //  AUTHENTICATION REQUIRED</text>
+  </g>
+  <g fill="#39ff83">
+    <circle cx="480" cy="480" r="4"/><circle cx="1440" cy="480" r="4"/><circle cx="480" cy="600" r="4"/><circle cx="1440" cy="600" r="4"/>
+  </g>
+  <g fill="#4c8b61" font-family="monospace" font-size="13" letter-spacing="2">
+    <text x="80" y="980">NODE: LOCAL</text><text x="80" y="1005">SECURITY: ACTIVE</text>
+    <text x="1840" y="980" text-anchor="end">INNYGROS // BLACKLIGHT</text><text x="1840" y="1005" text-anchor="end">LOCKED SESSION</text>
+  </g>
+</svg>
