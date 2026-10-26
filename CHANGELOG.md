@@ -7,6 +7,8 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ## Unreleased
 
 ### Added
+- `scripts/software-updater.sh`: interactive update assistant that checks the official InnyGrOS Git checkout and separately offers user-approved APT package upgrades. Source updates refuse dirty worktrees and non-`main` branches; `--check` does not modify files or refresh APT lists.
+- `tests/software-updater-fixture.sh`: CLI smoke test included in GitHub Actions validation.
 - `scripts/battery-power-report.sh`: read-only battery/power diagnostics, including status, approximate design-capacity remaining when available, active power profile, and optional temperature sensor output. Omits battery serial numbers and makes no configuration changes.
 - `scripts/network-health.sh`: standalone read-only connectivity and Tailscale service check for quick troubleshooting; the existing richer Welcome Center network report remains available through `scripts/network-check.sh`.
 
