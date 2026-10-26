@@ -7,6 +7,9 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 ## Unreleased
 
 ### Added
+- Optional SDDM Blacklight Matrix login theme with animated green code rain, an authentication panel, and session selection.
+- Guarded `scripts/login-theme.sh` installer/uninstaller; it refuses to overwrite existing theme files/configuration and only removes its own dedicated config drop-in.
+- `docs/login-theme.md` and a login-theme smoke test. Actual SDDM/Qt greeter rendering remains to be validated on a real Kubuntu login screen.
 - Optional native Plymouth Blacklight Matrix boot theme with animated green code rain, InnyGrOS/Blacklight branding, progress indicator, and password-prompt callback.
 - Guarded `scripts/boot-animation.sh` installer/uninstaller that backs up the previous Plymouth theme, requires explicit confirmation, and rebuilds initramfs after changes.
 - `docs/boot-animation.md` and a boot-theme smoke test. The theme remains experimental pending real-hardware validation.
@@ -77,6 +80,7 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 
 ### Fixed
 - A guessed GDLauncher Flatpak ID was removed; GDLauncher is found through its command, desktop entry, or AppImage.
+
 - `apply-theme.sh` no longer makes a backup when the installed scheme is unchanged.
 
 ## 0.4 and earlier
@@ -86,4 +90,4 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 - GitHub Actions validation of shell syntax, the wallpaper SVG, and required files.
 - Hand-authored SVG wallpaper with InnyGr and Team Blacklight branding.
 - Graphical Welcome Center prototype (KDialog).
-- Initial desktop starter: installer, KDE color scheme, performance diagnostics, documentation.
+- Initial desktop starter: installer, KDE color scheme, performance diagnostics.
