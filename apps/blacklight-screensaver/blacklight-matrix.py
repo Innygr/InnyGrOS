@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 """Fullscreen, local-only Blacklight Matrix visual. It is not a security lock screen."""
 import random
-import tkinter as tk
+import sys
+
+try:
+    import tkinter as tk
+except ModuleNotFoundError:
+    print(
+        "Blacklight Matrix needs Python Tkinter. On Kubuntu/Ubuntu, run:\n"
+        "  sudo apt update && sudo apt install python3-tk",
+        file=sys.stderr,
+    )
+    raise SystemExit(1)
 
 BG = "#020604"
 GREEN = "#3cff86"
