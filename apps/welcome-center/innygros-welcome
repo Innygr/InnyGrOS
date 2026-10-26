@@ -170,6 +170,7 @@ while true; do
     "first-steps" "First steps guide" \
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
+    "updater" "Software updater (InnyGrOS / system packages)" \
     "files" "Open File Manager" \
     "desktop-profile" "Apply InnyGrOS desktop profile (reversible)" \
     "desktop-restore" "Restore previous desktop settings" \
@@ -194,7 +195,7 @@ while true; do
   case "${choice}" in
     first-steps) first_steps ;;
     settings) open_app systemsettings "System Settings" ;;
-    discover) open_app plasma-discover "Discover" ;;
+    discover) open_app plasma-discover "Discover" ;;\n    updater) run_helper "Software updater" software-updater-gui.sh ;;
     files) open_app dolphin "Dolphin File Manager" ;;
     desktop-profile) run_helper "Desktop profile" desktop-profile.sh apply --gui ;;
     desktop-restore) run_helper "Desktop restore" desktop-profile.sh restore --gui ;;
