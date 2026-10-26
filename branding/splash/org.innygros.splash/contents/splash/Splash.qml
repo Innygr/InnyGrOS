@@ -1,5 +1,5 @@
 /*
-    InnyGrOS startup splash for KDE Plasma (KSplashQML).
+    IntegerOS startup splash for KDE Plasma (KSplashQML).
     Uses only QtQuick so it loads on Plasma 5 (Qt 5) and Plasma 6 (Qt 6).
     KSplash sets `stage` from 1 to 6 while the session starts.
 */
@@ -44,7 +44,7 @@ Rectangle {
             anchors.top: logo.bottom
             anchors.topMargin: logo.size * 0.18
             anchors.horizontalCenter: parent.horizontalCenter
-            text: "InnyGrOS"
+            text: "IntegerOS"
             color: "#f5f2ff"
             font.pixelSize: Math.max(18, logo.size * 0.22)
             font.weight: Font.DemiBold
@@ -79,7 +79,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: Math.max(16, logo.size * 0.15)
-            text: "InnyGr · Team Blacklight"
+            text: "IntegerOS · Team Blacklight"
             color: "#8e91ac"
             font.pixelSize: Math.max(12, logo.size * 0.09)
             font.letterSpacing: 1
