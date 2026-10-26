@@ -91,7 +91,7 @@ Check the current Plymouth theme with `bash scripts/boot-animation.sh status`. T
 
 ## Blacklight Matrix screensaver (optional)
 
-Run the visual immediately with `python3 apps/blacklight-screensaver/blacklight-matrix.py`, or use `bash scripts/blacklight-screensaver.sh status`. To enable automatic activation after five idle minutes in an X11 session, install `xautolock` if needed and run `bash scripts/blacklight-screensaver.sh enable`. Use `disable` to remove its dedicated autostart watcher. Automatic idle detection is deliberately not configured on Wayland; manual launch still works. This visual is not a security lock—leave KDE's normal screen lock enabled. See [docs/blacklight-screensaver.md](docs/blacklight-screensaver.md).
+Run the animated visual with `python3 apps/blacklight-screensaver/blacklight-matrix.py`, or use `bash scripts/blacklight-screensaver.sh status`. Set the Blacklight wallpaper on KDE's native lock screen with `bash scripts/blacklight-screensaver.sh lockscreen`; restore the previous wallpaper with `restore-wallpaper`. On X11, install `xautolock` and run `bash scripts/blacklight-screensaver.sh enable` to invoke KDE's secure lock screen after five idle minutes; use `disable` to remove the watcher. On Wayland, set the automatic lock timeout in KDE System Settings. The animated visual itself is not a security lock. See [docs/blacklight-screensaver.md](docs/blacklight-screensaver.md).
 
 ## Blacklight Matrix login theme (experimental)
 
