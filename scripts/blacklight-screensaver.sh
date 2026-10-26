@@ -134,6 +134,11 @@ lockscreen_wallpaper() {
     echo "Use 'restore-wallpaper' before running this command again." >&2
     exit 1
   fi
+  if [[ -e "${WALLPAPER_DEST}" ]]; then
+    echo "Wallpaper destination already exists: ${WALLPAPER_DEST}" >&2
+    echo "Refusing to overwrite a file that may belong to you." >&2
+    exit 1
+  fi
   mkdir -p "${STATE_DIR}" "${WALLPAPER_DIR}"
   printf '%s' "$(read_lock_key Image)" > "${STATE_DIR}/previous-image"
   printf '%s' "$(read_lock_key PreviewImage)" > "${STATE_DIR}/previous-preview"
