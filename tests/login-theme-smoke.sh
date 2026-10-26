@@ -14,6 +14,8 @@ grep -q 'sddm.login(usernameField.text, passwordField.text, sessionBox.currentIn
 grep -q 'onLoginFailed' "${theme}/Main.qml"
 grep -q 'Type INSTALL to continue' "${installer}"
 grep -q 'Type REMOVE to continue' "${installer}"
+grep -q 'update_theme()' "${installer}"
+grep -q 'Type UPDATE to continue' "${installer}"
 grep -q 'Refusing to overwrite existing files' "${installer}"
 grep -q '90-innygros-blacklight.conf' "${installer}"
 echo "Blacklight login-theme smoke checks passed."
