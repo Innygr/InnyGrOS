@@ -29,6 +29,9 @@ jobs:
       - name: ShellCheck (warnings and errors)
         run: shellcheck -S warning $(git ls-files '*.sh') apps/welcome-center/innygros-welcome
 
+      - name: Software updater CLI smoke test
+        run: bash ./tests/software-updater-fixture.sh
+
       - name: Run read-only performance snapshot
         shell: bash
         run: |
