@@ -11,10 +11,10 @@ LAUNCHER_FILE="${LAUNCHER_DIR}/innygros-blacklight-screensaver.desktop"
 usage() {
   cat <<'USAGE'
 Usage: bash scripts/blacklight-screensaver.sh status | enable | disable | run
-  status   Show availability and whether idle activation is enabled
-  enable   Enable automatic activation after 5 idle minutes (X11 only)
-  disable  Disable automatic activation; leave the manual launcher installed
-  run      Launch the fullscreen visual now
+  status   Show availability and whether secure idle locking is enabled
+  enable   Enable KDE's secure lock screen after 5 idle minutes (X11 only)
+  disable  Disable automatic locking; leave the manual visual launcher installed
+  run      Launch the fullscreen visual now (not a security lock)
 USAGE
 }
 
@@ -29,7 +29,7 @@ status() {
   fi
   command -v xautolock >/dev/null 2>&1 && echo "xautolock: available" || echo "xautolock: not installed"
   echo "Session type: ${XDG_SESSION_TYPE:-unknown}"
-  [[ -f "${AUTOSTART_FILE}" ]] && echo "Idle activation: enabled" || echo "Idle activation: disabled"
+  [[ -f "${AUTOSTART_FILE}" ]] && echo "Secure idle lock: enabled" || echo "Secure idle lock: disabled"
   echo "Manual launcher: ${LAUNCHER_FILE}"
 }
 
@@ -51,8 +51,8 @@ EOF
 enable_idle() {
   [[ -f "${APP}" ]] || { echo "Screensaver program missing: ${APP}" >&2; exit 1; }
   [[ "${XDG_SESSION_TYPE:-}" != "wayland" ]] || {
-    echo "Automatic idle activation is not enabled by this helper on Wayland." >&2
-    echo "The visual still works manually from the application menu; this avoids unreliable idle detection." >&2
+    echo "This xautolock helper is for X11 only; it will not configure Wayland idle locking." >&2
+    echo "On Wayland, use System Settings > Security & Privacy > Screen Locking to enable automatic locking." >&2
     exit 1
   }
   command -v xautolock >/dev/null 2>&1 || {
@@ -65,15 +65,15 @@ enable_idle() {
   cat > "${AUTOSTART_FILE}" <<EOF
 [Desktop Entry]
 Type=Application
-Name=InnyGrOS Blacklight Matrix idle visual
-Comment=Show the Blacklight Matrix visual after five minutes of inactivity (X11)
-Exec=xautolock -time 5 -locker "python3 '${APP}'" -detectsleep
+Name=InnyGrOS Blacklight secure idle lock
+Comment=Lock the KDE session after five minutes of inactivity (X11)
+Exec=xautolock -time 5 -locker "loginctl lock-session" -detectsleep
 Terminal=false
 X-GNOME-Autostart-enabled=true
 EOF
   chmod 0644 "${AUTOSTART_FILE}"
-  echo "Idle activation enabled for X11 after 5 minutes."
-  echo "This is a visual screensaver, not a security lock. Keep KDE screen locking enabled separately."
+  echo "Secure idle locking enabled for X11 after 5 minutes."
+  echo "This invokes KDE's native lock screen; it does not substitute a fake fullscreen window for authentication."
   echo "Log out and back in for the idle watcher to start."
 }
 
