@@ -32,6 +32,9 @@ jobs:
       - name: Software updater CLI smoke test
         run: bash ./tests/software-updater-fixture.sh
 
+      - name: Wallpaper chooser smoke test
+        run: bash ./tests/wallpaper-fixture.sh
+
       - name: Run read-only performance snapshot
         shell: bash
         run: |
