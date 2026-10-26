@@ -34,25 +34,25 @@ fi
 grep -q "extension is not in the image viewer's planned compatibility list" "${tmp}/invalid.out"
 
 # Spaces, non-ASCII paths, and uppercase extensions should be handled safely.
-mkdir -p "\${tmp}/fixtures/Wallpapers été"
-printf 'placeholder\n' > "\${tmp}/fixtures/Wallpapers été/TEST.WEBP"
-bash "\${SCRIPT}" --file "\${tmp}/fixtures/Wallpapers été/TEST.WEBP" > "\${tmp}/unicode.out"
-grep -q 'current wallpaper plugin cannot display' "\${tmp}/unicode.out"
+mkdir -p "${tmp}/fixtures/Wallpapers été"
+printf 'placeholder\n' > "${tmp}/fixtures/Wallpapers été/TEST.WEBP"
+bash "${SCRIPT}" --file "${tmp}/fixtures/Wallpapers été/TEST.WEBP" > "${tmp}/unicode.out"
+grep -q 'current wallpaper plugin cannot display' "${tmp}/unicode.out"
 
 # Stub Plasma's apply command to verify the default wallpaper is copied into
 # the user's home and the exact resulting path is passed without splitting.
-mkdir -p "\${tmp}/bin"
-cat > "\${tmp}/bin/plasma-apply-wallpaperimage" <<'STUB'
+mkdir -p "${tmp}/bin"
+cat > "${tmp}/bin/plasma-apply-wallpaperimage" <<'STUB'
 #!/usr/bin/env bash
-printf '%s\n' "$1" > "\${WALLPAPER_CAPTURE}"
+printf '%s\n' "$1" > "${WALLPAPER_CAPTURE}"
 STUB
-chmod +x "\${tmp}/bin/plasma-apply-wallpaperimage"
-export WALLPAPER_CAPTURE="\${tmp}/applied-path.txt"
-export PATH="\${tmp}/bin:\${PATH}"
-bash "\${SCRIPT}" --default > "\${tmp}/default.out"
-expected="\${HOME}/.local/share/wallpapers/InnyGrOS-Desktop.svg"
-[[ -r "\${expected}" ]] || { echo "Default wallpaper was not installed." >&2; exit 1; }
-[[ "$(cat "\${WALLPAPER_CAPTURE}")" == "\${expected}" ]] || {
+chmod +x "${tmp}/bin/plasma-apply-wallpaperimage"
+export WALLPAPER_CAPTURE="${tmp}/applied-path.txt"
+export PATH="${tmp}/bin:${PATH}"
+bash "${SCRIPT}" --default > "${tmp}/default.out"
+expected="${HOME}/.local/share/wallpapers/InnyGrOS-Desktop.svg"
+[[ -r "${expected}" ]] || { echo "Default wallpaper was not installed." >&2; exit 1; }
+[[ "$(cat "${WALLPAPER_CAPTURE}")" == "${expected}" ]] || {
   echo "Default wallpaper path was not passed intact to Plasma." >&2
   exit 1
 }
