@@ -54,3 +54,18 @@ Record results by format and platform in the documentation. Do not advertise a f
 3. Animated formats are explicitly tested rather than inferred.
 4. Missing codecs produce actionable messages, not a broken viewer.
 5. No source image is modified by viewing it.
+
+## Wallpaper integration
+
+The Welcome Center's **Choose any supported image as wallpaper** action opens a
+file chooser and passes the selected image to KDE Plasma's wallpaper apply
+helper. The chooser includes common still formats plus several less-common
+formats and camera RAW extensions, but its extension list is only a candidate
+list—not a guarantee that the installed wallpaper plugin can decode every file.
+Gwenview/image-plugin support and Plasma wallpaper support are separate.
+
+If Plasma rejects the image, the helper explains how to select it manually in
+System Settings. Animated GIF, WebP, and APNG files may become a still image;
+animated wallpaper requires a compatible Plasma wallpaper plugin and is not
+promised by this helper. Do not advertise a format as wallpaper-compatible
+until it has been tested on the supported Kubuntu release.
