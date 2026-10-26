@@ -93,10 +93,14 @@ uninstall_theme() {
     echo "Blacklight login theme is not installed."
     exit 0
   fi
-  if [[ -e "${CONFIG_FILE}" ]] && ! grep -Fxq 'Current=blacklight' "${CONFIG_FILE}"; then
-    echo "The config drop-in no longer matches the expected theme setting; refusing to remove it." >&2
-    echo "Inspect ${CONFIG_FILE} and restore it manually if appropriate." >&2
-    exit 1
+  if [[ -e "${CONFIG_FILE}" ]]; then
+    expected_config="$(printf '%s\\n' '# Managed by InnyGrOS scripts/login-theme.sh; remove with its uninstall action.' '[Theme]' 'Current=blacklight')"
+    actual_config="$(cat "${CONFIG_FILE}")"
+    if [[ "${actual_config}" != "${expected_config}" ]]; then
+      echo "The config drop-in was edited; refusing to remove user-modified configuration." >&2
+      echo "Inspect ${CONFIG_FILE} and remove it manually if appropriate." >&2
+      exit 1
+    fi
   fi
   echo "This removes only the dedicated InnyGrOS SDDM config drop-in and Blacklight theme files."
   read -r -p "Type REMOVE to continue: " answer
