@@ -75,7 +75,18 @@ check_source() {
     return
   fi
   version="$(head -n 1 "${ROOT_DIR}/VERSION" 2>/dev/null || echo unknown)"
-  info "InnyGrOS source updated successfully.\n\nCurrent version: ${version}\n\nReview CHANGELOG.md before running any installer. Existing desktop settings were not reapplied."
+  if [[ -f "${ROOT_DIR}/scripts/install-welcome-center.sh" ]] && kdialog --title "${TITLE}" --icon innygros --yesno "InnyGrOS source updated successfully to version ${version}.\n\nRefresh the installed Welcome Center and helper scripts now? This updates InnyGrOS application files only. It does not apply the desktop profile or install system packages."; then
+    local install_output install_status=0
+    install_output="$(bash "${ROOT_DIR}/scripts/install-welcome-center.sh" 2>&1)" || install_status=$?
+    log_output "Refresh Welcome Center (exit ${install_status}):\n${install_output}"
+    if ((install_status != 0)); then
+      details_error "The source updated, but refreshing the Welcome Center failed (exit ${install_status})." "${install_output}"
+      return
+    fi
+    info "Source updated to ${version}; the Welcome Center and helper scripts were refreshed. Desktop settings were not reapplied."
+  else
+    info "Source updated successfully to ${version}. The installed Welcome Center was left unchanged. You can refresh it later by running bash scripts/install-welcome-center.sh from the repository. Desktop settings were not reapplied."
+  fi
 }
 
 open_system_updater() {
