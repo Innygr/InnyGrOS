@@ -28,6 +28,6 @@
     <text x="215" y="119" fill="#77f7ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="47" font-weight="700" letter-spacing="2">BLACKLIGHT</text>
     <text x="217" y="166" fill="#8ba7b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18" letter-spacing="5">RESEARCH · BUILD · CREATE</text>
   </g>
-  <g transform="translate(150 930)"><circle cx="4" cy="0" r="4" fill="#a78bfa"/><text x="24" y="8" fill="#8f91ac" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" letter-spacing="3">INNYGROS / DESKTOP EDITION / 0.2</text></g>
-  <text x="1770" y="1000" text-anchor="end" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" letter-spacing="3">PERSONAL BUILD</text>
+  <g transform="translate(150 930)"><circle cx="4" cy="0" r="4" fill="#a78bfa"/><text x="24" y="8" fill="#8f91ac" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" letter-spacing="3">INTEGEROS / DESKTOP EDITION / 0.2</text></g>
+  <text x="1770" y="1000" text-anchor="end" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" letter-spacing="3">INTEGEROS · PERSONAL BUILD</text>
 </svg>
