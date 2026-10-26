@@ -20,6 +20,17 @@ sudo bash scripts/login-theme.sh install
 
 Read the prompt and type `INSTALL`. The helper refuses to overwrite an existing theme directory or its dedicated config file. It installs the theme into `/usr/share/sddm/themes/blacklight` and adds `/etc/sddm.conf.d/90-innygros-blacklight.conf`. It does not restart SDDM or change Plymouth/GRUB. Log out only when ready to test the greeter.
 
+## Update an installed theme
+
+Pull the latest repository changes, then refresh the files already installed under `/usr/share/sddm/themes/blacklight`:
+
+```bash
+git pull --ff-only origin main
+sudo bash scripts/login-theme.sh update
+```
+
+Type `UPDATE` at the prompt. This replaces only the theme's QML and metadata files; it does not change the selected display manager or restart SDDM. Log out to test the updated design.
+
 ## Uninstall
 
 ```bash
