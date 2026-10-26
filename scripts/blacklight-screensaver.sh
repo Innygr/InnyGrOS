@@ -62,7 +62,7 @@ enable_idle() {
 Type=Application
 Name=InnyGrOS Blacklight Matrix idle visual
 Comment=Show the Blacklight Matrix visual after five minutes of inactivity (X11)
-Exec=xautolock -time 5 -locker "python3 \"${APP}\"" -detectsleep
+Exec=xautolock -time 5 -locker "python3 '${APP}'" -detectsleep
 Terminal=false
 X-GNOME-Autostart-enabled=true
 EOF
