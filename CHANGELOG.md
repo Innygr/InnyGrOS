@@ -6,6 +6,17 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 
 ## Unreleased
 
+## 0.7 — 2026-10-25
+
+### Added
+- Graphical software updater (`scripts/software-updater-gui.sh`) integrated into the Welcome Center. It checks source updates, displays installed/latest versions and commit count, requires confirmation before a fast-forward-only update, logs results, and keeps APT upgrades separate in a terminal workflow.
+- Welcome Center installation now deploys the graphical and CLI updater helpers.
+- CI smoke coverage for the graphical updater shell syntax and safety checks.
+
+### Safety
+- The graphical updater refuses non-official remotes, non-`main` branches, and dirty worktrees; it never runs as root or applies desktop settings automatically.
+
+
 ### Added
 - `scripts/software-updater.sh`: interactive update assistant that checks the official InnyGrOS Git checkout and separately offers user-approved APT package upgrades. Source updates refuse dirty worktrees and non-`main` branches; `--check` does not modify files or refresh APT lists.
 - `tests/software-updater-fixture.sh`: CLI smoke test included in GitHub Actions validation.
