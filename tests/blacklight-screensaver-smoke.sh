@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+app="${ROOT_DIR}/apps/blacklight-screensaver/blacklight-matrix.py"
+helper="${ROOT_DIR}/scripts/blacklight-screensaver.sh"
+python3 -m py_compile "${app}"
+bash -n "${helper}"
+bash -n "${ROOT_DIR}/tests/blacklight-screensaver-smoke.sh"
+grep -q 'INNYGRCORP' "${app}"
+grep -q 'BLACKLIGHT MATRIX' "${app}"
+grep -q 'XDG_SESSION_TYPE' "${helper}"
+grep -q 'xautolock' "${helper}"
+grep -q 'visual screensaver, not a security lock' "${helper}"
+grep -q 'Press any key' "${ROOT_DIR}/docs/blacklight-screensaver.md"
+echo "Blacklight screensaver smoke checks passed."
