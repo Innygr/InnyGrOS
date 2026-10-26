@@ -16,7 +16,7 @@ Review eligible top-level entries. Recovery, advanced-options, memtest, firmware
 sudo bash scripts/boot-manager.sh install
 ```
 
-Type INSTALL when prompted. The script adds a separate file under /etc/default/grub.d, a violet/cyan GRUB theme, and a systemd shutdown hook. Random Boot is OFF by default. Enable the mode with `sudo bash scripts/boot-manager.sh random-on`; disable it with `sudo bash scripts/boot-manager.sh random-off`. When enabled, normal shutdown/reboot selects a random eligible entry and uses grub-reboot to make it the one-time next boot. Existing menu entries are not intentionally removed.
+Type INSTALL when prompted. The script adds a separate file under /etc/default/grub.d, a violet/cyan GRUB theme, and a systemd shutdown hook. Random Boot is OFF by default and remains disabled after installation. Enable the mode with `sudo bash scripts/boot-manager.sh random-on`; disable it with `sudo bash scripts/boot-manager.sh random-off`. When enabled, normal shutdown/reboot selects a random eligible entry and uses grub-reboot to make it the one-time next boot. Existing menu entries are not intentionally removed.
 
 ## Test without rebooting
 
