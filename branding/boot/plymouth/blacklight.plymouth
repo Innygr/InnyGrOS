@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=InnyGrOS Blacklight Matrix
+Description=InnyGrOS boot animation with animated code rain
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/blacklight
+ScriptFile=/usr/share/plymouth/themes/blacklight/blacklight.script
