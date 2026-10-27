@@ -45,7 +45,7 @@ OVERLAY = r'''
 
 '''
 
-PASSWORD_STYLE = '''                // INNYGROS BLACKLIGHT AUTH FIELD STYLE
+PASSWORD_STYLE = r'''                // INNYGROS BLACKLIGHT AUTH FIELD STYLE
                 color: "#baffd1"
                 background: Rectangle {
                     color: "#041109"
@@ -54,19 +54,12 @@ PASSWORD_STYLE = '''                // INNYGROS BLACKLIGHT AUTH FIELD STYLE
                     radius: 5
                 }
 '''
-BUTTON_STYLE = '''                icon.color: "#baffd1"\n                background: Rectangle {
+BUTTON_STYLE = r'''                icon.color: "#baffd1"
+                background: Rectangle {
                     color: loginButton.down ? "#0c6b35" : "#06180e"
                     border.color: loginButton.activeFocus ? "#baffd1" : "#39ff83"
                     border.width: loginButton.activeFocus ? 2 : 1
                     radius: 5
-                }
-                contentItem: Text {
-                    text: loginButton.text
-                    font: loginButton.font
-                    color: "#baffd1"
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
                 }
 '''
 
@@ -96,24 +89,17 @@ def patch_auth_fields(text: str) -> str:
         button = list(re.finditer(r"(?m)^(\s*)id:\s*loginButton\s*$", text))
         if len(password) != 1 or len(button) != 1:
             raise ValueError("MainBlock.qml structure unsupported: expected passwordBox and loginButton IDs.")
-        # Add a custom native TextField background and text colour immediately after its id.
-        p = password[0]
-        p_end = text.find("\n", p.end())
+        p_end = text.find("\n", password[0].end())
         if p_end < 0:
             raise ValueError("Unexpected end of MainBlock.qml after passwordBox.")
-        indent = p.group(1)
-        text = text[:p_end + 1] + indent + PASSWORD_STYLE + text[p_end + 1:]
-        # Re-find the button anchor after the first insertion.
+        text = text[:p_end + 1] + PASSWORD_STYLE + text[p_end + 1:]
         button = list(re.finditer(r"(?m)^(\s*)id:\s*loginButton\s*$", text))
         if len(button) != 1:
             raise ValueError("Could not safely locate loginButton after password field styling.")
-        b = button[0]
-        b_end = text.find("\n", b.end())
+        b_end = text.find("\n", button[0].end())
         if b_end < 0:
             raise ValueError("Unexpected end of MainBlock.qml after loginButton.")
-        text = text[:b_end + 1] + b.group(1) + BUTTON_STYLE + text[b_end + 1:]
-        # Keep a marker within the patched file so restore can verify its ownership.
-        text = text.replace(PASSWORD_STYLE.splitlines()[0], PASSWORD_STYLE.splitlines()[0], 1)
+        text = text[:b_end + 1] + BUTTON_STYLE + text[b_end + 1:]
     return text
 
 def main() -> int:
@@ -132,7 +118,7 @@ def main() -> int:
     except (OSError, UnicodeError, ValueError) as exc:
         print(f"Blacklight QML patch refused: {exc}", file=sys.stderr)
         return 1
-    # Both transformations must validate before either file is changed.
+    # Validate both files before writing either one.
     lock_path.write_text(lock_updated, encoding="utf-8")
     auth_path.write_text(auth_updated, encoding="utf-8")
     return 0
