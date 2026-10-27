@@ -30,15 +30,15 @@ fi
 
 has_command() { command -v "$1" >/dev/null 2>&1; }
 
-show_info() { kdialog --title "InnyGrOS" --icon innygros --msgbox "$1" >/dev/null 2>&1 || true; }
+show_info() { kdialog --title "IntegerOS" --icon innygros --msgbox "$1" >/dev/null 2>&1 || true; }
 
 # Show an error with the last lines of a helper's output as expandable details.
 show_error() {
   local message="$1" details="${2:-}"
   if [[ -n "${details}" ]]; then
-    kdialog --title "InnyGrOS" --detailederror "${message}" "${details}" >/dev/null 2>&1 || true
+    kdialog --title "IntegerOS" --detailederror "${message}" "${details}" >/dev/null 2>&1 || true
   else
-    kdialog --title "InnyGrOS" --error "${message}" >/dev/null 2>&1 || true
+    kdialog --title "IntegerOS" --error "${message}" >/dev/null 2>&1 || true
   fi
 }
 
@@ -132,7 +132,7 @@ show_diagnostics() {
   local report
   report="$(mktemp)"
   {
-    echo "InnyGrOS system diagnostics"
+    echo "IntegerOS system diagnostics"
     echo "Generated: $(date)"
     echo
     echo "=== Operating system ==="
@@ -150,7 +150,7 @@ show_diagnostics() {
     if has_command powerprofilesctl; then powerprofilesctl get 2>&1 || true; echo; powerprofilesctl list 2>&1 || true
     else echo "power-profiles-daemon CLI not detected"; fi
     echo
-    echo "=== InnyGrOS ==="
+    echo "=== IntegerOS ==="
     echo "Helpers: ${SCRIPTS_DIR}"
     echo "Log: ${LOG_FILE}"
     echo
@@ -170,15 +170,15 @@ while true; do
     "first-steps" "First steps guide" \
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
-    "updater" "Software updater (InnyGrOS / system packages)" \
+    "updater" "Software updater (IntegerOS / system packages)" \
     "files" "Open File Manager" \
     "images" "Open image viewer (Gwenview)" \
     "image-report" "Image viewer compatibility report (read-only)" \
     "desktop-profile" "Apply IntegerOS desktop profile (reversible)" \
     "desktop-restore" "Restore previous desktop settings" \
-    "theme" "Apply InnyGrOS colors" \
+    "theme" "Apply IntegerOS colors" \
     "wallpaper" "Choose any supported image as wallpaper" \
-    "terminal-profile" "Install InnyGrOS terminal theme" \
+    "terminal-profile" "Install IntegerOS terminal theme" \
     "game-readiness" "Check Minecraft / Windows game readiness" \
     "power" "Power mode (battery saver / balanced / performance)" \
     "terminal" "Open Terminal (advanced)" \
@@ -190,8 +190,8 @@ while true; do
     "network-health" "Quick connectivity & Tailscale check (read-only)" \
     "battery" "Battery & power health report (read-only)" \
     "autostart" "${autostart_label}" \
-    "repo" "Open InnyGrOS project page" \
-    "doctor" "Check InnyGrOS installation (doctor)" \
+    "repo" "Open IntegerOS project page" \
+    "doctor" "Check IntegerOS installation (doctor)" \
     "about" "About InnyGrOS" \
     "quit" "Exit" 2>/dev/null)" || exit 0
   case "${choice}" in
@@ -206,7 +206,7 @@ while true; do
     desktop-restore) run_helper "Desktop restore" desktop-profile.sh restore --gui ;;
     theme)
       run_helper "Color scheme" apply-theme.sh
-      show_info "The InnyGrOS color scheme is installed. If colors did not change, open System Settings → Colors & Themes → Colors and select InnyGrOS."
+      show_info "The InnyGrOS color scheme is installed. If colors did not change, open System Settings → Colors & Themes → Colors and select IntegerOS."
       ;;
     wallpaper) run_helper "Wallpaper setup" apply-wallpaper.sh --choose ;;
     terminal-profile) run_helper "Terminal theme setup" apply-terminal-profile.sh ;;
@@ -226,7 +226,7 @@ while true; do
       else show_info "Project: ${REPO_URL}"
       fi
       ;;
-    doctor) run_helper "InnyGrOS doctor" doctor.sh --gui ;;
+    doctor) run_helper "IntegerOS doctor" doctor.sh --gui ;;
     about) show_info "IntegerOS ${VERSION} — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nEarly experimental software: changes are limited to your user profile unless you explicitly install packages through system tools.\n\nHelpers: ${SCRIPTS_DIR}\nLog: ${LOG_FILE}" ;;
     quit|"") exit 0 ;;
   esac
