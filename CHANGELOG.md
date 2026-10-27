@@ -2,7 +2,7 @@
 
 > Public-facing product name: IntegerOS. Internal project identifiers and repository paths may still use InnyGrOS.
 
-All notable changes to IntegerOS. The current version is in the `VERSION` file; scripts and the Welcome Center read it from there.
+All notable changes in IntegerOS. The current version is in the `VERSION` file; scripts and the Welcome Center read it from there.
 
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
