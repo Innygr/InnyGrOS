@@ -8,7 +8,11 @@ QML_CANDIDATES=(
 )
 STATE_DIR=/var/lib/innygros/blacklight-lockscreen
 BACKUP_NAME=LockScreenUi.qml.original
+AUTH_BACKUP_NAME=MainBlock.qml.original
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PATCHER="${SCRIPT_DIR}/lib/blacklight-lockscreen-patch.py"
 OVERLAY_MARKER='INNYGROS BLACKLIGHT MATRIX OVERLAY'
+AUTH_MARKER='INNYGROS BLACKLIGHT AUTH FIELD STYLE'
 
 usage() {
   cat <<'USAGE'
@@ -50,7 +54,10 @@ status() {
       else
         echo "Blacklight animation: not installed"
       fi
-      [[ -f "$STATE_DIR/$BACKUP_NAME" ]] && echo "Original backup: available" || echo "Original backup: absent"
+      [[ -f "$STATE_DIR/$BACKUP_NAME" ]] && echo "Lock-screen backup: available" || echo "Lock-screen backup: absent"
+      [[ -f "$STATE_DIR/$AUTH_BACKUP_NAME" ]] && echo "Authentication-field backup: available" || echo "Authentication-field backup: absent"
+      local mainblock="$(dirname -- "$candidate")/MainBlock.qml"
+      if [[ -f "$mainblock" ]] && grep -qF "$AUTH_MARKER" "$mainblock"; then echo "Blacklight authentication styling: installed"; else echo "Blacklight authentication styling: not installed"; fi
       return
     fi
   done
@@ -61,116 +68,44 @@ status() {
 install_overlay() {
   require_root
   find_qml
-  if grep -qF "$OVERLAY_MARKER" "$QML_FILE"; then
-    echo "Blacklight overlay is already installed in $QML_FILE"
+  local mainblock_file="$(dirname -- "$QML_FILE")/MainBlock.qml"
+  if grep -qF "$OVERLAY_MARKER" "$QML_FILE" && [[ -f "$mainblock_file" ]] && grep -qF "$AUTH_MARKER" "$mainblock_file"; then
+    echo "Blacklight Matrix overlay and authentication styling are already installed."
     exit 0
   fi
-  if [[ -e "$STATE_DIR/$BACKUP_NAME" ]]; then
-    echo "Backup already exists at $STATE_DIR/$BACKUP_NAME; refusing to overwrite it." >&2
+  if [[ -e "$STATE_DIR/$BACKUP_NAME" || -e "$STATE_DIR/$AUTH_BACKUP_NAME" ]]; then
+    echo "A Blacklight backup already exists in $STATE_DIR; refusing to overwrite it." >&2
     echo "Inspect the existing patch or use restore first." >&2
     exit 1
   fi
+  [[ -f "$mainblock_file" ]] || { echo "Could not find MainBlock.qml beside $QML_FILE" >&2; exit 1; }
+  [[ -f "$PATCHER" ]] || { echo "Missing patcher: $PATCHER" >&2; exit 1; }
   command -v python3 >/dev/null 2>&1 || { echo "Python 3 is required." >&2; exit 1; }
+
   mkdir -p "$STATE_DIR"
   cp -a "$QML_FILE" "$STATE_DIR/$BACKUP_NAME"
-  chmod 0644 "$STATE_DIR/$BACKUP_NAME"
+  cp -a "$mainblock_file" "$STATE_DIR/$AUTH_BACKUP_NAME"
+  chmod 0644 "$STATE_DIR/$BACKUP_NAME" "$STATE_DIR/$AUTH_BACKUP_NAME"
 
-  if ! python3 - "$QML_FILE" <<'PY'
-from pathlib import Path
-import re
-import sys
-
-path = Path(sys.argv[1])
-text = path.read_text()
-marker = "INNYGROS BLACKLIGHT MATRIX OVERLAY"
-if marker in text:
-    raise SystemExit(0)
-
-wallpaper = list(re.finditer(r"(?m)^(\s*)WallpaperFader\s*\{", text))
-dropshadow = list(re.finditer(r"(?m)^(\s*)DropShadow\s*\{", text))
-if len(wallpaper) != 1 or len(dropshadow) < 1:
-    print("Unsupported Plasma QML layout; expected one WallpaperFader and a DropShadow anchor.", file=sys.stderr)
-    raise SystemExit(2)
-if wallpaper[0].start() > dropshadow[0].start():
-    print("Unexpected QML ordering; refusing to patch.", file=sys.stderr)
-    raise SystemExit(2)
-
-# Hide only the blur/fade layer. The wallpaper itself and KDE's authentication
-# components remain supplied by the original Plasma shell.
-start = wallpaper[0].end()
-line_end = text.find("\n", start)
-if line_end < 0:
-    print("Unexpected end of QML file.", file=sys.stderr)
-    raise SystemExit(2)
-indent = wallpaper[0].group(1) + "    "
-text = text[:line_end + 1] + indent + "visible: false // InnyGrOS: keep the lock-screen wallpaper sharp\n" + text[line_end + 1:]
-
-# Place a non-interactive animated overlay between the wallpaper and the
-# authentication UI. No password handling or authenticator logic is changed.
-overlay = '''
-        // INNYGROS BLACKLIGHT MATRIX OVERLAY
-        Item {
-            id: innygrBlacklightRainOverlay
-            anchors.fill: parent
-            opacity: 0.24
-            enabled: false
-
-            Repeater {
-                model: 32
-                delegate: Item {
-                    property int lane: index
-                    width: innygrBlacklightRainOverlay.width / 32
-                    height: innygrBlacklightRainOverlay.height
-                    x: lane * width
-
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        y: -height
-                        text: "1\\n0\\n1\\n1\\n0\\n0\\n1\\n0\\n1\\n0\\n1\\n0\\n0\\n1\\n0"
-                        color: lane % 4 === 0 ? "#aaffc7" : "#39ff83"
-                        font.family: "monospace"
-                        font.pixelSize: 15
-                        lineHeight: 1.15
-
-                        NumberAnimation on y {
-                            from: -parent.height * (1 + ((lane * 7) % 3))
-                            to: innygrBlacklightRainOverlay.height
-                            duration: 4800 + ((lane * 379) % 5200)
-                            loops: Animation.Infinite
-                        }
-                    }
-                }
-            }
-        }
-
-'''
-# DropShadow is an established point after WallpaperFader in Plasma 6's
-# lock-screen UI. Keep the overlay before the rest of the unlock UI.
-updated_dropshadow = list(re.finditer(r"(?m)^\s*DropShadow\s*\{", text))
-if not updated_dropshadow:
-    print("DropShadow anchor disappeared after wallpaper edit; refusing to patch.", file=sys.stderr)
-    raise SystemExit(2)
-anchor = updated_dropshadow[0].start()
-text = text[:anchor] + overlay + text[anchor:]
-path.write_text(text)
-PY
-  then
+  if ! python3 "$PATCHER" "$QML_FILE" "$mainblock_file"; then
     cp -a "$STATE_DIR/$BACKUP_NAME" "$QML_FILE"
-    rm -f "$STATE_DIR/$BACKUP_NAME"
+    cp -a "$STATE_DIR/$AUTH_BACKUP_NAME" "$mainblock_file"
+    rm -f "$STATE_DIR/$BACKUP_NAME" "$STATE_DIR/$AUTH_BACKUP_NAME"
     rmdir "$STATE_DIR" 2>/dev/null || true
-    echo "Patch failed; the original lock-screen file was restored." >&2
+    echo "Patch failed; both original QML files were restored." >&2
     exit 1
   fi
 
-  if ! grep -qF "$OVERLAY_MARKER" "$QML_FILE"; then
+  if ! grep -qF "$OVERLAY_MARKER" "$QML_FILE" || ! grep -qF "$AUTH_MARKER" "$mainblock_file"; then
     cp -a "$STATE_DIR/$BACKUP_NAME" "$QML_FILE"
-    rm -f "$STATE_DIR/$BACKUP_NAME"
+    cp -a "$STATE_DIR/$AUTH_BACKUP_NAME" "$mainblock_file"
+    rm -f "$STATE_DIR/$BACKUP_NAME" "$STATE_DIR/$AUTH_BACKUP_NAME"
     rmdir "$STATE_DIR" 2>/dev/null || true
-    echo "Patch verification failed; original file restored." >&2
+    echo "Patch verification failed; both original files were restored." >&2
     exit 1
   fi
-  echo "Blacklight Matrix animation installed in the native Plasma lock screen."
-  echo "Original saved at $STATE_DIR/$BACKUP_NAME"
+  echo "Blacklight Matrix animation and authentication-field styling installed."
+  echo "Original files saved in $STATE_DIR"
   echo "Lock with Meta+L to test. If anything looks wrong, run: sudo bash scripts/blacklight-lockscreen.sh restore"
   echo "The change takes effect when the lock screen is next loaded; no session restart was performed."
 }
@@ -182,13 +117,25 @@ restore_overlay() {
     exit 1
   }
   find_qml
+  local mainblock_file="$(dirname -- "$QML_FILE")/MainBlock.qml"
   if grep -qF "$OVERLAY_MARKER" "$QML_FILE"; then
     cp -a "$STATE_DIR/$BACKUP_NAME" "$QML_FILE"
     echo "Restored original Plasma lock-screen QML."
   else
-    echo "Current QML does not contain the InnyGrOS overlay marker; refusing to overwrite it." >&2
+    echo "Current lock-screen QML does not contain the InnyGrOS overlay marker; refusing to overwrite it." >&2
     echo "Original backup remains at $STATE_DIR/$BACKUP_NAME" >&2
     exit 1
+  fi
+  if [[ -f "$STATE_DIR/$AUTH_BACKUP_NAME" ]]; then
+    if [[ -f "$mainblock_file" ]] && grep -qF "$AUTH_MARKER" "$mainblock_file"; then
+      cp -a "$STATE_DIR/$AUTH_BACKUP_NAME" "$mainblock_file"
+      echo "Restored original authentication-field QML."
+    else
+      echo "Authentication QML is not marked as patched; leaving its backup untouched." >&2
+      echo "Backup remains at $STATE_DIR/$AUTH_BACKUP_NAME" >&2
+      exit 1
+    fi
+    rm -f "$STATE_DIR/$AUTH_BACKUP_NAME"
   fi
   rm -f "$STATE_DIR/$BACKUP_NAME"
   rmdir "$STATE_DIR" 2>/dev/null || true
