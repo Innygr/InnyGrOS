@@ -30,6 +30,7 @@ OVERLAY = r'''
                             color: lane % 4 === 0 ? "#aaffc7" : "#39ff83"
                             font.family: "monospace"
                             font.pixelSize: 15
+                            lineHeightMode: Text.ProportionalHeight
                             lineHeight: 1.15
 
                             NumberAnimation on y {
