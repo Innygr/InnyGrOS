@@ -18,8 +18,8 @@ usage() {
   cat <<'USAGE'
 Usage: sudo bash scripts/blacklight-lockscreen.sh status | install | restore
   status   Show detected Plasma lock-screen file and patch state
-  install  Back up and add animated Matrix rain; disable KDE's wallpaper blur/fade
-  restore  Restore the exact original QML file from the saved backup
+  install  Back up both QML files; add Matrix rain and style native authentication controls
+  restore  Restore the exact original QML files from the saved backups
 
 This is experimental and system-wide. Keep a terminal/recovery path available.
 It does not replace KDE authentication; the native authenticator remains in use.
@@ -54,10 +54,15 @@ status() {
       else
         echo "Blacklight animation: not installed"
       fi
-      [[ -f "$STATE_DIR/$BACKUP_NAME" ]] && echo "Lock-screen backup: available" || echo "Lock-screen backup: absent"
-      [[ -f "$STATE_DIR/$AUTH_BACKUP_NAME" ]] && echo "Authentication-field backup: available" || echo "Authentication-field backup: absent"
-      local mainblock="$(dirname -- "$candidate")/MainBlock.qml"
-      if [[ -f "$mainblock" ]] && grep -qF "$AUTH_MARKER" "$mainblock"; then echo "Blacklight authentication styling: installed"; else echo "Blacklight authentication styling: not installed"; fi
+      if [[ -f "$STATE_DIR/$BACKUP_NAME" ]]; then echo "Lock-screen backup: available"; else echo "Lock-screen backup: absent"; fi
+      if [[ -f "$STATE_DIR/$AUTH_BACKUP_NAME" ]]; then echo "Authentication-field backup: available"; else echo "Authentication-field backup: absent"; fi
+      local mainblock
+      mainblock="$(dirname -- "$candidate")/MainBlock.qml"
+      if [[ -f "$mainblock" ]] && grep -qF "$AUTH_MARKER" "$mainblock"; then
+        echo "Blacklight authentication styling: installed"
+      else
+        echo "Blacklight authentication styling: not installed"
+      fi
       return
     fi
   done
@@ -68,7 +73,8 @@ status() {
 install_overlay() {
   require_root
   find_qml
-  local mainblock_file="$(dirname -- "$QML_FILE")/MainBlock.qml"
+  local mainblock_file
+  mainblock_file="$(dirname -- "$QML_FILE")/MainBlock.qml"
   if grep -qF "$OVERLAY_MARKER" "$QML_FILE" && [[ -f "$mainblock_file" ]] && grep -qF "$AUTH_MARKER" "$mainblock_file"; then
     echo "Blacklight Matrix overlay and authentication styling are already installed."
     exit 0
