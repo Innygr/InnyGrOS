@@ -7,8 +7,8 @@ All notable changes in IntegerOS. The current version is in the `VERSION` file; 
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
 ## Unreleased
-- Added an experimental, reversible Plasma lock-screen QML patch for animated Matrix rain and a sharp, unblurred background while retaining KDE authentication.
-- Added recovery documentation and source-level smoke coverage for the native lock-screen patch.
+- Added an experimental, reversible Plasma lock-screen QML patch for animated Matrix rain, a sharp background, and green-on-black styling for KDE's native password field and unlock button.
+- Added a standalone QML patcher with fixture tests for idempotency, safe refusal of unknown layouts, and recovery documentation.
 - Added a Blacklight Matrix wallpaper for KDE's native lock screen, with a reversible wallpaper-setting helper.
 - Updated X11 idle activation to invoke KDE's secure lock screen through `loginctl lock-session` instead of presenting the unauthenticated visual as a lock.
 - Documented Wayland's use of KDE's built-in automatic screen-lock setting.
