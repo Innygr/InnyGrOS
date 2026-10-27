@@ -123,25 +123,29 @@ restore_overlay() {
     exit 1
   }
   find_qml
-  local mainblock_file="$(dirname -- "$QML_FILE")/MainBlock.qml"
-  if grep -qF "$OVERLAY_MARKER" "$QML_FILE"; then
-    cp -a "$STATE_DIR/$BACKUP_NAME" "$QML_FILE"
-    echo "Restored original Plasma lock-screen QML."
-  else
+  local mainblock_file
+  mainblock_file="$(dirname -- "$QML_FILE")/MainBlock.qml"
+
+  # Validate every file we intend to restore before changing either one.
+  if ! grep -qF "$OVERLAY_MARKER" "$QML_FILE"; then
     echo "Current lock-screen QML does not contain the InnyGrOS overlay marker; refusing to overwrite it." >&2
     echo "Original backup remains at $STATE_DIR/$BACKUP_NAME" >&2
     exit 1
   fi
+  if [[ -f "$STATE_DIR/$AUTH_BACKUP_NAME" ]] && {
+    [[ ! -f "$mainblock_file" ]] || ! grep -qF "$AUTH_MARKER" "$mainblock_file"
+  }; then
+    echo "Authentication QML is not marked as patched; refusing to restore only part of the install." >&2
+    echo "Backups remain in $STATE_DIR" >&2
+    exit 1
+  fi
+
+  cp -a "$STATE_DIR/$BACKUP_NAME" "$QML_FILE"
+  echo "Restored original Plasma lock-screen QML."
   if [[ -f "$STATE_DIR/$AUTH_BACKUP_NAME" ]]; then
-    if [[ -f "$mainblock_file" ]] && grep -qF "$AUTH_MARKER" "$mainblock_file"; then
-      cp -a "$STATE_DIR/$AUTH_BACKUP_NAME" "$mainblock_file"
-      echo "Restored original authentication-field QML."
-    else
-      echo "Authentication QML is not marked as patched; leaving its backup untouched." >&2
-      echo "Backup remains at $STATE_DIR/$AUTH_BACKUP_NAME" >&2
-      exit 1
-    fi
+    cp -a "$STATE_DIR/$AUTH_BACKUP_NAME" "$mainblock_file"
     rm -f "$STATE_DIR/$AUTH_BACKUP_NAME"
+    echo "Restored original authentication-field QML."
   fi
   rm -f "$STATE_DIR/$BACKUP_NAME"
   rmdir "$STATE_DIR" 2>/dev/null || true
