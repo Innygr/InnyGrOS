@@ -25,11 +25,11 @@ AUTH_FIXTURE = """SessionManagementScreen {
     RowLayout {
         PlasmaExtras.PasswordField {
             id: passwordBox
-            placeholderText: \\"Password\\"
+            placeholderText: "Password"
         }
         PlasmaComponents3.Button {
             id: loginButton
-            icon.name: \\"go-next\\"
+            icon.name: "go-next"
             onClicked: startLogin()
         }
     }
@@ -70,7 +70,7 @@ with tempfile.TemporaryDirectory() as tmp:
     # If either file has an unknown structure, neither file may be modified.
     bad_lock = tmp_path / "BadLockScreenUi.qml"
     bad_auth = tmp_path / "BadMainBlock.qml"
-    bad_lock.write_text("Item { Text { text: \\"not the expected structure\\" } }", encoding="utf-8")
+    bad_lock.write_text('Item { Text { text: "not the expected structure" } }', encoding="utf-8")
     bad_auth.write_text(AUTH_FIXTURE, encoding="utf-8")
     before_lock = bad_lock.read_text(encoding="utf-8")
     before_auth = bad_auth.read_text(encoding="utf-8")
