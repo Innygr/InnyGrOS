@@ -150,11 +150,11 @@ jobs:
           PATH="$stub:$PATH" timeout 60 ./apps/welcome-center/innygros-welcome
           grep -q -- '--textbox' "$KDIALOG_LOG"
           grep -q "Helpers: $PWD/scripts" "$KDIALOG_LOG"
-          grep -q "InnyGrOS first steps" "$KDIALOG_LOG"
+          grep -q "IntegerOS first steps" "$KDIALOG_LOG"
           test -f "$HOME/.local/state/innygros/first-run-done"
           : > "$KDIALOG_LOG"; rm -f "$KDIALOG_STATE"
           PATH="$stub:$PATH" timeout 60 ./apps/welcome-center/innygros-welcome
-          if grep -q "InnyGrOS first steps" "$KDIALOG_LOG"; then echo "First-steps guide shown twice"; exit 1; fi
+          if grep -q "IntegerOS first steps" "$KDIALOG_LOG"; then echo "First-steps guide shown twice"; exit 1; fi
 
       - name: Installer checks and recovery round trip
         shell: bash
@@ -191,7 +191,7 @@ jobs:
           set -euo pipefail
           version="$(head -n 1 VERSION)"
           [[ "${version}" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo "VERSION is not a version number: ${version}"; exit 1; }
-          grep -q "^\*\*InnyGrOS ${version} " README.md || { echo "README header does not mention ${version}"; exit 1; }
+          grep -q "^\*\*IntegerOS ${version} " README.md || { echo "README header does not mention ${version}"; exit 1; }
           grep -q "^## ${version} " CHANGELOG.md || { echo "CHANGELOG.md has no entry for ${version}"; exit 1; }
           if grep -rnE 'VERSION="[0-9]' --include='*.sh' . apps/welcome-center/innygros-welcome; then
             echo "Hard-coded version found; read the VERSION file instead"; exit 1
