@@ -23,7 +23,7 @@ HEIGHT_HINT = 720
 class BlacklightMatrix:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("InnyGrOS Blacklight Matrix")
+        self.root.title("IntegerOS Blacklight Matrix")
         self.root.configure(bg=BG)
         self.root.attributes("-fullscreen", True)
         self.root.attributes("-topmost", True)
