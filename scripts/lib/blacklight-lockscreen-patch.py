@@ -26,7 +26,7 @@ OVERLAY = r'''
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
                             y: -height
-                            text: "1\\n0\\n1\\n1\\n0\\n0\\n1\\n0\\n1\\n0\\n1\\n0\\n0\\n1\\n0"
+                            text: "1\n0\n1\n1\n0\n0\n1\n0\n1\n0\n1\n0\n0\n1\n0"
                             color: lane % 4 === 0 ? "#aaffc7" : "#39ff83"
                             font.family: "monospace"
                             font.pixelSize: 15
@@ -54,7 +54,7 @@ PASSWORD_STYLE = '''                // INNYGROS BLACKLIGHT AUTH FIELD STYLE
                     radius: 5
                 }
 '''
-BUTTON_STYLE = '''                background: Rectangle {
+BUTTON_STYLE = '''                icon.color: "#baffd1"\n                background: Rectangle {
                     color: loginButton.down ? "#0c6b35" : "#06180e"
                     border.color: loginButton.activeFocus ? "#baffd1" : "#39ff83"
                     border.width: loginButton.activeFocus ? 2 : 1
