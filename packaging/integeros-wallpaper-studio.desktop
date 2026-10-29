@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=IntegerOS Wallpaper Studio
+GenericName=Video Wallpaper Creator
+Comment=Create customizable IntegerOS branded video wallpapers
+Exec=python3 /path/to/InnyGrOS/apps/integeros-wallpaper-studio.py
+Icon=preferences-desktop-wallpaper
+Terminal=false
+Categories=Graphics;Utility;
