@@ -6,6 +6,7 @@ set -Eeuo pipefail
 # It never uploads the selected media or assets anywhere.
 
 APP_NAME="IntegerOS Black Hole Wallpaper"
+WALLPAPER_DURATION=30
 TEMP_DIR=""
 
 cleanup() {
@@ -96,8 +97,8 @@ if ! ffmpeg -hide_banner -y \
   -loop 1 -framerate 30 -i "$neg_inny" \
   -loop 1 -framerate 30 -i "$logo_png" \
   -filter_complex \
-  "[1:v]scale=150:150:force_original_aspect_ratio=decrease,pad=150:150:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[neg];[2:v]scale=96:96:force_original_aspect_ratio=decrease,pad=96:96:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[tbl];[0:v][neg]overlay=48:H-h-42:format=auto[tmp];[tmp][tbl]overlay=W-w-48:H-h-42:format=auto,format=yuv420p[out]" \
-  -map "[out]" -map "0:a?" -c:v libx264 -preset medium -crf 20 \
+  "[1:v]scale=150:150:force_original_aspect_ratio=decrease,pad=150:150:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[neg];[2:v]scale=96:96:force_original_aspect_ratio=decrease,pad=96:96:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[tbl];[0:v][neg]overlay=220:H-h-42:format=auto[tmp];[tmp][tbl]overlay=W-w-228:H-h-42:format=auto[logos];[logos]drawtext=font=Sans:text=Innygr Corp:fontcolor=white:fontsize=28:x=48:y=H-text_h-42,drawtext=font=Sans:text=Team Blacklight:fontcolor=white:fontsize=28:x=W-text_w-48:y=H-text_h-42,format=yuv420p[out]" \
+  -map "[out]" -map "0:a?" -t "$WALLPAPER_DURATION" -c:v libx264 -preset medium -crf 20 \
   -c:a aac -b:a 160k -shortest -movflags +faststart "$output"; then
   error "FFmpeg failed to render the wallpaper. Check that the selected video is readable and there is enough disk space."
 fi
