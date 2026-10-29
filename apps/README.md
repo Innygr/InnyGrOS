@@ -7,6 +7,7 @@ A graphical application for creating branded MP4 wallpapers for IntegerOS / KDE 
 - File pickers for background video, NegInny image, Team Blacklight logo, and output MP4
 - Editable text labels and color pickers
 - Font family and text-size controls
+- Independent X/Y positioning for each text label and logo, adjustable from 0% to 100% of the available travel range
 - Configurable bottom margin, artwork sizes, output duration, H.264 preset, and CPU thread limit
 - Low-priority FFmpeg rendering to help keep the desktop responsive
 - Supports PNG, WebP, JPEG, and ICO logos (ICO conversion needs ImageMagick)
