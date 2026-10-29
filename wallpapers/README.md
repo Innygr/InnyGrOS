@@ -1,31 +1,45 @@
 # Animated Black Hole Wallpaper
 
-The wallpaper source is the 1920×1080 MP4 supplied by the user from MotionBGs. The source video is **not included in this repository** because redistribution permission has not been established. Use only a copy you are permitted to use.
+This workflow uses the 1920×1080 MP4 selected by you as the background and overlays your own NegInny (your Celestan) and Team Blacklight logo. The source video and branding assets are **not included in this repository** because redistribution permission for the video has not been established.
 
-## Build the branded wallpaper locally
+## Easiest method: GUI builder on Kubuntu/KDE
 
-Requirements: FFmpeg and ImageMagick.
-
-1. Download or otherwise obtain the source video under its applicable terms.
-2. Extract your original artwork from your own `Logos n stuff.zip` archive.
-3. Run the build script, passing the video, your Celestan artwork (`NegInny.png`), and the Team Blacklight logo:
+After pulling the latest `main`, run this from the repository directory:
 
 ```bash
-./scripts/build-black-hole-wallpaper.sh \
-  ~/Videos/space-black-hole.1920x1080.mp4 \
-  ~/Pictures/NegInny.png \
-  ~/Pictures/TeamBlacklightLogo.ico \
-  ~/Videos/InnyGrOS-BlackHole-TeamBlacklight.mp4
+bash scripts/brand-black-hole-wallpaper.sh
 ```
 
-The script preserves the source video as the background and places NegInny in the lower-left corner and the original Team Blacklight icon in the lower-right. It exports H.264 MP4 at the source resolution. The source video and artwork files are read from your local paths; they are not uploaded to GitHub by this script.
+The script opens file pickers for:
+1. The source video (`.mp4`, `.mkv`, `.webm`, `.mov`, or `.avi`).
+2. Your NegInny image.
+3. Your Team Blacklight logo (`.ico` or a normal image).
+4. Where to save the finished MP4.
 
-## Set it as a KDE Plasma wallpaper
+If FFmpeg or ImageMagick is missing, it asks first and then uses the system's graphical authentication prompt to install them. It does not hard-code or collect your password. Rendering can take a few minutes depending on video length and laptop performance. The output defaults to `~/Videos/InnyGrOS-BlackHole-TeamBlacklight.mp4`.
 
-KDE Plasma's default image wallpaper plugin generally treats an MP4 as a still/unsupported image. Install a trusted Plasma-compatible video/live-wallpaper plugin, then select the generated MP4 through that plugin's settings. Availability and setup vary by Plasma version.
+The source video remains the background; NegInny is overlaid at the lower left and the Team Blacklight logo at the lower right. All selected files are processed locally and are not uploaded by the script.
+
+## Manual builder
+
+If you prefer using a terminal with file paths already known, the older non-GUI script is also available:
+
+```bash
+bash scripts/build-black-hole-wallpaper.sh VIDEO.mp4 NegInny.png TeamBlacklightLogo.ico OUTPUT.mp4
+```
+
+It requires FFmpeg and ImageMagick to already be installed.
+
+## Use it as a live wallpaper
+
+The output is an MP4, not an animated SVG. MP4 is much better suited to preserving the original video's animation, quality, and audio. KDE Plasma's default image wallpaper plugin may not play video files; you will need a compatible, trusted video/live-wallpaper plugin and then choose the generated MP4 in that plugin's settings. Support and setup vary by Plasma version.
+
+## Why `git pull` didn't visibly change anything
+
+A pull only downloads the script and documentation into the repository folder; it does not run the script, install dependencies, or change your desktop wallpaper automatically. After pulling, run the command in the GUI-builder section above.
 
 ## Copyright and attribution
 
 Source page: https://motionbgs.com/space-black-hole
 
-The source video's redistribution terms could not be confirmed. This repository therefore contains only the local build script and instructions, not the video or a rendered derivative. Check the source's current terms and obtain permission if needed before publishing or redistributing a derivative. The uploaded NegInny and Team Blacklight assets are used as supplied; no replacement logos are generated.
+The source video's redistribution terms could not be confirmed, so the MP4 and any rendered derivative are not committed to this public repository. Check the current source terms and obtain permission before redistributing a derivative. The builder uses the original branding files you select; it does not generate replacement logos.
