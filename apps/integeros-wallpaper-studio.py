@@ -39,7 +39,6 @@ class WallpaperStudio(tk.Tk):
         self.duration = tk.IntVar(value=30)
         self.logo_size = tk.IntVar(value=96)
         self.neg_size = tk.IntVar(value=150)
-        self.bottom_margin = tk.IntVar(value=110)
         self.tbl_logo_x = tk.IntVar(value=14)
         self.tbl_logo_y = tk.IntVar(value=85)
         self.neg_x = tk.IntVar(value=82)
@@ -80,8 +79,6 @@ class WallpaperStudio(tk.Tk):
         ttk.Combobox(controls, textvariable=self.font, values=("DejaVu Sans Mono", "DejaVu Sans", "Liberation Sans", "Liberation Mono", "Serif", "Sans"), width=20, state="readonly").pack(side="left", padx=(5, 14))
         ttk.Label(controls, text="Text size").pack(side="left")
         ttk.Spinbox(controls, from_=16, to=72, textvariable=self.font_size, width=5).pack(side="left", padx=5)
-        ttk.Label(controls, text="Bottom margin").pack(side="left")
-        ttk.Spinbox(controls, from_=50, to=300, increment=10, textvariable=self.bottom_margin, width=5).pack(side="left", padx=5)
 
         render = ttk.LabelFrame(self, text="Rendering and layout", padding=10)
         render.pack(fill="x", pady=4)
