@@ -40,6 +40,14 @@ class WallpaperStudio(tk.Tk):
         self.logo_size = tk.IntVar(value=96)
         self.neg_size = tk.IntVar(value=150)
         self.bottom_margin = tk.IntVar(value=110)
+        self.tbl_logo_x = tk.IntVar(value=14)
+        self.tbl_logo_y = tk.IntVar(value=85)
+        self.neg_x = tk.IntVar(value=82)
+        self.neg_y = tk.IntVar(value=85)
+        self.tbl_text_x = tk.IntVar(value=3)
+        self.tbl_text_y = tk.IntVar(value=85)
+        self.corp_text_x = tk.IntVar(value=83)
+        self.corp_text_y = tk.IntVar(value=85)
         self.threads = tk.IntVar(value=2)
         self.preset = tk.StringVar(value="ultrafast")
         self.status = tk.StringVar(value="Choose your video and original branding assets to begin.")
@@ -99,6 +107,13 @@ class WallpaperStudio(tk.Tk):
         self.render_button.pack(side="left")
         ttk.Label(bottom, textvariable=self.status, wraplength=520).pack(side="left", padx=12, fill="x", expand=True)
         ttk.Label(self, text="Tip: ultrafast + 1–2 threads reduces CPU pressure; rendering may take longer with fewer threads.", wraplength=720).pack(anchor="w", pady=(10, 0))
+
+    def _position_row(self, parent, label, x_var, y_var, row):
+        ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w", padx=(0, 12), pady=3)
+        ttk.Label(parent, text="X").grid(row=row, column=1, sticky="e", padx=(0, 4))
+        ttk.Spinbox(parent, from_=0, to=100, textvariable=x_var, width=6).grid(row=row, column=2, sticky="w", padx=(0, 14), pady=3)
+        ttk.Label(parent, text="Y").grid(row=row, column=3, sticky="e", padx=(0, 4))
+        ttk.Spinbox(parent, from_=0, to=100, textvariable=y_var, width=6).grid(row=row, column=4, sticky="w", pady=3)
 
     def _file_row(self, parent, label, variable, command, row):
         ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w", padx=(0, 8), pady=4)
@@ -197,6 +212,12 @@ class WallpaperStudio(tk.Tk):
                 ns = int(self.neg_size.get())
                 ls = int(self.logo_size.get())
                 size = int(self.font_size.get())
+                positions = {name: max(0, min(100, int(var.get()))) for name, var in {
+                    "tbl_logo_x": self.tbl_logo_x, "tbl_logo_y": self.tbl_logo_y,
+                    "neg_x": self.neg_x, "neg_y": self.neg_y,
+                    "tbl_text_x": self.tbl_text_x, "tbl_text_y": self.tbl_text_y,
+                    "corp_text_x": self.corp_text_x, "corp_text_y": self.corp_text_y,
+                }.items()}
                 font = ffmpeg_escape(self.font.get())
                 tbl = ffmpeg_escape(self.tbl_text.get())
                 corp = ffmpeg_escape(self.corp_text.get())
@@ -205,9 +226,10 @@ class WallpaperStudio(tk.Tk):
                 graph = (
                     f"[1:v]scale={ns}:{ns}:force_original_aspect_ratio=decrease,pad={ns}:{ns}:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[neg];"
                     f"[2:v]scale={ls}:{ls}:force_original_aspect_ratio=decrease,pad={ls}:{ls}:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[tbl];"
-                    f"[0:v][tbl]overlay=300:H-h-{margin}:format=auto[tmp];[tmp][neg]overlay=W-{ns+330}:H-h-{margin}:format=auto[logos];"
-                    f"[logos]drawtext=font='{font}':text='{tbl}':fontcolor=0x{tbl_color}:fontsize={size}:borderw=2:bordercolor=0x17102B:shadowcolor=0x7B2CFF@0.9:shadowx=2:shadowy=2:x=48:y=H-text_h-{margin},"
-                    f"drawtext=font='{font}':text='{corp}':fontcolor=0x{corp_color}:fontsize={size}:borderw=2:bordercolor=0x17102B:shadowcolor=0x00E5FF@0.85:shadowx=2:shadowy=2:x=W-text_w-48:y=H-text_h-{margin},format=yuv420p[out]"
+                    f"[0:v][tbl]overlay=x='(W-w)*{positions['tbl_logo_x']}/100':y='(H-h)*{positions['tbl_logo_y']}/100':format=auto[tmp];"
+                    f"[tmp][neg]overlay=x='(W-w)*{positions['neg_x']}/100':y='(H-h)*{positions['neg_y']}/100':format=auto[logos];"
+                    f"[logos]drawtext=font='{font}':text='{tbl}':fontcolor=0x{tbl_color}:fontsize={size}:borderw=2:bordercolor=0x17102B:shadowcolor=0x7B2CFF@0.9:shadowx=2:shadowy=2:x='(w-text_w)*{positions['tbl_text_x']}/100':y='(h-text_h)*{positions['tbl_text_y']}/100',"
+                    f"drawtext=font='{font}':text='{corp}':fontcolor=0x{corp_color}:fontsize={size}:borderw=2:bordercolor=0x17102B:shadowcolor=0x00E5FF@0.85:shadowx=2:shadowy=2:x='(w-text_w)*{positions['corp_text_x']}/100':y='(h-text_h)*{positions['corp_text_y']}/100',format=yuv420p[out]"
                 )
                 cmd = ["ffmpeg", "-hide_banner", "-y", "-i", self.video.get(), "-loop", "1", "-framerate", "30", "-i", self.neg.get(), "-loop", "1", "-framerate", "30", "-i", logo_path, "-filter_complex", graph, "-map", "[out]", "-map", "0:a?", "-t", str(int(self.duration.get())), "-c:v", "libx264", "-preset", self.preset.get(), "-threads", str(int(self.threads.get())), "-crf", "21", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", str(out)]
                 with open(os.devnull, "w") as devnull:
