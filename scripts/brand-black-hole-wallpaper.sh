@@ -92,15 +92,15 @@ fi
 mkdir -p "$(dirname "$output")"
 kdialog --title "$APP_NAME" --passivepopup "Rendering wallpaper… This can take a few minutes. The output will be saved to:\n$output" 8 || true
 
-if ! ffmpeg -hide_banner -y \
+if ! nice -n 10 ffmpeg -hide_banner -y \
   -i "$video" \
   -loop 1 -framerate 30 -i "$neg_inny" \
   -loop 1 -framerate 30 -i "$logo_png" \
   -filter_complex \
-  "[1:v]scale=150:150:force_original_aspect_ratio=decrease,pad=150:150:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[neg];[2:v]scale=96:96:force_original_aspect_ratio=decrease,pad=96:96:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[tbl];[0:v][neg]overlay=220:H-h-42:format=auto[tmp];[tmp][tbl]overlay=W-w-228:H-h-42:format=auto[logos];[logos]drawtext=font=Sans:text=Innygr Corp:fontcolor=white:fontsize=28:x=48:y=H-text_h-42,drawtext=font=Sans:text=Team Blacklight:fontcolor=white:fontsize=28:x=W-text_w-48:y=H-text_h-42,format=yuv420p[out]" \
-  -map "[out]" -map "0:a?" -t "$WALLPAPER_DURATION" -c:v libx264 -preset medium -crf 20 \
+  "[1:v]scale=150:150:force_original_aspect_ratio=decrease,pad=150:150:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[neg];[2:v]scale=96:96:force_original_aspect_ratio=decrease,pad=96:96:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[tbl];[0:v][tbl]overlay=300:H-h-42:format=auto[tmp];[tmp][neg]overlay=W-340:H-h-42:format=auto[logos];[logos]drawtext=font='DejaVu Sans Mono':text='Team Blacklight':fontcolor=0x00E5FF:fontsize=30:borderw=2:bordercolor=0x17102B:shadowcolor=0x7B2CFF@0.9:shadowx=2:shadowy=2:x=48:y=H-text_h-42,drawtext=font='DejaVu Sans Mono':text='Innygr Corp':fontcolor=0xB388FF:fontsize=30:borderw=2:bordercolor=0x17102B:shadowcolor=0x00E5FF@0.85:shadowx=2:shadowy=2:x=W-text_w-48:y=H-text_h-42,format=yuv420p[out]" \
+  -map "[out]" -map "0:a?" -t "$WALLPAPER_DURATION" -c:v libx264 -preset ultrafast -threads 2 -crf 21 \
   -c:a aac -b:a 160k -shortest -movflags +faststart "$output"; then
   error "FFmpeg failed to render the wallpaper. Check that the selected video is readable and there is enough disk space."
 fi
 
-info "Wallpaper created successfully!\n\n$output\n\nThe original video remains the background. NegInny is in the lower-left corner and the Team Blacklight logo is in the lower-right.\n\nNote: MP4 playback as a live wallpaper requires a compatible KDE Plasma video-wallpaper plugin; the default image wallpaper plugin may not play videos."
+info "Wallpaper created successfully!\n\n$output\n\nThe original video remains the background. Bottom-left: Team Blacklight text followed by its logo. Bottom-right: NegInny followed by Innygr Corp text.\n\nNote: MP4 playback as a live wallpaper requires a compatible KDE Plasma video-wallpaper plugin; the default image wallpaper plugin may not play videos."
