@@ -205,7 +205,7 @@ class WallpaperStudio(tk.Tk):
                 graph = (
                     f"[1:v]scale={ns}:{ns}:force_original_aspect_ratio=decrease,pad={ns}:{ns}:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[neg];"
                     f"[2:v]scale={ls}:{ls}:force_original_aspect_ratio=decrease,pad={ls}:{ls}:(ow-iw)/2:(oh-ih)/2:color=0x00000000,format=rgba,colorchannelmixer=aa=0.96[tbl];"
-                    f"[0:v][tbl]overlay=300:H-h-{margin}:format=auto[tmp];[tmp][neg]overlay=W-{ns+40}:H-h-{margin}:format=auto[logos];"
+                    f"[0:v][tbl]overlay=300:H-h-{margin}:format=auto[tmp];[tmp][neg]overlay=W-{ns+330}:H-h-{margin}:format=auto[logos];"
                     f"[logos]drawtext=font='{font}':text='{tbl}':fontcolor=0x{tbl_color}:fontsize={size}:borderw=2:bordercolor=0x17102B:shadowcolor=0x7B2CFF@0.9:shadowx=2:shadowy=2:x=48:y=H-text_h-{margin},"
                     f"drawtext=font='{font}':text='{corp}':fontcolor=0x{corp_color}:fontsize={size}:borderw=2:bordercolor=0x17102B:shadowcolor=0x00E5FF@0.85:shadowx=2:shadowy=2:x=W-text_w-48:y=H-text_h-{margin},format=yuv420p[out]"
                 )
