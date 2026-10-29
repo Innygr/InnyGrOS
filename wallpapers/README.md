@@ -4,7 +4,7 @@ The wallpaper source is the 1920×1080 MP4 supplied by the user from MotionBGs. 
 
 ## Build the branded wallpaper locally
 
-Requirements: FFmpeg.
+Requirements: FFmpeg and ImageMagick.
 
 1. Download or otherwise obtain the source video under its applicable terms.
 2. Extract your original artwork from your own `Logos n stuff.zip` archive.
@@ -18,7 +18,7 @@ Requirements: FFmpeg.
   ~/Videos/InnyGrOS-BlackHole-TeamBlacklight.mp4
 ```
 
-The script preserves the source video as the background and places NegInny in the lower-left corner and the original Team Blacklight icon in the lower-right. It exports H.264 MP4 at the source resolution. The source video and the two artwork files are read from your local paths; they are not uploaded to GitHub by this script.
+The script preserves the source video as the background and places NegInny in the lower-left corner and the original Team Blacklight icon in the lower-right. It exports H.264 MP4 at the source resolution. The source video and artwork files are read from your local paths; they are not uploaded to GitHub by this script.
 
 ## Set it as a KDE Plasma wallpaper
 
