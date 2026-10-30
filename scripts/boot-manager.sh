@@ -27,7 +27,7 @@ PY
 status() {
   echo "InnyGrOS Boot Manager"
   if [[ -f "$CONFIG_FILE" ]]; then
-    echo "GRUB customization: installed"
+    echo "GRUB customization: installed (native GRUB colors; graphical theme disabled)"
   else
     echo "GRUB customization: not installed"
   fi
@@ -61,47 +61,23 @@ install_manager() {
     [[ ! -e "$file" ]] || { echo "Refusing to overwrite existing file: $file" >&2; exit 1; }
   done
   list_entries >/dev/null || { echo "No eligible OS entries found; refusing install." >&2; exit 1; }
-  echo "Adds a separate GRUB config, theme, and shutdown hook; existing entries are not intentionally removed."
+  echo "Adds a separate GRUB color configuration and optional shutdown hook; existing entries are not intentionally removed."
   if [[ "${INNYGROS_BOOT_MANAGER_CONFIRM:-}" == "INSTALL" ]]; then
     answer="INSTALL"
   else
     read -r -p "Type INSTALL to continue: " answer
   fi
   [[ "$answer" == INSTALL ]] || { echo "Cancelled; no changes made."; exit 0; }
-  install -d -m 0755 /etc/default/grub.d "$THEME_DIR" /usr/local/sbin
+  install -d -m 0755 /etc/default/grub.d /usr/local/sbin
   cat > "$CONFIG_FILE" <<'CFG'
 # InnyGrOS Boot Manager
+# Safe native GRUB menu styling; no unvalidated graphical theme is activated.
 GRUB_DEFAULT=saved
 GRUB_TIMEOUT_STYLE=menu
 GRUB_TIMEOUT=8
-GRUB_THEME="/boot/grub/themes/innygros/theme.txt"
+GRUB_COLOR_NORMAL="light-gray/black"
+GRUB_COLOR_HIGHLIGHT="black/light-cyan"
 CFG
-  cat > "$THEME_DIR/theme.txt" <<'THEME'
-# Conservative GRUB theme: no external image or non-default font dependencies.
-desktop-color: "#080612"
-title-text: "INTEGEROS // DEEP SPACE"
-title-color: "#e7d7ff"
-message-color: "#c8f4ff"
-message-bg-color: "#171126"
-+ boot_menu {
-  left = 16%
-  top = 25%
-  width = 68%
-  height = 54%
-  item_color = "#e6e0f0"
-  selected_item_color = "#ffffff"
-  item_height = 40
-  item_padding = 10
-}
-+ label {
-  top = 84%
-  left = 16%
-  width = 68%
-  align = "center"
-  text = "ARROW KEYS: SELECT   |   ENTER: BOOT"
-  color = "#8be9fd"
-}
-THEME
 
   cat > "$HELPER_FILE" <<'HELPER'
 #!/usr/bin/env bash
@@ -140,15 +116,15 @@ WantedBy=reboot.target poweroff.target halt.target
 UNIT
   if ! update-grub; then
     echo "update-grub failed; removing newly-created files." >&2
-    rm -f "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; rm -rf "$THEME_DIR"; exit 1
+    rm -f "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; exit 1
   fi
   if command -v grub-script-check >/dev/null 2>&1 && ! grub-script-check "$GRUB_CFG"; then
     echo "GRUB validation failed; rolling back newly-created files." >&2
-    rm -f "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; rm -rf "$THEME_DIR"; update-grub || true; exit 1
+    rm -f "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; update-grub || true; exit 1
   fi
   systemctl daemon-reload
   systemctl disable innygros-random-boot.service >/dev/null 2>&1 || true
-  echo "Installed with Random Boot OFF. Review entries with: sudo bash scripts/boot-manager.sh status"
+  echo "Installed safe native menu styling with Random Boot OFF. Review entries with: sudo bash scripts/boot-manager.sh status"
   echo "Enable with: sudo bash scripts/boot-manager.sh random-on"
   echo "Undo with: sudo bash scripts/boot-manager.sh uninstall"
 }
@@ -161,7 +137,7 @@ uninstall_manager() {
   fi
   [[ "$answer" == REMOVE ]] || { echo "Cancelled; no changes made."; exit 0; }
   systemctl disable --now innygros-random-boot.service >/dev/null 2>&1 || true
-  rm -f "$SERVICE_FILE" "$HELPER_FILE" "$CONFIG_FILE"; rm -rf "$THEME_DIR"
+  rm -f "$SERVICE_FILE" "$HELPER_FILE" "$CONFIG_FILE"
   systemctl daemon-reload
   update-grub
   echo "Removed InnyGrOS files and regenerated GRUB."
