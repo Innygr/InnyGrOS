@@ -101,6 +101,7 @@ message-bg-color: "#171126"
   text = "ARROW KEYS: SELECT   |   ENTER: BOOT"
   color = "#8be9fd"
 }
+THEME
 
   cat > "$HELPER_FILE" <<'HELPER'
 #!/usr/bin/env bash
