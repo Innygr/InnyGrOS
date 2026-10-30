@@ -13,7 +13,6 @@ if [[ ! -x "$MANAGER" ]]; then
 fi
 mkdir -p "$LOG_DIR"
 status="$(bash "$MANAGER" status 2>&1 || true)"
-printf -v menu_text "Manage the GRUB boot experience. Existing Kubuntu, Windows and recovery entries are preserved.\\n\\n%s" "$status"
 choice="$(kdialog --title "IntegerOS // Deep Space Boot Studio" --menu \
   "Manage the GRUB boot experience. Existing Kubuntu, Windows and recovery entries are preserved.\n\n$status" \
   status "Refresh status" \
