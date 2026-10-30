@@ -11,7 +11,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Dark violet/cyan KDE color scheme
 - Original 1920×1080 vector wallpaper with InnyGr and Team Blacklight identity
 - Custom Konsole profile with Fira Code, violet/cyan terminal colors, and scrollback
-- Welcome Center for desktop settings, wallpaper, terminal setup, and read-only diagnostics
+- Welcome Center for desktop settings, wallpaper, terminal setup, read-only diagnostics, and Deep Space Boot Studio for installing/removing the optional GRUB theme
 - Image-viewer compatibility report available from the Welcome Center, with a local inventory of Gwenview, image-format packages, and Qt plugins (not a substitute for visual format testing)
 - Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile, optional IntegerOS startup splash) with snapshots and one-click restore
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
