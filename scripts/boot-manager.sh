@@ -62,8 +62,18 @@ install_manager() {
   local has_backup=0
   for file in "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
     [[ -e "$file" ]] || continue
-    case "$file" in
-      "$CONFIG_FILE") grep -q '^# InnyGrOS Boot Manager
+    if [[ "$file" == "$CONFIG_FILE" ]]; then
+      grep -q "InnyGrOS Boot Manager" "$file" || { echo "Refusing to replace unrecognized file: $file" >&2; exit 1; }
+    elif [[ "$file" == "$SERVICE_FILE" ]]; then
+      grep -q "Choose a random OS for the next InnyGrOS boot" "$file" || { echo "Refusing to replace unrecognized file: $file" >&2; exit 1; }
+    elif [[ "$file" == "$HELPER_FILE" ]]; then
+      grep -q "InnyGrOS Random Boot: next boot" "$file" || { echo "Refusing to replace unrecognized file: $file" >&2; exit 1; }
+    fi
+    install -d -m 0700 "$backup_dir"
+    cp -a -- "$file" "$backup_dir/"
+    has_backup=1
+  done
+  if (( has_backup )); then echo "Backed up previous IntegerOS files to: $backup_dir"; fi
   echo "Adds a separate GRUB color configuration and optional shutdown hook; existing entries are not intentionally removed."
   if [[ "${INNYGROS_BOOT_MANAGER_CONFIRM:-}" == "INSTALL" ]]; then
     answer="INSTALL"
