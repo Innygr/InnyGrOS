@@ -3,7 +3,6 @@ set -Eeuo pipefail
 CONFIG_FILE="/etc/default/grub.d/99-innygros-boot-manager.cfg"
 SERVICE_FILE="/etc/systemd/system/innygros-random-boot.service"
 HELPER_FILE="/usr/local/sbin/innygros-random-boot"
-THEME_DIR="/boot/grub/themes/innygros"
 GRUB_CFG="/boot/grub/grub.cfg"
 usage() { echo "Usage: bash scripts/boot-manager.sh status | sudo bash scripts/boot-manager.sh install | choose-random | random-on | random-off | uninstall"; }
 list_entries() {
