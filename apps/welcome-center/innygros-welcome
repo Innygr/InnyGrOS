@@ -171,6 +171,7 @@ while true; do
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
     "updater" "Software updater (IntegerOS / system packages)" \
+    "boot-studio" "Deep Space Boot Studio (GRUB theme and boot options)" \
     "files" "Open File Manager" \
     "images" "Open image viewer (Gwenview)" \
     "image-report" "Image viewer compatibility report (read-only)" \
@@ -199,6 +200,7 @@ while true; do
     settings) open_app systemsettings "System Settings" ;;
     discover) open_app plasma-discover "Discover" ;;
     updater) run_helper "Software updater" software-updater-gui.sh ;;
+    boot-studio) run_helper "Deep Space Boot Studio" boot-studio.sh ;;
     images) open_app gwenview "Gwenview image viewer" ;;
     image-report) run_helper "Image viewer report" image-viewer-report.sh --gui ;;
     files) open_app dolphin "Dolphin File Manager" ;;
