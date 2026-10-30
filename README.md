@@ -11,7 +11,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Dark violet/cyan KDE color scheme
 - Original 1920×1080 vector wallpaper with InnyGr and Team Blacklight identity
 - Custom Konsole profile with Fira Code, violet/cyan terminal colors, and scrollback
-- Welcome Center for desktop settings, wallpaper, terminal setup, read-only diagnostics, and Deep Space Boot Studio for installing/removing the optional GRUB theme
+- Welcome Center for desktop settings, wallpaper, terminal setup, read-only diagnostics, and Deep Space Boot Studio for installing/removing safe GRUB menu styling
 - Image-viewer compatibility report available from the Welcome Center, with a local inventory of Gwenview, image-format packages, and Qt plugins (not a substitute for visual format testing)
 - Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile, optional IntegerOS startup splash) with snapshots and one-click restore
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
@@ -20,7 +20,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Read-only network report for NetworkManager, IP addresses, default route, DNS, nearby Wi-Fi metadata, and detected VPN/overlay interfaces (including Tailscale and WireGuard when installed), plus a quick connectivity/Tailscale health check in the Welcome Center
 - Read-only battery and power report for battery status, estimated design-capacity remaining when exposed by firmware, power profile, and optional temperature sensor output; available from the Welcome Center
 - Game-readiness report for Minecraft Java, Windows compatibility tools, graphics drivers, and Vulkan
-- Experimental GRUB Boot Manager with violet/cyan styling, OS-entry preview, and optional Random Boot on normal shutdown/reboot ([docs](docs/boot-manager.md))
+- Experimental GRUB Boot Manager with safe native violet/cyan menu colors, OS-entry preview, and optional Random Boot on normal shutdown/reboot; graphical theming remains disabled pending hardware validation ([docs](docs/boot-manager.md))
 - Optional native Plymouth **Blacklight Matrix** boot animation with animated code rain, boot-progress indicator, and a guarded installer/uninstaller ([docs](docs/boot-animation.md))
 - Optional **Blacklight Matrix SDDM login theme** with animated code rain, green authentication panel, session selection, and guarded install/uninstall ([docs](docs/login-theme.md))
 - Optional fullscreen **Blacklight Matrix screensaver** with animated code rain; manual launcher works independently, and automatic five-minute idle activation is opt-in for X11 sessions only ([docs](docs/blacklight-screensaver.md))
