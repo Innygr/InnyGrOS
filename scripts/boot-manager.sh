@@ -57,7 +57,8 @@ install_manager() {
   fi
   command -v python3 >/dev/null 2>&1 || { echo "Python 3 is required." >&2; exit 1; }
   list_entries >/dev/null || { echo "No eligible OS entries found; refusing install." >&2; exit 1; }
-  local backup_dir="/var/backups/innygros-boot-manager/$(date +%Y%m%d-%H%M%S)"
+  local backup_dir
+  backup_dir="/var/backups/innygros-boot-manager/$(date +%Y%m%d-%H%M%S)"
   local has_backup=0
   for file in "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
     [[ -e "$file" ]] || continue
