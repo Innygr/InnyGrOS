@@ -62,7 +62,11 @@ install_manager() {
   done
   list_entries >/dev/null || { echo "No eligible OS entries found; refusing install." >&2; exit 1; }
   echo "Adds a separate GRUB config, theme, and shutdown hook; existing entries are not intentionally removed."
-  read -r -p "Type INSTALL to continue: " answer
+  if [[ "${INNYGROS_BOOT_MANAGER_CONFIRM:-}" == "INSTALL" ]]; then
+    answer="INSTALL"
+  else
+    read -r -p "Type INSTALL to continue: " answer
+  fi
   [[ "$answer" == INSTALL ]] || { echo "Cancelled; no changes made."; exit 0; }
   install -d -m 0755 /etc/default/grub.d "$THEME_DIR" /usr/local/sbin
   cat > "$CONFIG_FILE" <<'CFG'
@@ -151,7 +155,11 @@ UNIT
 }
 uninstall_manager() {
   [[ "$EUID" -eq 0 ]] || { echo "Uninstall requires sudo/root." >&2; exit 1; }
-  read -r -p "Type REMOVE to remove only InnyGrOS Boot Manager files: " answer
+  if [[ "${INNYGROS_BOOT_MANAGER_CONFIRM:-}" == "REMOVE" ]]; then
+    answer="REMOVE"
+  else
+    read -r -p "Type REMOVE to remove only InnyGrOS Boot Manager files: " answer
+  fi
   [[ "$answer" == REMOVE ]] || { echo "Cancelled; no changes made."; exit 0; }
   systemctl disable --now innygros-random-boot.service >/dev/null 2>&1 || true
   rm -f "$SERVICE_FILE" "$HELPER_FILE" "$CONFIG_FILE"; rm -rf "$THEME_DIR"
