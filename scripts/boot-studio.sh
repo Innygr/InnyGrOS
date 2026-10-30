@@ -16,7 +16,7 @@ status="$(bash "$MANAGER" status 2>&1 || true)"
 choice="$(kdialog --title "IntegerOS // Deep Space Boot Studio" --menu \
   "Manage the GRUB boot experience. Existing Kubuntu, Windows and recovery entries are preserved.\n\n$status" \
   status "Refresh status" \
-  install "Install / update IntegerOS GRUB theme" \
+  install "Install / update safe GRUB menu styling" \
   remove "Remove IntegerOS GRUB customization" \
   cancel "Close" 2>/dev/null)" || exit 0
 case "$choice" in
