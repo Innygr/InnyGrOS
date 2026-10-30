@@ -77,33 +77,31 @@ GRUB_TIMEOUT=8
 GRUB_THEME="/boot/grub/themes/innygros/theme.txt"
 CFG
   cat > "$THEME_DIR/theme.txt" <<'THEME'
-title-text: "InnyGrOS // BOOT MANAGER"
-title-color: "#b88cff"
-title-font: "Unifont Regular 24"
-message-color: "#8be9fd"
-message-bg-color: "#171321"
-terminal-font: "Unifont Regular 16"
+# Conservative GRUB theme: no external image or non-default font dependencies.
+desktop-color: "#080612"
+title-text: "INTEGEROS // DEEP SPACE"
+title-color: "#e7d7ff"
+message-color: "#c8f4ff"
+message-bg-color: "#171126"
 + boot_menu {
-  left = 18%
-  top = 28%
-  width = 64%
-  height = 48%
-  item_font = "Unifont Regular 16"
-  item_color = "#c9c2d8"
-  selected_item_color = "#8be9fd"
-  item_height = 36
-  item_padding = 8
+  left = 16%
+  top = 25%
+  width = 68%
+  height = 54%
+  item_color = "#e6e0f0"
+  selected_item_color = "#ffffff"
+  item_height = 40
+  item_padding = 10
 }
 + label {
-  top = 82%
-  left = 18%
-  width = 64%
+  top = 84%
+  left = 16%
+  width = 68%
   align = "center"
-  text = "ENTER: boot  |  arrows: select"
+  text = "ARROW KEYS: SELECT   |   ENTER: BOOT"
   color = "#8be9fd"
-  font = "Unifont Regular 12"
 }
-THEME
+
   cat > "$HELPER_FILE" <<'HELPER'
 #!/usr/bin/env bash
 set -Eeuo pipefail
