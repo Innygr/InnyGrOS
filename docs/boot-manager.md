@@ -4,7 +4,7 @@ GRUB, not Bash, displays the operating-system menu before Linux starts. This hel
 
 ## Safe menu styling
 
-The installer deliberately uses GRUB's native menu colors instead of activating a graphical theme. The previous prototype declared a `desktop-color` property without providing a GRUB-supported background image; this could produce a white or otherwise unexpected screen on some systems. The safe configuration sets a visible 8-second menu and high-contrast native colors, and does not set `GRUB_THEME`, change the firmware boot order, or replace the generated Kubuntu/Windows entries.
+The installer deliberately uses GRUB's native menu colors instead of activating a graphical theme. The previous prototype declared a `desktop-color` property without providing a GRUB-supported background image; this could produce a white or otherwise unexpected screen on some systems. Kubuntu's `05_debian_theme` generator emits its own menu-color assignments, so the installer adds a small, ordered `/etc/grub.d/06_innygros_colors` hook after it. That hook sets the actual `menu_color_normal` and `menu_color_highlight` values in generated `grub.cfg`. The installer also sets a visible 8-second menu and does not set `GRUB_THEME`, change firmware boot order, or replace generated Kubuntu/Windows entries.
 
 The graphical Deep Space theme remains deferred until it can be validated against the installed GRUB build and display hardware. No image is generated or downloaded by this feature.
 
