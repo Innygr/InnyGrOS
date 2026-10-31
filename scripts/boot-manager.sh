@@ -142,7 +142,7 @@ WantedBy=reboot.target poweroff.target halt.target
 UNIT
   if ! update-grub; then
     echo "update-grub failed; restoring the pre-install state." >&2
-    for file in "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
+    for file in "$CONFIG_FILE" "$COLOR_SCRIPT_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
       if [[ -f "$backup_dir/$(basename "$file")" ]]; then cp -a -- "$backup_dir/$(basename "$file")" "$file"; else rm -f -- "$file"; fi
     done
     update-grub || true
@@ -150,7 +150,7 @@ UNIT
   fi
   if command -v grub-script-check >/dev/null 2>&1 && ! grub-script-check "$GRUB_CFG"; then
     echo "GRUB validation failed; restoring the pre-install state." >&2
-    for file in "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
+    for file in "$CONFIG_FILE" "$COLOR_SCRIPT_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
       if [[ -f "$backup_dir/$(basename "$file")" ]]; then cp -a -- "$backup_dir/$(basename "$file")" "$file"; else rm -f -- "$file"; fi
     done
     update-grub || true
