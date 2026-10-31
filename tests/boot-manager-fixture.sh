@@ -10,6 +10,11 @@ grep -q 'random-on' "$ROOT/scripts/boot-manager.sh"
 grep -q 'random-off' "$ROOT/scripts/boot-manager.sh"
 grep -q 'GRUB_COLOR_NORMAL="light-gray/black"' "$ROOT/scripts/boot-manager.sh"
 grep -q 'GRUB_COLOR_HIGHLIGHT="black/light-cyan"' "$ROOT/scripts/boot-manager.sh"
+grep -q 'COLOR_SCRIPT_FILE="/etc/grub.d/06_innygros_colors"' "$ROOT/scripts/boot-manager.sh"
+grep -q 'set menu_color_normal=light-gray/black' "$ROOT/scripts/boot-manager.sh"
+grep -q 'set menu_color_highlight=black/light-cyan' "$ROOT/scripts/boot-manager.sh"
+grep -q 'chmod 0755 "$COLOR_SCRIPT_FILE"' "$ROOT/scripts/boot-manager.sh"
+grep -q 'for file in "$CONFIG_FILE" "$COLOR_SCRIPT_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do' "$ROOT/scripts/boot-manager.sh"
 if grep -q 'GRUB_THEME=' "$ROOT/scripts/boot-manager.sh"; then
   echo "Unvalidated graphical GRUB themes must not be activated" >&2; exit 1
 fi
