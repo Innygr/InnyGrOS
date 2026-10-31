@@ -2,6 +2,7 @@
 set -Eeuo pipefail
 CONFIG_FILE="/etc/default/grub.d/99-innygros-boot-manager.cfg"
 SERVICE_FILE="/etc/systemd/system/innygros-random-boot.service"
+COLOR_SCRIPT_FILE="/etc/grub.d/06_innygros_colors"
 HELPER_FILE="/usr/local/sbin/innygros-random-boot"
 GRUB_CFG="/boot/grub/grub.cfg"
 usage() { echo "Usage: bash scripts/boot-manager.sh status | sudo bash scripts/boot-manager.sh install | choose-random | random-on | random-off | uninstall"; }
@@ -60,10 +61,12 @@ install_manager() {
   local backup_dir
   backup_dir="/var/backups/innygros-boot-manager/$(date +%Y%m%d-%H%M%S)"
   local has_backup=0
-  for file in "$CONFIG_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
+  for file in "$CONFIG_FILE" "$COLOR_SCRIPT_FILE" "$SERVICE_FILE" "$HELPER_FILE"; do
     [[ -e "$file" ]] || continue
     if [[ "$file" == "$CONFIG_FILE" ]]; then
       grep -q "InnyGrOS Boot Manager" "$file" || { echo "Refusing to replace unrecognized file: $file" >&2; exit 1; }
+    elif [[ "$file" == "$COLOR_SCRIPT_FILE" ]]; then
+      grep -q "IntegerOS GRUB menu colors" "$file" || { echo "Refusing to replace unrecognized file: $file" >&2; exit 1; }
     elif [[ "$file" == "$SERVICE_FILE" ]]; then
       grep -q "Choose a random OS for the next InnyGrOS boot" "$file" || { echo "Refusing to replace unrecognized file: $file" >&2; exit 1; }
     elif [[ "$file" == "$HELPER_FILE" ]]; then
@@ -91,6 +94,16 @@ GRUB_TIMEOUT=8
 GRUB_COLOR_NORMAL="light-gray/black"
 GRUB_COLOR_HIGHLIGHT="black/light-cyan"
 CFG
+
+  cat > "$COLOR_SCRIPT_FILE" <<'COLORS'
+#!/bin/sh
+# IntegerOS GRUB menu colors
+cat <<'GRUB_COLORS'
+set menu_color_normal=light-gray/black
+set menu_color_highlight=black/light-cyan
+GRUB_COLORS
+COLORS
+  chmod 0755 "$COLOR_SCRIPT_FILE"
 
   cat > "$HELPER_FILE" <<'HELPER'
 #!/usr/bin/env bash
@@ -158,7 +171,7 @@ uninstall_manager() {
   fi
   [[ "$answer" == REMOVE ]] || { echo "Cancelled; no changes made."; exit 0; }
   systemctl disable --now innygros-random-boot.service >/dev/null 2>&1 || true
-  rm -f "$SERVICE_FILE" "$HELPER_FILE" "$CONFIG_FILE"
+  rm -f "$SERVICE_FILE" "$HELPER_FILE" "$COLOR_SCRIPT_FILE" "$CONFIG_FILE"
   systemctl daemon-reload
   update-grub
   echo "Removed InnyGrOS files and regenerated GRUB."
