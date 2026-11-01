@@ -9,7 +9,7 @@ import shutil
 import signal
 import subprocess
 import sys
-import time
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -19,7 +19,7 @@ STATE_FILE = STATE_DIR / "state.json"
 MAX_MESSAGE_LENGTH = 240
 HEARTBEAT_SECONDS = 10
 HEARTBEAT_TIMEOUT = 35
-_STOP = False
+_STOP_EVENT = threading.Event()
 
 
 def now() -> str:
@@ -80,8 +80,7 @@ def status() -> int:
 
 
 def _stop_handler(_signum: int, _frame: object) -> None:
-    global _STOP
-    _STOP = True
+    _STOP_EVENT.set()
 
 
 def run_agent() -> int:
@@ -90,12 +89,12 @@ def run_agent() -> int:
     pid = os.getpid()
     print(f"Blacklight Control agent started (PID {pid}).", flush=True)
     try:
-        while not _STOP:
+        while not _STOP_EVENT.is_set():
             state = load_state()
             state["agent_pid"] = pid
             state["agent_heartbeat"] = now()
             save_state(state)
-            time.sleep(HEARTBEAT_SECONDS)
+            _STOP_EVENT.wait(HEARTBEAT_SECONDS)
     finally:
         state = load_state()
         if state.get("agent_pid") == pid:
