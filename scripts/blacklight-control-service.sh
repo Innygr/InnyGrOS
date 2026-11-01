@@ -27,6 +27,7 @@ print_commands() {
   printf '%s\n' "Add these as KDE Connect Run Commands for your paired phone:"
   printf 'Status: %s status\n' "$WRAPPER"
   printf 'Lock: %s lock\n' "$WRAPPER"
+  printf 'Blacklight Lockdown: %s lockdown\n' "$WRAPPER"
   printf 'Message: %s message "Your message here"\n' "$WRAPPER"
   printf 'Clear last-action record: %s clear-state\n' "$WRAPPER"
 }
