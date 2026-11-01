@@ -26,6 +26,19 @@ grep -q 'enable --now blacklight-control.service' "$SYSTEMCTL_LOG"
 grep -q 'Status: .*blacklight-control status' "$TMP/install.out"
 grep -q 'Lock: .*blacklight-control lock' "$TMP/install.out"
 
+python3 "$HOME/.local/lib/blacklight-control/blacklight-control" daemon > "$TMP/agent.log" 2>&1 &
+agent_pid=$!
+for _ in {1..20}; do
+  if "$HOME/.local/bin/blacklight-control" status | grep -q 'Agent service: active'; then
+    break
+  fi
+  sleep 0.1
+done
+"$HOME/.local/bin/blacklight-control" status | grep -q 'Agent service: active'
+kill "$agent_pid"
+wait "$agent_pid"
+"$HOME/.local/bin/blacklight-control" status | grep -q 'Agent service: inactive'
+
 mkdir -p "$XDG_STATE_HOME/blacklight-control"
 printf '{"last_action":"test","updated_at":"now"}\n' > "$XDG_STATE_HOME/blacklight-control/state.json"
 bash "$ROOT/scripts/blacklight-control-service.sh" uninstall
