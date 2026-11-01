@@ -77,7 +77,7 @@ def status() -> int:
     print(f"Agent heartbeat: {heartbeat}")
     print(f"Last action: {state.get('last_action', 'none')}")
     print(f"Last action time: {state.get('updated_at', 'never')}")
-    print("Session lock: native KDE authentication (authentication remains required)")
+    print("Native lock: KDE authentication; visual lockdown: dismissible fullscreen notice")
     return 0
 
 
@@ -107,7 +107,7 @@ def run_agent() -> int:
     return 0
 
 
-def lock_session(lockdown: bool = False) -> int:
+def lock_session() -> int:
     # Plasma exposes the native screen locker on the user's session bus.
     # Prefer this over logind: KDE Connect Run Commands may not have a
     # reliable logind "self" session identifier in their process context.
@@ -134,9 +134,8 @@ def lock_session(lockdown: bool = False) -> int:
             text=True,
         )
         if result.returncode == 0:
-            record("lockdown-requested" if lockdown else "lock-requested")
-            label = "Blacklight Lockdown" if lockdown else "KDE desktop lock"
-            print(f"{label} requested. Use your normal account authentication to unlock.")
+            record("lock-requested")
+            print("KDE desktop lock requested. Use your normal account authentication to unlock.")
             return 0
 
     # Fallback only when the caller has an explicit session ID. Avoid
@@ -152,9 +151,8 @@ def lock_session(lockdown: bool = False) -> int:
             text=True,
         )
         if result.returncode == 0:
-            record("lockdown-requested" if lockdown else "lock-requested")
-            label = "Blacklight Lockdown" if lockdown else "Native session lock"
-            print(f"{label} requested. Use your normal account authentication to unlock.")
+            record("lock-requested")
+            print("Native session lock requested. Use your normal account authentication to unlock.")
             return 0
 
     print(
@@ -163,6 +161,38 @@ def lock_session(lockdown: bool = False) -> int:
         file=sys.stderr,
     )
     return 1
+
+def show_lockdown(message: str) -> int:
+    """Show a fullscreen, visibly dismissible notice; this is not a security lock."""
+    cleaned = " ".join(message.split()) or "This screen is temporarily locked."
+    if len(cleaned) > MAX_MESSAGE_LENGTH:
+        print(f"Message must be {MAX_MESSAGE_LENGTH} characters or fewer.", file=sys.stderr)
+        return 2
+    try:
+        import tkinter as tk
+    except ModuleNotFoundError:
+        print("Blacklight Lockdown needs Python Tkinter. Install it with: sudo apt install python3-tk", file=sys.stderr)
+        return 1
+    record("lockdown-active", cleaned)
+    root = tk.Tk()
+    root.title("Blacklight Control — Lockdown")
+    root.configure(bg="#020604")
+    root.attributes("-fullscreen", True)
+    root.attributes("-topmost", True)
+    root.bind("<Escape>", lambda _event: root.destroy())
+    root.bind("<F10>", lambda _event: root.destroy())
+    shell = tk.Frame(root, bg="#020604", highlightbackground="#39ff83", highlightthickness=2)
+    shell.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.72, relheight=0.72)
+    tk.Label(shell, text="BLACKLIGHT CONTROL", bg="#020604", fg="#39ff83", font=("monospace", 16, "bold")).pack(pady=(42, 12))
+    tk.Label(shell, text="SESSION NOTICE", bg="#020604", fg="#baffd1", font=("monospace", 34, "bold")).pack(pady=(12, 24))
+    tk.Frame(shell, bg="#1c7540", height=2).pack(fill="x", padx=60, pady=8)
+    tk.Label(shell, text=cleaned, bg="#020604", fg="#e6ffed", font=("sans", 20), wraplength=760, justify="center").pack(expand=True, padx=48, pady=24)
+    tk.Label(shell, text="Visual notice only — not an authentication barrier.", bg="#020604", fg="#77a98a", font=("monospace", 11)).pack(pady=(4, 10))
+    tk.Button(shell, text="EXIT LOCKDOWN  [ ESC ]", command=root.destroy, bg="#0b2816", fg="#baffd1", activebackground="#174d2b", activeforeground="#ffffff", relief="flat", padx=28, pady=14, font=("monospace", 13, "bold"), cursor="hand2").pack(pady=(8, 34))
+    root.mainloop()
+    record("lockdown-ended")
+    return 0
+
 
 def show_message(message: str) -> int:
     cleaned = " ".join(message.split())
@@ -186,7 +216,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("status", help="Show agent and last-action status")
     sub.add_parser("daemon", help="Run the background user-session agent")
     sub.add_parser("lock", help="Request the native KDE session lock")
-    sub.add_parser("lockdown", help="Activate the native-authenticated Blacklight lock screen")
+    lockdown = sub.add_parser("lockdown", help="Show a fullscreen Blacklight notice with local exit")
+    lockdown.add_argument("text", nargs="*", help="Optional notice text (maximum 240 characters)")
     message = sub.add_parser("message", help="Show a message on this desktop")
     message.add_argument("text", nargs="+", help="Message text (maximum 240 characters)")
     sub.add_parser("clear-state", help="Clear the last-action record")
@@ -202,7 +233,7 @@ def main() -> int:
     if args.command == "lock":
         return lock_session()
     if args.command == "lockdown":
-        return lock_session(lockdown=True)
+        return show_lockdown(" ".join(args.text))
     if args.command == "message":
         return show_message(" ".join(args.text))
     if args.command == "clear-state":
