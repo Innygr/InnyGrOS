@@ -38,16 +38,15 @@ def save_state(state: dict) -> None:
 def status() -> int:
     state = load_state()
     print("Blacklight Control — prototype")
-    print(f"State: {state.get('state', 'idle')}")
+    print("Agent: ready")
     print(f"Last action: {state.get('last_action', 'none')}")
     print(f"Updated: {state.get('updated_at', 'never')}")
     print("Session lock: native desktop lock (authentication remains required)")
     return 0
 
 
-def record(action: str, state_name: str, message: str | None = None) -> None:
+def record(action: str, message: str | None = None) -> None:
     data = {
-        "state": state_name,
         "last_action": action,
         "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
@@ -70,7 +69,7 @@ def lock_session() -> int:
     if result.returncode != 0:
         print(result.stderr.strip() or "The desktop session manager rejected the lock request.", file=sys.stderr)
         return result.returncode
-    record("lock", "locked")
+    record("lock-requested")
     print("Native session lock requested. Sign in normally on the laptop to unlock.")
     return 0
 
@@ -87,7 +86,7 @@ def show_message(message: str) -> int:
     if not kdialog:
         print("kdialog is not installed; cannot display a desktop message.", file=sys.stderr)
         return 1
-    record("message", "message-shown", cleaned)
+    record("message-shown", cleaned)
     return subprocess.run([kdialog, "--title", "Blacklight Control", "--msgbox", cleaned], check=False).returncode
 
 
