@@ -8,7 +8,7 @@ trap 'rm -rf "$TMP"' EXIT
 export XDG_STATE_HOME="$TMP/state"
 
 status_output="$(python3 "$APP" status)"
-grep -q "Agent: ready" <<<"$status_output"
+grep -q "Agent service: inactive" <<<"$status_output"
 
 mkdir -p "$TMP/bin"
 cat > "$TMP/bin/loginctl" <<'MOCK'
@@ -29,7 +29,7 @@ if python3 "$APP" message "" >/dev/null 2>&1; then
   exit 1
 fi
 
-python3 "$APP" clear-state | grep -q "Local status cleared"
-python3 "$APP" status | grep -q "Agent: ready"
+python3 "$APP" clear-state | grep -q "Last-action record cleared"
+python3 "$APP" status | grep -q "Agent service: inactive"
 
 echo "Blacklight Control smoke tests passed."

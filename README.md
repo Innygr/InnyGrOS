@@ -25,7 +25,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Optional **Blacklight Matrix SDDM login theme** with animated code rain, green authentication panel, session selection, and guarded install/uninstall ([docs](docs/login-theme.md))
 - Optional fullscreen **Blacklight Matrix screensaver** with animated code rain; manual launcher works independently, and automatic five-minute idle activation is opt-in for X11 sessions only ([docs](docs/blacklight-screensaver.md))
 - Experimental, reversible **native Plasma lock-screen Matrix overlay** that adds animated code rain and disables the wallpaper blur/fader while preserving KDE's native authentication ([docs](docs/blacklight-lockscreen.md))
-- **Blacklight Control prototype** with local status, native KDE session-lock request, and visible message dialog; KDE Connect Run Commands setup is currently manual, while service lifecycle, GUI, and consent-based screen viewing remain on the roadmap ([prototype and security plan](docs/blacklight-control.md))
+- **Blacklight Control** user-scoped systemd service with heartbeat status, native KDE session-lock request, visible message dialog, install/uninstall helper, and generated KDE Connect Run Commands setup instructions; GUI and consent-based screen viewing remain planned ([setup and security boundaries](docs/blacklight-control.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
 - 0.8 planned: broad-format image viewing, including animated formats where the selected viewer/backend supports them ([image viewer plan](docs/IMAGE-VIEWER.md), [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md))

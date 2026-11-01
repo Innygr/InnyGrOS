@@ -1,76 +1,93 @@
-# Blacklight Control (prototype)
+# Blacklight Control
 
-Blacklight Control is the proposed remote-management subsystem for IntegerOS / Kubuntu. Its intended controller is the user's explicitly paired KDE Connect phone; its target is the user's own device.
+Blacklight Control is a user-scoped remote-management helper for an IntegerOS / Kubuntu computer, intended to be controlled from the owner's explicitly paired KDE Connect phone.
 
-The first command prototype is now present. **It is not a complete remote-management app and is not yet installed by IntegerOS.** The existing Blacklight Matrix lock-screen theme is a separate visual customization.
+## Install the user service
 
-## Prototype commands
-
-Run the helper from a checkout:
+From the repository checkout:
 
 ```bash
-python3 apps/blacklight-control/blacklight-control status
-python3 apps/blacklight-control/blacklight-control lock
-python3 apps/blacklight-control/blacklight-control message "Your configured message"
-python3 apps/blacklight-control/blacklight-control clear-state
+bash scripts/blacklight-control-service.sh install
 ```
 
-- `status` prints the locally recorded state.
-- `lock` asks `loginctl` to lock the current desktop session using the native session manager. Normal account authentication is still required to unlock.
-- `message` displays a visible KDE dialog using `kdialog`; text is limited to 240 characters.
-- `clear-state` clears only the helper's local status record. It does not unlock the session.
+This installs the helper under `~/.local/lib/blacklight-control/`, a command wrapper at `~/.local/bin/blacklight-control`, and a systemd **user** service at `~/.config/systemd/user/blacklight-control.service`. It does not use sudo or install a system-wide daemon.
 
-The status record is stored under `$XDG_STATE_HOME/blacklight-control/state.json`, or `~/.local/state/blacklight-control/state.json` when XDG_STATE_HOME is unset. The file is user-owned and written with mode 0600.
+Check it with:
 
-## KDE Connect setup (manual, prototype)
+```bash
+~/.local/bin/blacklight-control status
+systemctl --user status blacklight-control.service
+```
 
-1. Pair the phone with the laptop in KDE Connect and verify the pairing on both devices.
-2. On the laptop, open KDE Connect's Run Commands configuration for that paired phone.
-3. Add commands that invoke the helper by its full local path. For example, replace `/path/to/InnyGrOS` with the actual checkout path:
-   - Status: `python3 /path/to/InnyGrOS/apps/blacklight-control/blacklight-control status`
-   - Lock: `python3 /path/to/InnyGrOS/apps/blacklight-control/blacklight-control lock`
-   - Message: `python3 /path/to/InnyGrOS/apps/blacklight-control/blacklight-control message "Please check in with the laptop owner"`
+The agent writes a heartbeat to `~/.local/state/blacklight-control/state.json` (or `$XDG_STATE_HOME/blacklight-control/state.json`). The file is private to the user. The service starts with the user's systemd session and restarts if it exits unexpectedly.
+
+To remove the service and installed program files:
+
+```bash
+bash scripts/blacklight-control-service.sh uninstall
+```
+
+Uninstall retains the local status/history directory. The installer and uninstaller touch only the named Blacklight Control files in the current user's home directory.
+
+## Connect KDE Connect
+
+1. Pair the phone and laptop in KDE Connect and confirm the pairing on both devices.
+2. Run `bash scripts/blacklight-control-service.sh commands` to print the commands with the correct installed path.
+3. In KDE Connect's Run Commands settings on the laptop, add the printed commands for that paired phone:
+   - **Status** — reports whether the user service heartbeat is active.
+   - **Lock** — asks `loginctl` to lock the current session.
+   - **Message** — displays a visible KDE dialog. Replace the sample text with a fixed message of your choice.
+   - **Clear last-action record** — clears the saved last-action text only.
 4. Keep Run Commands enabled only for devices you recognize and have explicitly paired.
 
-KDE Connect Run Commands send fixed commands; they do not provide a text-entry prompt on the phone. The message example above is static. Do not expose this helper through a public network listener or copy KDE Connect pairing credentials into this project.
+KDE Connect Run Commands are fixed commands; this integration does not create a text-entry prompt on the phone. The message command is configured as a fixed command. The setup helper prints commands but deliberately does not edit KDE Connect's private configuration or pairing data.
+
+## Commands
+
+The installed wrapper supports:
+
+```bash
+blacklight-control status
+blacklight-control lock
+blacklight-control message "Your message"
+blacklight-control clear-state
+```
+
+- `status` checks the agent heartbeat and reports the last recorded action.
+- `lock` requests the native desktop session lock. Normal account authentication remains required to unlock.
+- `message` displays a visible `kdialog` message (maximum 240 characters).
+- `clear-state` clears only the last-action record; it does not stop the service or unlock the session.
 
 ## Security and platform boundaries
 
-- Only devices explicitly paired and authorized in KDE Connect should receive the Run Commands profile. Pairing and authorization remain managed by KDE Connect.
-- Do not store KDE Connect pairing keys in this project or attempt to bypass KDE Connect's authorization.
-- The native session lock is real; the helper does not implement remote unlock and does not bypass the user's password or other login method.
-- Do not disable or intercept shutdown, restart, firmware controls, emergency recovery, virtual terminals, or normal authentication.
+- KDE Connect remains responsible for pairing and authorization. This project does not store or manipulate KDE Connect pairing keys.
+- The service is user-scoped and has no network listener.
+- The native session lock is real; there is no remote unlock or authentication bypass.
+- Shutdown, restart, firmware controls, emergency recovery, virtual terminals, and normal authentication are not disabled or intercepted.
 - A fullscreen overlay is not a security boundary. On Plasma Wayland, ordinary applications cannot reliably suppress every system shortcut or alternate session path.
-- Do not silently capture or stream a screen. Any future screen viewing must be explicit, visible, and stoppable locally.
-- If the phone is disconnected, the user must retain a local recovery method.
-
-## Planned architecture
-
-1. **Agent** — evolve the helper into a user-session service with a narrow command interface and local state.
-2. **KDE Connect adapter** — setup helper and tested Run Commands profile for paired devices.
-3. **Lockdown backend** — evaluate supported KDE kiosk/session-policy facilities; document exactly what is and is not enforced.
-4. **Screen-view backend** — investigate KRdp / KDE's supported PipeWire remote-desktop stack. Screen capture must remain visible and consent-based.
-5. **GUI and recovery** — IntegerOS Welcome Center controls, local logs, recovery, and uninstall support.
+- Screen viewing is not implemented. Any future screen viewing must be explicitly initiated, visibly indicated, and stoppable locally; silent capture or recording is out of scope.
+- Keep a local recovery method available if the phone is disconnected.
 
 ## Implementation milestones
 
-- [x] **0.1 — Initial architecture and security boundaries.**
-- [x] **0.2a — Command prototype:** local status, native session-lock request, visible message dialog, and local state clearing.
-- [ ] **0.2b — Agent lifecycle:** user-scoped service, explicit start/stop, and clean uninstall.
-- [ ] **0.3 — KDE Connect integration:** setup helper and tested Run Commands profile for paired devices.
+- [x] **0.1 — Architecture and security boundaries.**
+- [x] **0.2a — Command prototype:** status, native session-lock request, visible message dialog, and local state.
+- [x] **0.2b — Agent lifecycle:** user-scoped systemd service, install/uninstall helper, heartbeat status, and KDE Connect command setup instructions.
+- [ ] **0.3 — KDE Connect integration:** validate the printed Run Commands on supported KDE Connect desktop/mobile versions.
 - [ ] **0.4 — Lockdown backend:** evaluate supported kiosk/session-policy mechanisms; document exactly what is and is not enforced.
 - [ ] **0.5 — Screen viewing:** consent-based KRdp/PipeWire integration and mobile-client compatibility testing.
 - [ ] **0.6 — GUI and packaging:** IntegerOS Welcome Center controls, logs, recovery, and uninstall support.
 
 ## Tests
 
-Run the smoke test from the repository root:
+Run the isolated smoke tests from the repository root:
 
 ```bash
 bash tests/blacklight-control-smoke.sh
+bash tests/blacklight-control-service-smoke.sh
 ```
 
-The test uses a temporary state directory and a mock `loginctl`; it does not lock the test machine.
+The tests use temporary directories and mocked system commands; they do not lock the test machine or enable a real service.
 
 ## Related features
 
