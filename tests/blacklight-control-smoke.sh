@@ -7,31 +7,29 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 export XDG_STATE_HOME="$TMP/state"
 
-chmod +x "$APP"
-
-status_output="$("$APP" status)"
+status_output="$(python3 "$APP" status)"
 grep -q "State: idle" <<<"$status_output"
 
 mkdir -p "$TMP/bin"
 cat > "$TMP/bin/loginctl" <<'MOCK'
 #!/usr/bin/env bash
-[[ "$*" == "lock-session" ]] || exit 9
+[[ "$*" == "lock-session self" ]] || exit 9
 touch "$MOCK_LOCK_MARKER"
 MOCK
 chmod +x "$TMP/bin/loginctl"
 export MOCK_LOCK_MARKER="$TMP/lock-called"
 export PATH="$TMP/bin:$PATH"
 
-"$APP" lock | grep -q "Native session lock requested"
+python3 "$APP" lock | grep -q "Native session lock requested"
 test -f "$MOCK_LOCK_MARKER"
-"$APP" status | grep -q "State: locked"
+python3 "$APP" status | grep -q "State: locked"
 
-if "$APP" message "" >/dev/null 2>&1; then
+if python3 "$APP" message "" >/dev/null 2>&1; then
   echo "Empty message unexpectedly accepted" >&2
   exit 1
 fi
 
-"$APP" clear-state | grep -q "Local status cleared"
+python3 "$APP" clear-state | grep -q "Local status cleared"
 "$APP" status | grep -q "State: idle"
 
 echo "Blacklight Control smoke tests passed."
