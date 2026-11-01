@@ -8,7 +8,7 @@ trap 'rm -rf "$TMP"' EXIT
 export XDG_STATE_HOME="$TMP/state"
 
 status_output="$(python3 "$APP" status)"
-grep -q "State: idle" <<<"$status_output"
+grep -q "Agent: ready" <<<"$status_output"
 
 mkdir -p "$TMP/bin"
 cat > "$TMP/bin/loginctl" <<'MOCK'
@@ -22,7 +22,7 @@ export PATH="$TMP/bin:$PATH"
 
 python3 "$APP" lock | grep -q "Native session lock requested"
 test -f "$MOCK_LOCK_MARKER"
-python3 "$APP" status | grep -q "State: locked"
+python3 "$APP" status | grep -q "Last action: lock-requested"
 
 if python3 "$APP" message "" >/dev/null 2>&1; then
   echo "Empty message unexpectedly accepted" >&2
@@ -30,6 +30,6 @@ if python3 "$APP" message "" >/dev/null 2>&1; then
 fi
 
 python3 "$APP" clear-state | grep -q "Local status cleared"
-"$APP" status | grep -q "State: idle"
+"$APP" status | grep -q "Agent: ready"
 
 echo "Blacklight Control smoke tests passed."
