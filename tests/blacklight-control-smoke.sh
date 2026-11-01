@@ -30,6 +30,6 @@ if python3 "$APP" message "" >/dev/null 2>&1; then
 fi
 
 python3 "$APP" clear-state | grep -q "Local status cleared"
-"$APP" status | grep -q "Agent: ready"
+python3 "$APP" status | grep -q "Agent: ready"
 
 echo "Blacklight Control smoke tests passed."
