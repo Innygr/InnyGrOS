@@ -61,7 +61,7 @@ def lock_session() -> int:
         print("loginctl was not found; cannot request a native session lock.", file=sys.stderr)
         return 1
     result = subprocess.run(
-        ["loginctl", "lock-session"],
+        ["loginctl", "lock-session", "self"],
         check=False,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
