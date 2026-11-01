@@ -73,8 +73,10 @@ def status() -> int:
     active = agent_is_active(state)
     print("Blacklight Control")
     print(f"Agent service: {'active' if active else 'inactive'}")
+    heartbeat = state.get("agent_heartbeat", "unavailable")
+    print(f"Agent heartbeat: {heartbeat}")
     print(f"Last action: {state.get('last_action', 'none')}")
-    print(f"Updated: {state.get('updated_at', 'never')}")
+    print(f"Last action time: {state.get('updated_at', 'never')}")
     print("Session lock: native desktop lock (authentication remains required)")
     return 0
 
