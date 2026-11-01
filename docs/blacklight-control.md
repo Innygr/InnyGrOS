@@ -35,7 +35,8 @@ Uninstall retains the local status/history directory. The installer and uninstal
 2. Run `bash scripts/blacklight-control-service.sh commands` to print the commands with the correct installed path.
 3. In KDE Connect's Run Commands settings on the laptop, add the printed commands for that paired phone:
    - **Status** — reports whether the user service heartbeat is active.
-   - **Lock** — asks `loginctl` to lock the current session.
+   - **Lock** — requests the native KDE session lock.
+   - **Blacklight Lockdown** — requests the same native lock and records a distinct lockdown action. If the optional Blacklight Matrix native lock-screen theme is installed, KDE displays its branded authentication screen.
    - **Message** — displays a visible KDE dialog. Replace the sample text with a fixed message of your choice.
    - **Clear last-action record** — clears the saved last-action text only.
 4. Keep Run Commands enabled only for devices you recognize and have explicitly paired.
@@ -49,12 +50,14 @@ The installed wrapper supports:
 ```bash
 blacklight-control status
 blacklight-control lock
+blacklight-control lockdown
 blacklight-control message "Your message"
 blacklight-control clear-state
 ```
 
 - `status` shows the agent heartbeat separately from the last-action timestamp, so an active service with no commands received is not reported as having an update.
-- `lock` requests the native desktop session lock. Normal account authentication remains required to unlock.
+- `lock` requests the native desktop session lock.
+- `lockdown` requests the same native KDE lock, but records a distinct `lockdown-requested` action so the phone-side command and status are identifiable. With the optional [Blacklight Matrix native lock-screen theme](blacklight-lockscreen.md) installed, the native KDE authentication screen has the branded Blacklight appearance. Normal account authentication remains required to unlock.
 - `message` displays a visible `kdialog` message (maximum 240 characters).
 - `clear-state` clears only the last-action record; it does not stop the service or unlock the session.
 
@@ -74,7 +77,8 @@ blacklight-control clear-state
 - [x] **0.2a — Command prototype:** status, native session-lock request, visible message dialog, and local state.
 - [x] **0.2b — Agent lifecycle:** user-scoped systemd service, install/uninstall helper, heartbeat status, and KDE Connect command setup instructions.
 - [ ] **0.3 — KDE Connect integration:** validate the printed Run Commands on supported KDE Connect desktop/mobile versions.
-- [ ] **0.4 — Lockdown backend:** evaluate supported kiosk/session-policy mechanisms; document exactly what is and is not enforced.
+- [x] **0.4a — Native-authenticated Lockdown command:** dedicated KDE Connect action using KDE’s real lock screen; optional Blacklight lock-screen branding remains a separate reversible install.
+- [ ] **0.4b — Full-screen notice:** investigate a supported Plasma lock-screen extension point for displaying a custom remote notice without replacing authentication or blocking recovery.
 - [ ] **0.5 — Screen viewing:** consent-based KRdp/PipeWire integration and mobile-client compatibility testing.
 - [ ] **0.6 — GUI and packaging:** IntegerOS Welcome Center controls, logs, recovery, and uninstall support.
 
