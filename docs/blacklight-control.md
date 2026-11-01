@@ -53,7 +53,7 @@ blacklight-control message "Your message"
 blacklight-control clear-state
 ```
 
-- `status` checks the agent heartbeat and reports the last recorded action.
+- `status` shows the agent heartbeat separately from the last-action timestamp, so an active service with no commands received is not reported as having an update.
 - `lock` requests the native desktop session lock. Normal account authentication remains required to unlock.
 - `message` displays a visible `kdialog` message (maximum 240 characters).
 - `clear-state` clears only the last-action record; it does not stop the service or unlock the session.
