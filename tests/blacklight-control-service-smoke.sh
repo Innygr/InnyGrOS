@@ -34,7 +34,11 @@ for _ in {1..20}; do
   fi
   sleep 0.1
 done
-"$HOME/.local/bin/blacklight-control" status | grep -q 'Agent service: active'
+active_status="$("$HOME/.local/bin/blacklight-control" status)"
+grep -q 'Agent service: active' <<<"$active_status"
+grep -Eq 'Agent heartbeat: [0-9]{4}-[0-9]{2}-[0-9]{2}T' <<<"$active_status"
+grep -q 'Last action: none' <<<"$active_status"
+grep -q 'Last action time: never' <<<"$active_status"
 kill "$agent_pid"
 wait "$agent_pid"
 "$HOME/.local/bin/blacklight-control" status | grep -q 'Agent service: inactive'
