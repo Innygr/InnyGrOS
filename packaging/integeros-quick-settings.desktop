@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=IntegerOS Quick Settings
+GenericName=Quick system controls
+Comment=Toggle connectivity, audio, and power profiles
+Exec=integeros-quick-settings
+Icon=preferences-system
+Terminal=false
+Categories=Settings;System;
+StartupNotify=true
