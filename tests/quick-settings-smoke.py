@@ -3,8 +3,15 @@
 import importlib.util
 from pathlib import Path
 import sys
+import types
 import unittest
 from unittest.mock import patch
+
+# The status-reader tests do not need a display or the Tkinter system package.
+tk_stub = types.ModuleType("tkinter")
+tk_stub.messagebox = types.SimpleNamespace()
+tk_stub.ttk = types.SimpleNamespace()
+sys.modules.setdefault("tkinter", tk_stub)
 
 APP = Path(__file__).resolve().parents[1] / "apps/quick-settings/integeros-quick-settings"
 spec = importlib.util.spec_from_file_location("integeros_quick_settings", APP)
@@ -16,7 +23,6 @@ spec.loader.exec_module(module)
 class QuickSettingsSmokeTests(unittest.TestCase):
     @patch.object(module.shutil, "which", return_value=None)
     def test_missing_tools_are_reported_without_launching_ui(self, _which):
-        # The status readers are pure helpers and do not require a display.
         instance = object.__new__(module.QuickSettings)
         self.assertEqual(instance.read_wifi(), "Unavailable (nmcli missing)")
         self.assertEqual(instance.read_bluetooth(), "Unavailable (bluetoothctl missing)")
