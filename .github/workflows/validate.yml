@@ -50,6 +50,9 @@ jobs:
       - name: Blacklight Matrix native lock-screen smoke test
         run: bash ./tests/blacklight-lockscreen-smoke.sh
 
+      - name: IntegerOS Theme Studio syntax check
+        run: python3 -m py_compile ./apps/theme-studio/integeros-theme-studio
+
       - name: Blacklight Control smoke tests
         run: |
           python3 -m py_compile ./apps/blacklight-control/blacklight-control
