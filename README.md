@@ -49,7 +49,15 @@ To undo IntegerOS changes, run `./scripts/restore-defaults.sh` or see [docs/reco
 
 The installer checks the distribution first, then asks before each step: package groups (required, diagnostics, KDE apps, developer tools), the Welcome Center, and the reversible desktop profile. It prints a summary of what was done, skipped, or failed. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
 
-## IntegerOS Quick Settings\n\nInstall the optional compact controls panel with `bash scripts/install-quick-settings.sh`. Search the application launcher for **IntegerOS Quick Settings**. It uses the existing NetworkManager, Bluetooth, audio, and power-profile services; missing tools are reported rather than installed automatically. See [Quick Settings documentation](docs/quick-settings.md).\n\n## Desktop profile
+## IntegerOS Quick Settings
+
+Install the optional compact controls panel with `bash scripts/install-quick-settings.sh`. Search the application launcher for **IntegerOS Quick Settings**. It uses the existing NetworkManager, Bluetooth, audio, and power-profile services; missing tools are reported rather than installed automatically. See [Quick Settings documentation](docs/quick-settings.md).
+
+## Blacklight Desktop Suite
+
+Install with `bash scripts/install-blacklight-suite.sh`, then search for **Blacklight Desktop Suite**. It provides a Fish-first/Bash-fallback Konsole launcher, School/Development/Gaming/Presentation presets, animation speed controls, and shortcuts into KDE's native notification settings. See [the suite guide](docs/blacklight-desktop-suite.md).
+
+## Desktop profile
 
 ```bash
 ./scripts/desktop-profile.sh status                      # what is set now
