@@ -59,6 +59,12 @@ jobs:
           python3 ./tests/quick-settings-smoke.py
           bash -n ./scripts/install-quick-settings.sh
 
+      - name: Blacklight Desktop Suite checks
+        run: |
+          python3 -m py_compile ./apps/blacklight-suite/blacklight-desktop-suite
+          python3 ./tests/blacklight-suite-smoke.py
+          bash -n ./scripts/install-blacklight-suite.sh
+
       - name: Blacklight Control smoke tests
         run: |
           python3 -m py_compile ./apps/blacklight-control/blacklight-control
