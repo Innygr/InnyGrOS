@@ -53,6 +53,12 @@ jobs:
       - name: IntegerOS Theme Studio syntax check
         run: python3 -m py_compile ./apps/theme-studio/integeros-theme-studio
 
+      - name: IntegerOS Quick Settings checks
+        run: |
+          python3 -m py_compile ./apps/quick-settings/integeros-quick-settings
+          python3 ./tests/quick-settings-smoke.py
+          bash -n ./scripts/install-quick-settings.sh
+
       - name: Blacklight Control smoke tests
         run: |
           python3 -m py_compile ./apps/blacklight-control/blacklight-control
