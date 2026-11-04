@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=IntegerOS Theme Studio
+GenericName=Desktop appearance settings
+Comment=Customize the IntegerOS and KDE desktop appearance
+Exec=integeros-theme-studio
+Icon=preferences-desktop-theme
+Terminal=false
+Categories=Settings;DesktopSettings;
+StartupNotify=true
