@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Blacklight Desktop Suite
+GenericName=IntegerOS desktop tools
+Comment=Terminal, profiles, animation and notification shortcuts
+Exec=blacklight-desktop-suite
+Icon=utilities-terminal
+Terminal=false
+Categories=Settings;System;Utility;
+StartupNotify=true
