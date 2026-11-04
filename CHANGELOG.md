@@ -7,6 +7,8 @@ All notable changes in IntegerOS. The current version is in the `VERSION` file; 
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
 ## Unreleased
+- Added Blacklight Desktop Suite: Fish-first/Bash-fallback Konsole launcher, task presets with saved-setting restore, Plasma animation controls, and shortcuts to native KDE notification settings.
+- Added user-scoped installer, launcher, documentation, and headless smoke tests. KDE remains responsible for notification history and Do Not Disturb.
 - Added IntegerOS Quick Settings, a compact GUI for Wi-Fi, Bluetooth, default-output mute, and power profiles, with direct links to KDE settings.
 - Added a user-scoped installer, launcher, usage documentation, and headless smoke tests.
 
