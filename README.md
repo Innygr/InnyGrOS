@@ -28,6 +28,7 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - **Blacklight Control** user-scoped systemd service with heartbeat status, native KDE session-lock request, visible message dialog, install/uninstall helper, and generated KDE Connect Run Commands setup instructions; GUI and consent-based screen viewing remain planned ([setup and security boundaries](docs/blacklight-control.md))
 - **IntegerOS Theme Studio** GUI for the existing colour scheme, wallpaper chooser, and KDE icon/cursor/global-theme/font settings ([documentation](docs/theme-studio.md))
 - **IntegerOS Quick Settings** compact GUI for Wi-Fi, Bluetooth, audio mute, and power profiles, complementing (not duplicating) the system-monitor side panel ([documentation](docs/quick-settings.md))
+- **Blacklight Desktop Suite** with a Fish-compatible terminal launcher, task profiles, Plasma animation controls, and native notification settings shortcuts ([documentation](docs/blacklight-desktop-suite.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
 - 0.8 planned: broad-format image viewing, including animated formats where the selected viewer/backend supports them ([image viewer plan](docs/IMAGE-VIEWER.md), [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md))
@@ -132,6 +133,7 @@ Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. T
 - [x] Original logo (hand-authored SVG) used as the Welcome Center icon
 - [ ] Richer KDE desktop layout
 - [x] Quick Settings GUI for connectivity, audio, and power controls
+- [x] Blacklight Desktop Suite: terminal, profiles, animation controls, and notification shortcuts
 - [x] First IntegerOS Theme Studio GUI for common appearance settings
 - [ ] Automated tests and Kubuntu VM validation
 - [x] Hardware check and ThinkPad T580 test plan
