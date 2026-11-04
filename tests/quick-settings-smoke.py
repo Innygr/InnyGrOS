@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Headless smoke checks for IntegerOS Quick Settings helpers."""
 import importlib.util
+from importlib.machinery import SourceFileLoader
 from pathlib import Path
 import sys
 import types
@@ -14,7 +15,7 @@ tk_stub.ttk = types.SimpleNamespace()
 sys.modules.setdefault("tkinter", tk_stub)
 
 APP = Path(__file__).resolve().parents[1] / "apps/quick-settings/integeros-quick-settings"
-spec = importlib.util.spec_from_file_location("integeros_quick_settings", APP)
+spec = importlib.util.spec_from_loader("integeros_quick_settings", SourceFileLoader("integeros_quick_settings", str(APP)))
 module = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = module
 spec.loader.exec_module(module)
