@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+"""Blacklight Desktop Suite: terminal, workspace presets, motion and notifications."""
+from __future__ import annotations
+
+import os
+import shutil
+import subprocess
+import tkinter as tk
+from tkinter import messagebox, ttk
+from pathlib import Path
+
+TITLE = "Blacklight Desktop Suite"
+BG, CARD, FG, MUTED, CYAN, PURPLE = "#090b18", "#151a30", "#f1f3ff", "#aeb7d4", "#55eaff", "#a58bff"
+CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+BACKUP = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share")) / "integeros" / "blacklight-suite" / "profile-backup"
+KEYS = (("kdeglobals", "KDE", "AnimationDurationFactor"),)
+
+def which(*names: str) -> str | None:
+    return next((shutil.which(name) for name in names if shutil.which(name)), None)
+
+def run(command: list[str], timeout: int = 12) -> str:
+    result = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False)
+    if result.returncode:
+        raise RuntimeError((result.stderr or result.stdout).strip() or f"Command failed: {command[0]}")
+    return result.stdout.strip()
+
+def notify_error(message: str) -> None:
+    messagebox.showwarning(TITLE, message)
+
+class Suite:
+    def __init__(self, root: tk.Tk):
+        self.root = root
+        root.title(TITLE)
+        root.geometry("690x620")
+        root.minsize(590, 540)
+        root.configure(bg=BG)
+        tk.Label(root, text="BLACKLIGHT // DESKTOP SUITE", bg=BG, fg=CYAN,
+                 font=("DejaVu Sans", 19, "bold")).pack(anchor="w", padx=24, pady=(22, 3))
+        tk.Label(root, text="Terminal • Profiles • Motion • Notifications",
+                 bg=BG, fg=MUTED, font=("DejaVu Sans", 10)).pack(anchor="w", padx=25, pady=(0, 16))
+        style = ttk.Style()
+        style.theme_use("clam")
+        style.configure("TNotebook", background=BG, borderwidth=0)
+        style.configure("TNotebook.Tab", background=CARD, foreground=FG, padding=(15, 9))
+        style.map("TNotebook.Tab", background=[("selected", "#263451")], foreground=[("selected", CYAN)])
+        self.tabs = ttk.Notebook(root)
+        self.tabs.pack(fill="both", expand=True, padx=18, pady=(0, 16))
+        self.terminal_tab = self.page("BLACKLIGHT TERMINAL")
+        self.profiles_tab = self.page("PROFILES")
+        self.animation_tab = self.page("ANIMATION")
+        self.notifications_tab = self.page("NOTIFICATIONS")
+        self.build_terminal()
+        self.build_profiles()
+        self.build_animation()
+        self.build_notifications()
+
+    def page(self, name: str) -> tk.Frame:
+        frame = tk.Frame(self.tabs, bg=BG)
+        self.tabs.add(frame, text=name)
+        return frame
+
+    def heading(self, parent: tk.Widget, title: str, detail: str) -> None:
+        tk.Label(parent, text=title, bg=BG, fg=CYAN,
+                 font=("DejaVu Sans", 15, "bold")).pack(anchor="w", padx=20, pady=(20, 4))
+        tk.Label(parent, text=detail, bg=BG, fg=MUTED, wraplength=590,
+                 justify="left", font=("DejaVu Sans", 9)).pack(anchor="w", padx=21, pady=(0, 15))
+
+    def button(self, parent: tk.Widget, label: str, callback, detail: str = "") -> None:
+        row = tk.Frame(parent, bg=CARD, highlightbackground="#30395c", highlightthickness=1)
+        row.pack(fill="x", padx=18, pady=5)
+        box = tk.Frame(row, bg=CARD)
+        box.pack(side="left", fill="both", expand=True, padx=12, pady=9)
+        tk.Label(box, text=label, bg=CARD, fg=FG, font=("DejaVu Sans", 10, "bold")).pack(anchor="w")
+        if detail:
+            tk.Label(box, text=detail, bg=CARD, fg=MUTED, wraplength=390,
+                     justify="left", font=("DejaVu Sans", 8)).pack(anchor="w", pady=(2, 0))
+        tk.Button(row, text="OPEN" if label.startswith("Open") else "APPLY",
+                  command=callback, bg="#24304d", fg=CYAN, activebackground="#35466e",
+                  activeforeground=FG, relief="flat", padx=14, pady=7,
+                  cursor="hand2").pack(side="right", padx=12)
+
+    def build_terminal(self) -> None:
+        self.heading(self.terminal_tab, "A terminal with Blacklight styling",
+                     "Launches Konsole with the installed IntegerOS profile. Fish is preferred when installed; Bash is the compatible fallback. Your login shell and shell configuration are not changed.")
+        self.shell_choice = tk.StringVar(value="auto")
+        choice = tk.Frame(self.terminal_tab, bg=BG)
+        choice.pack(anchor="w", padx=22, pady=8)
+        for value, label in (("auto", "Auto (fish → bash)"), ("fish", "Fish"), ("bash", "Bash")):
+            ttk.Radiobutton(choice, text=label, value=value, variable=self.shell_choice).pack(side="left", padx=7)
+        self.button(self.terminal_tab, "Launch Blacklight Terminal", self.launch_terminal,
+                    "Uses Konsole and the InnyGrOS / IntegerOS colour profile if available.")
+
+    def launch_terminal(self) -> None:
+        konsole = which("konsole")
+        if not konsole:
+            notify_error("Konsole was not found. Install it through Discover, then try again.")
+            return
+        requested = self.shell_choice.get()
+        fish, bash = which("fish"), which("bash")
+        shell = fish if requested in ("auto", "fish") and fish else bash if requested in ("auto", "bash") else None
+        if not shell:
+            notify_error("The selected shell is not installed. Choose Auto or install the shell using Discover.")
+            return
+        command = [konsole]
+        if Path.home().joinpath(".local/share/konsole/InnyGrOS.profile").is_file():
+            command += ["--profile", "InnyGrOS"]
+        command += ["-e", shell, "-l"]
+        try:
+            subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError as exc:
+            notify_error(f"Could not launch Konsole.\n\n{exc}")
+
+    def build_profiles(self) -> None:
+        self.heading(self.profiles_tab, "One laptop, four modes",
+                     "Presets adjust the power profile and KDE animation speed. They do not move windows, close apps, or change your login shell. Current settings are backed up before the first preset.")
+        self.button(self.profiles_tab, "Development", lambda: self.apply_profile("balanced", "1"),
+                    "Balanced power • normal motion")
+        self.button(self.profiles_tab, "School / Focus", lambda: self.apply_profile("power-saver", "0.65"),
+                    "Power Saver • reduced motion")
+        self.button(self.profiles_tab, "Gaming", lambda: self.apply_profile("performance", "1"),
+                    "Performance profile when supported • normal motion")
+        self.button(self.profiles_tab, "Presentation", lambda: self.apply_profile("balanced", "0"),
+                    "Balanced power • minimal desktop animation")
+        self.button(self.profiles_tab, "Restore saved settings", self.restore_profile,
+                    "Restore the power profile and animation factor saved before the first preset.")
+
+    def config_tools(self) -> tuple[str, str]:
+        writer, reader = which("kwriteconfig6", "kwriteconfig5"), which("kreadconfig6", "kreadconfig5")
+        if not writer or not reader:
+            raise RuntimeError("KDE config tools (kwriteconfig6/kreadconfig6 or Plasma 5 equivalents) were not found.")
+        return writer, reader
+
+    def apply_profile(self, power: str, factor: str) -> None:
+        try:
+            writer, reader = self.config_tools()
+            if not BACKUP.exists():
+                BACKUP.parent.mkdir(parents=True, exist_ok=True)
+                old = run([reader, "--file", "kdeglobals", "--group", "KDE", "--key",
+                           "AnimationDurationFactor", "--default", "__DEFAULT__"])
+                powerctl = which("powerprofilesctl")
+                old_power = run([powerctl, "get"]) if powerctl else "__UNAVAILABLE__"
+                BACKUP.write_text(f"animation={old}\npower={old_power}\n", encoding="utf-8")
+            run([writer, "--file", "kdeglobals", "--group", "KDE", "--key",
+                 "AnimationDurationFactor", factor])
+            powerctl = which("powerprofilesctl")
+            if powerctl:
+                profiles = run([powerctl, "list"])
+                if power in profiles:
+                    run([powerctl, "set", power])
+            messagebox.showinfo(TITLE, "Preset applied. KDE may animate the change immediately; some effects update after reopening windows.")
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            notify_error(f"Could not apply this preset.\n\n{exc}")
+
+    def restore_profile(self) -> None:
+        if not BACKUP.is_file():
+            notify_error("There is no saved preset backup yet.")
+            return
+        try:
+            writer, _ = self.config_tools()
+            values = dict(line.split("=", 1) for line in BACKUP.read_text(encoding="utf-8").splitlines() if "=" in line)
+            old = values.get("animation", "__DEFAULT__")
+            if old == "__DEFAULT__":
+                run([writer, "--file", "kdeglobals", "--group", "KDE", "--key", "AnimationDurationFactor", "--delete"])
+            else:
+                run([writer, "--file", "kdeglobals", "--group", "KDE", "--key", "AnimationDurationFactor", old])
+            powerctl = which("powerprofilesctl")
+            old_power = values.get("power", "__UNAVAILABLE__")
+            if powerctl and old_power not in ("__UNAVAILABLE__", ""):
+                run([powerctl, "set", old_power])
+            BACKUP.unlink()
+            messagebox.showinfo(TITLE, "Saved power and animation settings restored.")
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            notify_error(f"Could not restore the saved settings.\n\n{exc}")
+
+    def build_animation(self) -> None:
+        self.heading(self.animation_tab, "Motion controls",
+                     "Tune Plasma's global animation-duration factor. This changes animation timing, not the contents of your animated black-hole wallpaper or video wallpaper.")
+        self.button(self.animation_tab, "Smooth / default", lambda: self.set_animation("1"),
+                    "Use the normal Plasma animation duration.")
+        self.button(self.animation_tab, "Snappy", lambda: self.set_animation("0.5"),
+                    "Half-duration animations.")
+        self.button(self.animation_tab, "Instant", lambda: self.set_animation("0"),
+                    "Disable duration-based animations.")
+        self.button(self.animation_tab, "Open KDE animation settings", lambda: self.open_settings("kcm_kwin_effects"),
+                    "For individual desktop effects, use the native KDE settings module.")
+
+    def set_animation(self, factor: str) -> None:
+        try:
+            writer, _ = self.config_tools()
+            run([writer, "--file", "kdeglobals", "--group", "KDE", "--key", "AnimationDurationFactor", factor])
+            messagebox.showinfo(TITLE, f"Animation duration set to {factor}.")
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            notify_error(f"Could not change animation speed.\n\n{exc}")
+
+    def open_settings(self, module: str) -> None:
+        executable = which("systemsettings")
+        if not executable:
+            notify_error("KDE System Settings was not found.")
+            return
+        try:
+            subprocess.Popen([executable, module], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError as exc:
+            notify_error(f"Could not open KDE settings.\n\n{exc}")
+
+    def build_notifications(self) -> None:
+        self.heading(self.notifications_tab, "A better front door to notifications",
+                     "Keep Plasma's native notification history, Do Not Disturb controls, and per-app rules intact. These shortcuts open the real KDE controls instead of maintaining a separate, incomplete notification database.")
+        self.button(self.notifications_tab, "Open notification settings", lambda: self.open_settings("kcm_notifications"),
+                    "Configure banners, history, application rules, and Do Not Disturb.")
+        self.button(self.notifications_tab, "Open system tray settings", lambda: self.open_settings("kcm_s plasma"),
+                    "Customize the tray area where Plasma exposes notification history.")
+        self.button(self.notifications_tab, "Notification centre help", self.notification_help,
+                    "Quick guidance for the native Plasma notification history and quiet mode.")
+
+    def notification_help(self) -> None:
+        messagebox.showinfo(TITLE, "Use the Plasma system-tray Notifications applet to review recent notifications. Open System Settings → Notifications to configure Do Not Disturb, history, and per-application behaviour. IntegerOS leaves KDE's native notification storage and controls untouched.")
+
+if __name__ == "__main__":
+    app = tk.Tk()
+    Suite(app)
+    app.mainloop()
