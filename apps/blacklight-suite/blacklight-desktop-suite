@@ -198,7 +198,7 @@ class Suite:
             notify_error("KDE System Settings was not found.")
             return
         try:
-            subprocess.Popen([executable, module], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen([executable] + ([module] if module else []), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except OSError as exc:
             notify_error(f"Could not open KDE settings.\n\n{exc}")
 
@@ -207,8 +207,8 @@ class Suite:
                      "Keep Plasma's native notification history, Do Not Disturb controls, and per-app rules intact. These shortcuts open the real KDE controls instead of maintaining a separate, incomplete notification database.")
         self.button(self.notifications_tab, "Open notification settings", lambda: self.open_settings("kcm_notifications"),
                     "Configure banners, history, application rules, and Do Not Disturb.")
-        self.button(self.notifications_tab, "Open system tray settings", lambda: self.open_settings("kcm_s plasma"),
-                    "Customize the tray area where Plasma exposes notification history.")
+        self.button(self.notifications_tab, "Open System Settings", lambda: self.open_settings(""),
+                    "Browse all KDE settings modules.")
         self.button(self.notifications_tab, "Notification centre help", self.notification_help,
                     "Quick guidance for the native Plasma notification history and quiet mode.")
 
