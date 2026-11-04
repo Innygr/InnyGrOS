@@ -7,6 +7,9 @@ All notable changes in IntegerOS. The current version is in the `VERSION` file; 
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
 ## Unreleased
+- Added IntegerOS Quick Settings, a compact GUI for Wi-Fi, Bluetooth, default-output mute, and power profiles, with direct links to KDE settings.
+- Added a user-scoped installer, launcher, usage documentation, and headless smoke tests.
+
 - Added an experimental, reversible Plasma lock-screen QML patch for animated Matrix rain, a sharp background, and green-on-black styling for KDE's native password field and unlock button.
 - Added a standalone QML patcher with fixture tests for idempotency, safe refusal of unknown layouts, and recovery documentation.
 - Added a Blacklight Matrix wallpaper for KDE's native lock screen, with a reversible wallpaper-setting helper.
