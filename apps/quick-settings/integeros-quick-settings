@@ -1,0 +1,241 @@
+#!/usr/bin/env python3
+"""IntegerOS Quick Settings: a compact, user-scoped KDE control panel."""
+from __future__ import annotations
+
+import shutil
+import subprocess
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
+
+APP_NAME = "IntegerOS Quick Settings"
+BG = "#090b18"
+CARD = "#151a30"
+TEXT = "#f1f3ff"
+MUTED = "#aeb7d4"
+ACCENT = "#55eaff"
+
+
+def command_output(command: list[str], timeout: int = 5) -> str:
+    result = subprocess.run(command, check=False, text=True, capture_output=True, timeout=timeout)
+    if result.returncode:
+        raise RuntimeError((result.stderr or result.stdout).strip() or "The command failed.")
+    return result.stdout.strip()
+
+
+def available(name: str) -> bool:
+    return shutil.which(name) is not None
+
+
+class QuickSettings:
+    def __init__(self, root: tk.Tk) -> None:
+        self.root = root
+        root.title(APP_NAME)
+        root.geometry("440x590")
+        root.minsize(390, 520)
+        root.configure(bg=BG)
+        self.status_vars = {
+            "wifi": tk.StringVar(value="Checking…"),
+            "bluetooth": tk.StringVar(value="Checking…"),
+            "audio": tk.StringVar(value="Checking…"),
+            "power": tk.StringVar(value="Checking…"),
+        }
+        self.power_buttons: list[ttk.Radiobutton] = []
+        self.power_value = tk.StringVar(value="")
+        self.build()
+        self.refresh()
+
+    def build(self) -> None:
+        tk.Label(self.root, text="BLACKLIGHT // QUICK SETTINGS", bg=BG, fg=ACCENT,
+                 font=("DejaVu Sans", 16, "bold")).pack(anchor="w", padx=22, pady=(22, 3))
+        tk.Label(self.root, text="Fast controls for your IntegerOS desktop.",
+                 bg=BG, fg=MUTED, font=("DejaVu Sans", 9)).pack(anchor="w", padx=23, pady=(0, 15))
+
+        self.section("CONNECTIVITY")
+        self.control("Wi-Fi", "Toggle the NetworkManager Wi-Fi radio.", "wifi", self.toggle_wifi)
+        self.control("Bluetooth", "Power the Bluetooth adapter on or off.", "bluetooth", self.toggle_bluetooth)
+
+        self.section("AUDIO")
+        self.control("Default output", "Mute or unmute the current default audio output.", "audio", self.toggle_audio)
+
+        self.section("POWER PROFILE")
+        power = tk.Frame(self.root, bg=CARD, highlightbackground="#30395c", highlightthickness=1)
+        power.pack(fill="x", padx=20, pady=4)
+        tk.Label(power, text="Active power mode", bg=CARD, fg=TEXT,
+                 font=("DejaVu Sans", 10, "bold")).pack(anchor="w", padx=12, pady=(9, 2))
+        tk.Label(power, textvariable=self.status_vars["power"], bg=CARD, fg=MUTED,
+                 font=("DejaVu Sans", 9)).pack(anchor="w", padx=12)
+        self.power_row = tk.Frame(power, bg=CARD)
+        self.power_row.pack(fill="x", padx=8, pady=(4, 9))
+
+        self.section("SYSTEM SETTINGS")
+        actions = tk.Frame(self.root, bg=BG)
+        actions.pack(fill="x", padx=20)
+        for label, module in (("Network", "kcm_networkmanagement"),
+                              ("Bluetooth", "kcm_bluetooth"),
+                              ("Audio", "kcm_pulseaudio")):
+            tk.Button(actions, text=label, command=lambda m=module: self.open_settings(m),
+                      bg="#24304d", fg=ACCENT, activebackground="#35466e",
+                      activeforeground=TEXT, relief="flat", padx=10, pady=7,
+                      cursor="hand2").pack(side="left", expand=True, fill="x", padx=3)
+
+        bottom = tk.Frame(self.root, bg=BG)
+        bottom.pack(fill="x", padx=20, pady=(15, 12))
+        tk.Button(bottom, text="REFRESH", command=self.refresh, bg="#24304d", fg=ACCENT,
+                  activebackground="#35466e", activeforeground=TEXT, relief="flat",
+                  padx=14, pady=7, cursor="hand2").pack(side="left")
+        tk.Label(bottom, text="Changes use standard desktop services.",
+                 bg=BG, fg="#7f89a8", font=("DejaVu Sans", 8)).pack(side="right")
+
+    def section(self, title: str) -> None:
+        tk.Label(self.root, text=title, bg=BG, fg="#a58bff",
+                 font=("DejaVu Sans", 9, "bold")).pack(anchor="w", padx=22, pady=(9, 2))
+
+    def control(self, title: str, detail: str, key: str, callback) -> None:
+        row = tk.Frame(self.root, bg=CARD, highlightbackground="#30395c", highlightthickness=1)
+        row.pack(fill="x", padx=20, pady=3)
+        text = tk.Frame(row, bg=CARD)
+        text.pack(side="left", fill="both", expand=True, padx=12, pady=8)
+        tk.Label(text, text=title, bg=CARD, fg=TEXT,
+                 font=("DejaVu Sans", 10, "bold")).pack(anchor="w")
+        tk.Label(text, textvariable=self.status_vars[key], bg=CARD, fg=ACCENT,
+                 font=("DejaVu Sans", 9)).pack(anchor="w")
+        tk.Label(text, text=detail, bg=CARD, fg=MUTED,
+                 font=("DejaVu Sans", 8), wraplength=240, justify="left").pack(anchor="w", pady=(2, 0))
+        tk.Button(row, text="TOGGLE", command=callback, bg="#24304d", fg=ACCENT,
+                  activebackground="#35466e", activeforeground=TEXT, relief="flat",
+                  padx=10, pady=7, cursor="hand2").pack(side="right", padx=10)
+
+    def action(self, command: list[str], description: str) -> bool:
+        try:
+            command_output(command, timeout=10)
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            messagebox.showwarning(APP_NAME, f"{description} could not be completed.\n\n{exc}")
+            return False
+        self.refresh()
+        return True
+
+    def toggle_wifi(self) -> None:
+        if not available("nmcli"):
+            messagebox.showwarning(APP_NAME, "NetworkManager's nmcli command was not found.")
+            return
+        try:
+            current = command_output(["nmcli", "-t", "-f", "WIFI", "general"])
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            messagebox.showwarning(APP_NAME, f"Could not read Wi-Fi state.\n\n{exc}")
+            return
+        self.action(["nmcli", "radio", "wifi", "off" if current.lower() == "enabled" else "on"],
+                    "Wi-Fi toggle")
+
+    def toggle_bluetooth(self) -> None:
+        if not available("bluetoothctl"):
+            messagebox.showwarning(APP_NAME, "bluetoothctl was not found.")
+            return
+        try:
+            details = command_output(["bluetoothctl", "show"])
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            messagebox.showwarning(APP_NAME, f"Could not read Bluetooth state.\n\n{exc}")
+            return
+        powered = any(line.strip().lower() == "powered: yes" for line in details.splitlines())
+        self.action(["bluetoothctl", "power", "off" if powered else "on"], "Bluetooth toggle")
+
+    def toggle_audio(self) -> None:
+        if not available("pactl"):
+            messagebox.showwarning(APP_NAME, "PulseAudio/PipeWire's pactl command was not found.")
+            return
+        try:
+            muted = command_output(["pactl", "get-sink-mute", "@DEFAULT_SINK@"]).lower().endswith("yes")
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            messagebox.showwarning(APP_NAME, f"Could not read the default audio output.\n\n{exc}")
+            return
+        self.action(["pactl", "set-sink-mute", "@DEFAULT_SINK@", "0" if muted else "1"],
+                    "Audio mute toggle")
+
+    def set_power(self, profile: str) -> None:
+        if not available("powerprofilesctl"):
+            messagebox.showwarning(APP_NAME, "powerprofilesctl was not found.")
+            return
+        self.action(["powerprofilesctl", "set", profile], f"Switch to {profile}")
+
+    def open_settings(self, module: str) -> None:
+        executable = shutil.which("systemsettings")
+        if not executable:
+            messagebox.showwarning(APP_NAME, "KDE System Settings was not found.")
+            return
+        try:
+            subprocess.Popen([executable, module], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError as exc:
+            messagebox.showwarning(APP_NAME, f"Could not open System Settings.\n\n{exc}")
+
+    def refresh(self) -> None:
+        self.status_vars["wifi"].set(self.read_wifi())
+        self.status_vars["bluetooth"].set(self.read_bluetooth())
+        self.status_vars["audio"].set(self.read_audio())
+        self.read_power()
+
+    def read_wifi(self) -> str:
+        if not available("nmcli"):
+            return "Unavailable (nmcli missing)"
+        try:
+            state = command_output(["nmcli", "-t", "-f", "WIFI", "general"])
+            return "Enabled" if state.lower() == "enabled" else "Disabled"
+        except (OSError, RuntimeError, subprocess.TimeoutExpired):
+            return "Status unavailable"
+
+    def read_bluetooth(self) -> str:
+        if not available("bluetoothctl"):
+            return "Unavailable (bluetoothctl missing)"
+        try:
+            details = command_output(["bluetoothctl", "show"])
+            powered = any(line.strip().lower() == "powered: yes" for line in details.splitlines())
+            return "Powered on" if powered else "Powered off"
+        except (OSError, RuntimeError, subprocess.TimeoutExpired):
+            return "Adapter unavailable"
+
+    def read_audio(self) -> str:
+        if not available("pactl"):
+            return "Unavailable (pactl missing)"
+        try:
+            state = command_output(["pactl", "get-sink-mute", "@DEFAULT_SINK@"])
+            return "Muted" if state.lower().endswith("yes") else "Unmuted"
+        except (OSError, RuntimeError, subprocess.TimeoutExpired):
+            return "No default output"
+
+    def read_power(self) -> None:
+        for child in self.power_row.winfo_children():
+            child.destroy()
+        self.power_buttons.clear()
+        if not available("powerprofilesctl"):
+            self.status_vars["power"].set("Unavailable (powerprofilesctl missing)")
+            return
+        try:
+            current = command_output(["powerprofilesctl", "get"])
+            listing = command_output(["powerprofilesctl", "list"])
+        except (OSError, RuntimeError, subprocess.TimeoutExpired):
+            self.status_vars["power"].set("Status unavailable")
+            return
+        self.status_vars["power"].set(current.replace("-", " ").title())
+        profiles = []
+        for line in listing.splitlines():
+            stripped = line.strip().lstrip("*").strip()
+            if stripped.endswith(":"):
+                candidate = stripped[:-1]
+                if candidate in {"power-saver", "balanced", "performance"} and candidate not in profiles:
+                    profiles.append(candidate)
+        for profile in profiles:
+            button = ttk.Radiobutton(
+                self.power_row, text=profile.replace("-", " ").title(),
+                value=profile, variable=self.power_value,
+                command=lambda p=profile: self.set_power(p))
+            button.pack(side="left", padx=4)
+            self.power_buttons.append(button)
+        self.power_value.set(current)
+        if not profiles:
+            tk.Label(self.power_row, text="No profiles reported by the service.",
+                     bg=CARD, fg=MUTED, font=("DejaVu Sans", 8)).pack(anchor="w")
+
+
+if __name__ == "__main__":
+    window = tk.Tk()
+    QuickSettings(window)
+    window.mainloop()
