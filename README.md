@@ -44,7 +44,7 @@ chmod +x install.sh scripts/*.sh
 ./install.sh
 ```
 
-Open **IntegerOS Control Center** and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the Welcome Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. IntegerOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.
+Open **IntegerOS Control Center** and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the IntegerOS Control Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. IntegerOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.
 
 To undo IntegerOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
 
