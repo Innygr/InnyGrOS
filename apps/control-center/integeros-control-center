@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import platform
 import shutil
 import subprocess
 import threading
@@ -57,7 +58,7 @@ class ControlCenter:
         footer.pack(fill="x", padx=24, pady=(0, 12))
         tk.Label(footer, textvariable=self.status, bg=BG, fg=MUTED,
                  font=("DejaVu Sans", 8)).pack(side="left")
-        tk.Label(footer, text="INTEGEROS • ONE CONTROL CENTER", bg=BG, fg="#7186a8",
+        tk.Label(footer, text="INNTEGEROS • ONE CONTROL CENTER", bg=BG, fg="#7186a8",
                  font=("DejaVu Sans", 8, "bold")).pack(side="right")
 
     def _style(self) -> None:
@@ -72,7 +73,7 @@ class ControlCenter:
     def _header(self) -> None:
         head = tk.Frame(self.root, bg=BG)
         head.pack(fill="x", padx=28, pady=(20, 8))
-        tk.Label(head, text="INTEGEROS // CONTROL CENTER", bg=BG, fg=CYAN,
+        tk.Label(head, text="INNTEGEROS // CONTROL CENTER", bg=BG, fg=CYAN,
                  font=("DejaVu Sans", 10, "bold")).pack(anchor="w")
         tk.Label(head, text="Everything in one place.", bg=BG, fg=FG,
                  font=("DejaVu Sans", 24, "bold")).pack(anchor="w", pady=(2, 0))
@@ -159,6 +160,7 @@ class ControlCenter:
     def _build_home(self, page: tk.Frame) -> None:
         self._section(page, "Welcome to InntegerOS",
                       "Your old Welcome Center now lives here. Start with a baseline, check the laptop, then apply the desktop profile if you want it.")
+        self._build_live_overview(page)
         self._button(page, "First steps guide", "A guided checklist for setting up InntegerOS safely.",
                      self._first_steps, PURPLE)
         self._button(page, "Apply InntegerOS desktop profile", "Save a restore point, then apply the InntegerOS desktop appearance.",
@@ -184,6 +186,107 @@ class ControlCenter:
                      self._diagnostics)
         self._button(page, "InntegerOS project page", "Open the project's GitHub repository.",
                      lambda: self._launch(["xdg-open", "https://github.com/Innygr/InntegerOS"], "InntegerOS project"))
+
+    def _build_live_overview(self, page: tk.Frame) -> None:
+        self._section(page, "Live system overview",
+                      "A local snapshot of this computer. Information refreshes automatically every 15 seconds.")
+        panel = tk.Frame(page, bg=CARD, highlightbackground="#263957", highlightthickness=1)
+        panel.pack(fill="x", padx=14, pady=4)
+        self.snapshot_vars: dict[str, tk.StringVar] = {}
+        fields = (("Operating system", "os"), ("Kernel", "kernel"),
+                  ("Memory", "memory"), ("System storage", "storage"),
+                  ("Battery", "battery"), ("Power profile", "power"),
+                  ("Network", "network"), ("Uptime", "uptime"))
+        for index, (label, key) in enumerate(fields):
+            cell = tk.Frame(panel, bg=CARD)
+            cell.grid(row=index // 2, column=index % 2, sticky="ew", padx=12, pady=9)
+            tk.Label(cell, text=label.upper(), bg=CARD, fg=MUTED,
+                     font=("DejaVu Sans", 7, "bold")).pack(anchor="w")
+            value = tk.StringVar(value="Checking…")
+            self.snapshot_vars[key] = value
+            tk.Label(cell, textvariable=value, bg=CARD, fg=FG,
+                     font=("DejaVu Sans", 9, "bold")).pack(anchor="w")
+        panel.grid_columnconfigure(0, weight=1)
+        panel.grid_columnconfigure(1, weight=1)
+        self.snapshot_updated = tk.StringVar(value="Refreshing…")
+        tk.Label(page, textvariable=self.snapshot_updated, bg=BG, fg=MUTED,
+                 font=("DejaVu Sans", 7)).pack(anchor="e", padx=18, pady=(2, 4))
+        self._refresh_overview()
+
+    @staticmethod
+    def _read_text(path: Path, fallback: str = "") -> str:
+        try:
+            return path.read_text(encoding="utf-8").strip()
+        except (OSError, UnicodeError):
+            return fallback
+
+    @staticmethod
+    def _command_output(command: list[str], fallback: str = "Unavailable") -> str:
+        if not shutil.which(command[0]):
+            return fallback
+        try:
+            result = subprocess.run(command, capture_output=True, text=True,
+                                    timeout=2, check=False)
+            return result.stdout.strip() if result.returncode == 0 and result.stdout.strip() else fallback
+        except (OSError, subprocess.TimeoutExpired):
+            return fallback
+
+    def _refresh_overview(self) -> None:
+        try:
+            os_release = {}
+            for line in Path("/etc/os-release").read_text(encoding="utf-8").splitlines():
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    os_release[key] = value.strip().strip('"')
+            self.snapshot_vars["os"].set(os_release.get("PRETTY_NAME", platform.system()))
+            self.snapshot_vars["kernel"].set(platform.release())
+
+            meminfo = {}
+            for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
+                if ":" in line:
+                    key, value = line.split(":", 1)
+                    meminfo[key] = int(value.strip().split()[0])
+            total = meminfo.get("MemTotal", 0)
+            available = meminfo.get("MemAvailable", 0)
+            used = max(0, total - available)
+            self.snapshot_vars["memory"].set(
+                f"{used / 1048576:.1f} / {total / 1048576:.1f} GiB used" if total else "Unavailable")
+
+            stat = os.statvfs("/")
+            total_bytes = stat.f_blocks * stat.f_frsize
+            free_bytes = stat.f_bavail * stat.f_frsize
+            used_bytes = total_bytes - free_bytes
+            self.snapshot_vars["storage"].set(
+                f"{used_bytes / 1e9:.0f} / {total_bytes / 1e9:.0f} GB used on /")
+
+            batteries = []
+            for battery in Path("/sys/class/power_supply").glob("*/"):
+                if self._read_text(battery / "type") == "Battery":
+                    capacity = self._read_text(battery / "capacity")
+                    state = self._read_text(battery / "status")
+                    if capacity.isdigit():
+                        batteries.append(f"{capacity}% · {state or 'status unknown'}")
+            self.snapshot_vars["battery"].set(", ".join(batteries) if batteries else "No battery detected")
+
+            self.snapshot_vars["power"].set(self._command_output(["powerprofilesctl", "get"], "Not reported"))
+            network = self._command_output(["nmcli", "-t", "-f", "CONNECTIVITY", "general"], "Not reported")
+            self.snapshot_vars["network"].set(network.capitalize())
+            uptime_raw = self._read_text(Path("/proc/uptime")).split()
+            if uptime_raw:
+                seconds = int(float(uptime_raw[0]))
+                hours, remainder = divmod(seconds, 3600)
+                days, hours = divmod(hours, 24)
+                minutes = remainder // 60
+                self.snapshot_vars["uptime"].set(
+                    f"{days}d {hours}h {minutes}m" if days else f"{hours}h {minutes}m")
+            else:
+                self.snapshot_vars["uptime"].set("Unavailable")
+            from datetime import datetime
+            self.snapshot_updated.set("Last updated " + datetime.now().astimezone().strftime("%H:%M:%S") +
+                                      " · refreshes every 15 seconds")
+        except (OSError, ValueError, KeyError):
+            self.snapshot_updated.set("Some system information could not be read.")
+        self.root.after(15000, self._refresh_overview)
 
     def _first_steps(self) -> None:
         choice = messagebox.askyesnocancel(
