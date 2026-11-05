@@ -40,11 +40,8 @@ chmod 0644 "${APPS_DIR}/integeros-control-center.desktop"
 # Hide specialist launchers from the application menu; the Control Center is the main entry point.
 for entry in innygros-welcome.desktop integeros-personalization-center.desktop integeros-quick-settings.desktop integeros-theme-studio.desktop integeros-wallpaper-studio.desktop blacklight-desktop-suite.desktop; do
   file="${APPS_DIR}/${entry}"
-  if [[ -f "${file}" ]] && ! grep -q '^NoDisplay=trueecho "IntegerOS Control Center installed."
-echo "Search the application launcher for 'IntegerOS Control Center'."
-echo "The former applications remain installed as components; use this hub as the main entry point."
- "${file}"; then
-    sed -i '/^Type=Application$/a NoDisplay=true' "${file}"
+  if [[ -f "${file}" ]] && ! grep -q 'NoDisplay=true' "${file}"; then
+    sed -i '/Type=Application/a NoDisplay=true' "${file}"
   fi
 done
 echo "IntegerOS Control Center installed."
