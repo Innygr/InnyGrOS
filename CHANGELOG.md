@@ -1,4 +1,6 @@
 ## Unreleased
+- Added IntegerOS Control Center, a unified tabbed application that brings Welcome Center workflows, system maintenance, personalization, Quick Settings and Blacklight tools behind one main application entry.
+- Added a user-scoped installer and documentation for the consolidated Control Center; specialist tools remain modular components and may open focused windows.
 - Add the IntegerOS Personalization Center, a user-scoped hub for wallpaper, appearance, KDE effects, and Plasma dock guidance.
 
 # IntegerOS — Changelog
