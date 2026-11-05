@@ -5,6 +5,11 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 
 > Early development: this repository is not yet a standalone operating system or installable ISO.
 
+## Official branding
+
+- Official InntegerOS vector wordmark: [branding/logo/inntegeros-logo.svg](branding/logo/inntegeros-logo.svg)
+- Official InntegerOS application icon: [branding/logo/inntegeros-icon.svg](branding/logo/inntegeros-icon.svg)
+
 ## Current features
 - Guided setup script and optional developer-tool installer
 - Graphical software updater in the Welcome Center for InntegerOS source updates, with a separate terminal workflow for user-approved Ubuntu/Kubuntu APT upgrades
