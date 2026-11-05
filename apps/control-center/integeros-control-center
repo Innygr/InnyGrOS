@@ -80,9 +80,18 @@ class ControlCenter:
                  bg=BG, fg=MUTED, font=("DejaVu Sans", 9)).pack(anchor="w")
 
     def _page(self, title: str) -> tk.Frame:
-        page = tk.Frame(self.tabs, bg=BG)
-        self.tabs.add(page, text=title)
-        return page
+        outer = tk.Frame(self.tabs, bg=BG)
+        canvas = tk.Canvas(outer, bg=BG, highlightthickness=0, borderwidth=0)
+        scrollbar = ttk.Scrollbar(outer, orient="vertical", command=canvas.yview)
+        inner = tk.Frame(canvas, bg=BG)
+        window = canvas.create_window((0, 0), window=inner, anchor="nw")
+        inner.bind("<Configure>", lambda _event: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.bind("<Configure>", lambda event: canvas.itemconfigure(window, width=event.width))
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        self.tabs.add(outer, text=title)
+        return inner
 
     def _section(self, page: tk.Widget, title: str, detail: str = "") -> None:
         tk.Label(page, text=title.upper(), bg=BG, fg=CYAN,
