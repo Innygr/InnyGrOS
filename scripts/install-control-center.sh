@@ -13,7 +13,7 @@ for required in apps/control-center/integeros-control-center scripts/install-wel
   [[ -f "${ROOT_DIR}/${required}" ]] || { echo "Missing required file: ${required}" >&2; exit 1; }
 done
 bash "${ROOT_DIR}/scripts/install-welcome-center.sh"
-mkdir -p "${INT_DIR}/control-center" "${INT_DIR}/personalization" "${INT_DIR}/quick-settings" "${INT_DIR}/theme-studio" "${INT_DIR}/blacklight-suite" "${INT_DIR}/blacklight-control" "${BIN_DIR}" "${APPS_DIR}"
+mkdir -p "${INT_DIR}/control-center" "${INT_DIR}/personalization" "${INT_DIR}/quick-settings" "${INT_DIR}/theme-studio" "${INT_DIR}/blacklight-suite" "${INT_DIR}/blacklight-control" "${DATA_DIR}/apps/blacklight-screensaver" "${DATA_DIR}/branding/lockscreen" "${DATA_DIR}/scripts/lib" "${BIN_DIR}" "${APPS_DIR}"
 install -m 0755 "${ROOT_DIR}/apps/control-center/integeros-control-center" "${INT_DIR}/control-center/integeros-control-center"
 install -m 0755 "${INT_DIR}/control-center/integeros-control-center" "${BIN_DIR}/integeros-control-center"
 install -m 0644 "${ROOT_DIR}/apps/integeros-wallpaper-studio.py" "${INT_DIR}/personalization/integeros-wallpaper-studio.py"
@@ -24,6 +24,9 @@ install -m 0755 "${ROOT_DIR}/apps/blacklight-control/blacklight-control" "${INT_
 for helper in blacklight-screensaver.sh blacklight-lockscreen.sh network-health.sh battery-power-report.sh; do
   install -m 0755 "${ROOT_DIR}/scripts/${helper}" "${DATA_DIR}/scripts/${helper}"
 done
+install -m 0644 "${ROOT_DIR}/scripts/lib/blacklight-lockscreen-patch.py" "${DATA_DIR}/scripts/lib/blacklight-lockscreen-patch.py"
+install -m 0644 "${ROOT_DIR}/apps/blacklight-screensaver/blacklight-matrix.py" "${DATA_DIR}/apps/blacklight-screensaver/blacklight-matrix.py"
+install -m 0644 "${ROOT_DIR}/branding/lockscreen/blacklight-matrix.svg" "${DATA_DIR}/branding/lockscreen/blacklight-matrix.svg"
 cat > "${APPS_DIR}/integeros-control-center.desktop" <<EOF
 [Desktop Entry]
 Type=Application
