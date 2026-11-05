@@ -9,15 +9,13 @@ InntegerOS is intended to become an independently developed Linux distribution�
 
 The project will build its own integrated desktop experience, system identity, Control Center, first-run flow, package/configuration manifest, update and recovery experience, live image, and installation workflow. It may reuse upstream components such as the Linux kernel, Ubuntu package infrastructure, and KDE Plasma. Reusing components is good engineering; outsourcing the entire product identity and experience to another distribution is not the goal.
 
-## Desktop editions
+## Desktop editions and Complete Edition vision
 
-InntegerOS will have a shared system foundation with a choice of desktop environments:
+The first installable prototype focuses on **Plasma Edition**, the current development target. **GNOME Edition** is the first alternative workflow; **Xfce Edition** is the lightweight alternative. All three must use the same shared InntegerOS foundation, with separate desktop profiles and independent VM test coverage. The installer should select one desktop, defaulting to Plasma, rather than installing every desktop environment at once.
 
-- **KDE Plasma — flagship and default.** Primary development target and the most complete InntegerOS desktop experience.
-- **GNOME — alternative.** A GNOME-native workflow with InntegerOS identity and shared core utilities.
-- **Xfce — lightweight alternative.** A leaner edition intended for modest or older hardware, subject to performance testing.
+**InntegerOS: Complete Edition** is the long-term vision for a mature, fully integrated InntegerOS ecosystem, eventually including an InntegerOS-designed desktop environment. It is not a current release or a reason to delay the first Plasma live image. The project will first stabilize shared services and desktop integration, then prototype native desktop components only where justified.
 
-Users should select one desktop edition during installation. The default image and first release focus on Plasma; GNOME and Xfce become supported editions only after the shared base and installer are stable and each has passed its own VM tests. Do not install all desktop environments by default or mix their settings applications unnecessarily.
+See [Desktop Editions](DESKTOP-EDITIONS.md) for the detailed architecture and support gates.
 
 The base release, image-building method, and installer engine must be evaluated and documented before the first image is frozen. Kubuntu 26.04.1 is a useful Plasma reference environment and possible technical starting point, not a permanently decided product base.
 
