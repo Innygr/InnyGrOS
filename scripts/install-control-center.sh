@@ -40,6 +40,11 @@ Categories=Settings;System;
 StartupNotify=true
 EOF
 chmod 0644 "${APPS_DIR}/integeros-control-center.desktop"
+# Preserve the user's opt-in login launch, but point it at the unified application.
+AUTOSTART_FILE="${XDG_CONFIG_HOME:-${HOME}/.config}/autostart/innygros-welcome.desktop"
+if [[ -f "${AUTOSTART_FILE}" ]] && grep -q 'X-InnyGrOS-Autostart=true' "${AUTOSTART_FILE}"; then
+  sed -i "s|^Exec=.*|Exec=${BIN_DIR}/integeros-control-center|" "${AUTOSTART_FILE}"
+fi
 # Hide specialist launchers from the application menu; the Control Center is the main entry point.
 for entry in innygros-welcome.desktop integeros-personalization-center.desktop integeros-quick-settings.desktop integeros-theme-studio.desktop integeros-wallpaper-studio.desktop blacklight-desktop-suite.desktop; do
   file="${APPS_DIR}/${entry}"
