@@ -32,17 +32,13 @@ Do not fork Plasma immediately just to claim independence. Prefer upstream-compa
 
 ## 3. Desktop editions
 
-InntegerOS should offer a small number of supported desktop choices while keeping one shared operating-system foundation.
+InntegerOS should offer multiple desktop experiences over one shared operating-system foundation. The flagship is **Plasma Edition**, with **GNOME Edition** as the first alternative and **Xfce Edition** as a lightweight alternative. Each edition needs its own desktop profile, native settings integration, package selection, and VM test coverage.
 
-- **InntegerOS Desktop — KDE Plasma (default):** the flagship edition and primary development target. Existing InntegerOS desktop integration, Control Center, workspace design, Blacklight features, and visual customization are developed and validated here first.
-- **InntegerOS GNOME:** an alternative edition for users who prefer GNOME's workflow. It should receive the same system identity, core utilities, update/recovery support, and first-run essentials, with a GNOME-appropriate layout rather than copying Plasma-specific settings.
-- **InntegerOS Lightweight — Xfce:** an optional lower-resource edition for older or modest hardware. Keep its package selection lean and do not promise specific performance gains until tested.
+The installer should select one desktop profile, defaulting to Plasma. Do not install all desktop environments together by default. The shared Control Center core, first-run flow, updater, recovery tools, system identity, and security policy must work consistently across editions; desktop-specific settings and dependencies must remain isolated.
 
-All editions share the same base system, package/update policy, security maintenance, branding, and first-party core applications. Desktop-specific configuration and optional applications should be separated into edition profiles so that one desktop does not install another desktop's settings modules or duplicate applications unnecessarily.
+**InntegerOS: Complete Edition** is the long-term vision for the fully integrated product, eventually including an InntegerOS-designed desktop environment. It is not a current edition or a promise to replace Plasma immediately. Build the shared system first, then prototype native desktop components only where clear product requirements justify the maintenance cost.
 
-**Default recommendation:** Plasma. GNOME and Xfce are optional choices, not separate operating systems with divergent support policies.
-
-The first installable prototype should focus on making the Plasma edition reliable. Add GNOME and Xfce only after the shared base, installer, and first-boot architecture are stable. Each edition must have its own VM test coverage before being advertised as supported.
+See [Desktop Editions](DESKTOP-EDITIONS.md) for the full edition architecture, Complete Edition vision, and release gates.
 
 ## 4. Base system strategy
 
