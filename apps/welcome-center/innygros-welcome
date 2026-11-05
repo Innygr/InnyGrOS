@@ -165,8 +165,8 @@ show_diagnostics() {
 while true; do
   if [[ -f "${AUTOSTART_FILE}" ]]; then autostart_label="Show Welcome Center at login: ON (select to turn off)"
   else autostart_label="Show Welcome Center at login: OFF (select to turn on)"; fi
-  choice="$(kdialog --title "IntegerOS Welcome Center" --icon innygros --menu \
-    "Welcome to IntegerOS. What would you like to do?" \
+  choice="$(kdialog --geometry 900x680 --title "IntegerOS Welcome Center" --icon innygros --menu \
+    "Welcome to IntegerOS. Scroll the list with your mouse wheel or scrollbar to see every tool. What would you like to do?" \
     "first-steps" "First steps guide" \
     "settings" "Open System Settings" \
     "discover" "Open Discover (software and updates)" \
