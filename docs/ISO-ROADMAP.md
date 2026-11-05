@@ -1,4 +1,4 @@
-# InnyGrOS ISO Roadmap
+# InntegerOS ISO Roadmap
 
 **Target:** a tested bootable InnyGrOS ISO or equivalent during December 2026–January 2027  
 **Relationship to 1.0:** the November 14 desktop edition remains the stable customization project. The ISO is a separate deliverable and will not be called release-ready until it passes the checks below.
@@ -35,9 +35,11 @@ Prefer a reproducible, documented build process over a one-off manually modified
 - Do not test installation on the user's daily-use dual-boot laptop until the image has passed VM testing and a separate backup/recovery plan is confirmed.
 - If installation testing is not complete by the end of November, December's deliverable can be a live ISO preview rather than an unsafe or untested installer.
 
-## Current status
+## Current status — November 5, 2026
 
-Planning only. This document does not claim that an ISO has been built or tested yet.
+**Stage: planning; no ISO build proof-of-concept yet.** The repository currently contains the desktop customization project and this roadmap, but no `iso/` build configuration, image-generation script, live image artifact, or VM boot-test report. The build-system milestone has not started.
+
+The next concrete deliverable is a reproducible build proof-of-concept: choose and document the supported Kubuntu/Ubuntu base and build tooling, automate package/branding integration, and generate a bootable test image. Only after an image exists can live-session and installer testing begin.
 
 ## 0.8 image-viewer track
 
