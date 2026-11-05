@@ -270,10 +270,10 @@ class ControlCenter:
                      lambda: self._open_app("blacklight-control", "Blacklight Control",
                          INT_DATA / "blacklight-control/blacklight-control",
                          REPO / "apps/blacklight-control/blacklight-control"), PURPLE)
-        self._button(page, "Screensaver settings", "Open the IntegerOS Blacklight screensaver controls.",
+        self._button(page, "Screensaver settings", "Check Blacklight screensaver dependencies and secure idle-lock status.",
                      lambda: self._run_script("blacklight-screensaver.sh", "status"), PURPLE)
-        self._button(page, "Lockscreen controls", "Open the Blacklight lockscreen configuration helper.",
-                     lambda: self._run_script("blacklight-lockscreen.sh", "--gui"), PURPLE)
+        self._button(page, "Lockscreen controls", "Check the native Plasma lockscreen overlay and backup status (read-only).",
+                     lambda: self._run_script("blacklight-lockscreen.sh", "status"), PURPLE)
         self._button(page, "About IntegerOS", "View the project version and installation details.",
                      self._about)
 
