@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""IntegerOS Personalization Center — a safe hub for Plasma appearance controls."""
+from __future__ import annotations
+
+import shutil
+import subprocess
+import tkinter as tk
+from tkinter import messagebox
+from pathlib import Path
+
+APP = "IntegerOS Personalization Center"
+BG = "#080d1c"
+PANEL = "#111b31"
+PANEL_ALT = "#172541"
+CYAN = "#55eaff"
+BLUE = "#388bff"
+TEXT = "#edf5ff"
+MUTED = "#a7b9d5"
+PURPLE = "#a78bfa"
+
+
+def launch(command: list[str], label: str) -> None:
+    executable = shutil.which(command[0])
+    if not executable:
+        messagebox.showwarning(APP, f"{label} is not installed or is not on PATH.\n\n"
+                              f"Try installing the relevant KDE component, then try again.")
+        return
+    try:
+        subprocess.Popen([executable, *command[1:]],
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except OSError as exc:
+        messagebox.showerror(APP, f"Could not open {label}.\n\n{exc}")
+
+
+def open_kcm(module: str, label: str) -> None:
+    launch(["systemsettings", module], label)
+
+
+def open_theme_studio() -> None:
+    if shutil.which("integeros-theme-studio"):
+        launch(["integeros-theme-studio"], "IntegerOS Theme Studio")
+        return
+    candidate = Path.home() / ".local/share/integeros/theme-studio/integeros-theme-studio"
+    if candidate.is_file():
+        launch([str(candidate)], "IntegerOS Theme Studio")
+    else:
+        messagebox.showinfo(APP, "Theme Studio is not installed yet.\n\n"
+                            "From your IntegerOS checkout, run:\n"
+                            "bash scripts/install-theme-studio.sh")
+
+
+def open_wallpaper_studio() -> None:
+    if shutil.which("integeros-wallpaper-studio"):
+        launch(["integeros-wallpaper-studio"], "IntegerOS Wallpaper Studio")
+        return
+    candidates = [
+        Path(__file__).resolve().parents[2] / "apps/integeros-wallpaper-studio.py",
+        Path.home() / ".local/share/integeros/personalization/integeros-wallpaper-studio.py",
+    ]
+    for path in candidates:
+        if path.is_file():
+            launch(["python3", str(path)], "IntegerOS Wallpaper Studio")
+            return
+    helper = Path.home() / ".local/share/innygros/scripts/apply-wallpaper.sh"
+    if helper.is_file():
+        launch(["bash", str(helper), "--choose"], "Wallpaper chooser")
+        return
+    open_kcm("kcm_wallpaper", "KDE Wallpaper settings")
+
+
+class PersonalizationCenter(tk.Tk):
+    def __init__(self) -> None:
+        super().__init__()
+        self.title(APP)
+        self.geometry("820x680")
+        self.minsize(700, 590)
+        self.configure(bg=BG)
+        self._build()
+
+    def _build(self) -> None:
+        header = tk.Frame(self, bg=BG)
+        header.pack(fill="x", padx=30, pady=(24, 12))
+        tk.Label(header, text="INTEGEROS", bg=BG, fg=CYAN,
+                 font=("DejaVu Sans", 10, "bold")).pack(anchor="w")
+        tk.Label(header, text="Personalization Center", bg=BG, fg=TEXT,
+                 font=("DejaVu Sans", 24, "bold")).pack(anchor="w", pady=(3, 2))
+        tk.Label(header, text="Make the desktop feel like yours. Choose a tool below; nothing changes until you open a setting or apply an option.",
+                 bg=BG, fg=MUTED, font=("DejaVu Sans", 9), wraplength=740,
+                 justify="left").pack(anchor="w")
+
+        body = tk.Frame(self, bg=BG)
+        body.pack(fill="both", expand=True, padx=24, pady=8)
+
+        self._section(body, "DESKTOP & WALLPAPER")
+        self._card(body, "Wallpaper Studio", "Create branded MP4 wallpapers with adjustable text, logos and layout.",
+                   "OPEN STUDIO", open_wallpaper_studio, BLUE)
+        self._card(body, "Desktop wallpaper", "Choose a still or animated wallpaper using the existing IntegerOS helper or KDE settings.",
+                   "CHOOSE", open_wallpaper_studio, BLUE)
+
+        self._section(body, "DOCK & PANEL")
+        self._card(body, "Dock layout and behaviour",
+                   "Right-click the dock and choose Enter Edit Mode / Show Panel Configuration to adjust its size, alignment, visibility and appearance.",
+                   "HOW TO", self._dock_help, PURPLE)
+        self._card(body, "Desktop effects",
+                   "Open KDE's native effects controls. IntegerOS does not overwrite compositor settings.",
+                   "OPEN EFFECTS", lambda: open_kcm("kcm_kwin_effects", "KWin Desktop Effects"), PURPLE)
+
+        self._section(body, "APPEARANCE")
+        self._card(body, "Theme Studio", "Open IntegerOS Theme Studio for colours, icons, cursors, global themes and fonts.",
+                   "OPEN STUDIO", open_theme_studio, CYAN)
+        self._card(body, "More Plasma settings", "Open KDE's native desktop, font and workspace settings.",
+                   "OPEN SETTINGS", lambda: open_kcm("kcm_desktop", "KDE Desktop settings"), CYAN)
+
+        footer = tk.Frame(self, bg=BG)
+        footer.pack(fill="x", padx=30, pady=(8, 18))
+        tk.Label(footer, text="IntegerOS • Plasma-native controls • User-scoped launcher",
+                 bg=BG, fg="#7186a8", font=("DejaVu Sans", 8)).pack(anchor="w")
+
+    def _section(self, parent: tk.Widget, title: str) -> None:
+        tk.Label(parent, text=title, bg=BG, fg=CYAN,
+                 font=("DejaVu Sans", 9, "bold")).pack(anchor="w", padx=5, pady=(12, 5))
+
+    def _card(self, parent: tk.Widget, title: str, detail: str, button: str,
+              callback, accent: str) -> None:
+        row = tk.Frame(parent, bg=PANEL, highlightbackground="#263957", highlightthickness=1)
+        row.pack(fill="x", pady=4)
+        left = tk.Frame(row, bg=PANEL)
+        left.pack(side="left", fill="both", expand=True, padx=14, pady=9)
+        tk.Label(left, text=title, bg=PANEL, fg=TEXT,
+                 font=("DejaVu Sans", 10, "bold")).pack(anchor="w")
+        tk.Label(left, text=detail, bg=PANEL, fg=MUTED,
+                 font=("DejaVu Sans", 8), wraplength=535, justify="left").pack(anchor="w", pady=(3, 0))
+        tk.Button(row, text=button, command=callback, bg=PANEL_ALT, fg=accent,
+                  activebackground="#263957", activeforeground=TEXT, relief="flat",
+                  padx=13, pady=8, cursor="hand2",
+                  font=("DejaVu Sans", 8, "bold")).pack(side="right", padx=13, pady=12)
+
+    def _dock_help(self) -> None:
+        messagebox.showinfo(
+            "Dock layout and behaviour",
+            "Plasma panels are configured directly in KDE so the running dock stays in control.\n\n"
+            "1. Right-click an empty area of the dock.\n"
+            "2. Choose Enter Edit Mode (or Show Panel Configuration).\n"
+            "3. Adjust alignment, length, icon size, visibility and screen edge.\n"
+            "4. Exit Edit Mode when finished.\n\n"
+            "Audio visualizer controls are not exposed by Plasma's standard panel API. "
+            "This hub does not invent settings or overwrite the visualizer's own configuration."
+        )
+
+
+if __name__ == "__main__":
+    PersonalizationCenter().mainloop()

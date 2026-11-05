@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=IntegerOS Personalization Center
+GenericName=Desktop personalization
+Comment=Customize the IntegerOS desktop, wallpaper, dock and appearance
+Exec=integeros-personalization-center
+Icon=preferences-desktop
+Terminal=false
+Categories=Settings;DesktopSettings;
+StartupNotify=true

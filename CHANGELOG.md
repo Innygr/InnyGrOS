@@ -1,3 +1,6 @@
+## Unreleased
+- Add the IntegerOS Personalization Center, a user-scoped hub for wallpaper, appearance, KDE effects, and Plasma dock guidance.
+
 # IntegerOS — Changelog
 
 > Public-facing product name: IntegerOS. Internal project identifiers and repository paths may still use InnyGrOS.
