@@ -283,9 +283,9 @@ class ControlCenter:
         path.parent.mkdir(parents=True, exist_ok=True)
         executable = HOME / ".local/bin/integeros-control-center"
         path.write_text(
-            "[Desktop Entry]\\nType=Application\\nName=IntegerOS Control Center\\n"
-            "Comment=Open IntegerOS Control Center at login\\n"
-            f"Exec={executable}\\nIcon=innygros\\nTerminal=false\\n{marker}\\n",
+            "[Desktop Entry]\nType=Application\nName=IntegerOS Control Center\n"
+            "Comment=Open IntegerOS Control Center at login\n"
+            f"Exec={executable}\nIcon=innygros\nTerminal=false\n{marker}\n",
             encoding="utf-8")
         messagebox.showinfo(TITLE, "IntegerOS Control Center will open automatically at login.")
 
@@ -302,7 +302,7 @@ class ControlCenter:
         ]
         for command, title in ((["lscpu"], "CPU"), (["free", "-h"], "Memory"),
                                (["df", "-h", "-x", "tmpfs", "-x", "devtmpfs"], "Storage")):
-            report.append(f"\\n=== {title} ===")
+            report.append(f"\n=== {title} ===")
             if shutil.which(command[0]):
                 try:
                     result = subprocess.run(command, capture_output=True, text=True, timeout=8, check=False)
@@ -317,7 +317,7 @@ class ControlCenter:
         text = scrolledtext.ScrolledText(window, wrap="word", bg="#0b1222", fg=FG,
                                          insertbackground=FG, font=("DejaVu Sans Mono", 9))
         text.pack(fill="both", expand=True, padx=10, pady=10)
-        text.insert("1.0", "\\n".join(report))
+        text.insert("1.0", "\n".join(report))
         text.configure(state="disabled")
 
     def _about(self) -> None:
