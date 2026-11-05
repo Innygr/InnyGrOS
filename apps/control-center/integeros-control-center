@@ -271,7 +271,7 @@ class ControlCenter:
                          INT_DATA / "blacklight-control/blacklight-control",
                          REPO / "apps/blacklight-control/blacklight-control"), PURPLE)
         self._button(page, "Screensaver settings", "Open the IntegerOS Blacklight screensaver controls.",
-                     lambda: self._run_script("blacklight-screensaver.sh", "--gui"), PURPLE)
+                     lambda: self._run_script("blacklight-screensaver.sh", "status"), PURPLE)
         self._button(page, "Lockscreen controls", "Open the Blacklight lockscreen configuration helper.",
                      lambda: self._run_script("blacklight-lockscreen.sh", "--gui"), PURPLE)
         self._button(page, "About IntegerOS", "View the project version and installation details.",
