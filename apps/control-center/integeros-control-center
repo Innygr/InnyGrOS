@@ -399,7 +399,7 @@ class ControlCenter:
         path.write_text(
             "[Desktop Entry]\nType=Application\nName=InntegerOS Control Center\n"
             "Comment=Open InntegerOS Control Center at login\n"
-            f"Exec={executable}\nIcon=innygros\nTerminal=false\n{marker}\n",
+            f"Exec={executable}\nIcon=inntegeros\nTerminal=false\n{marker}\n",
             encoding="utf-8")
         messagebox.showinfo(TITLE, "InntegerOS Control Center will open automatically at login.")
 
