@@ -347,6 +347,18 @@ class ControlCenter:
                      lambda: self._open_settings("kcm_kwin_effects"), PURPLE)
         self._button(page, "All desktop effects", "Open KDE's compositor and desktop effects controls.",
                      lambda: self._open_settings("kcm_kwin_effects"), PURPLE)
+        self._section(page, "Window management & workspace",
+                      "Configure the macOS-inspired desktop experience using KDE's native, reversible settings.")
+        self._button(page, "Window decorations", "Choose title-bar style, button layout and installed window decoration themes.",
+                     lambda: self._open_settings("kcm_kwindecoration"), PURPLE)
+        self._button(page, "Window behaviour", "Configure focus, title-bar actions, snapping and window movement.",
+                     lambda: self._open_settings("kcm_kwinoptions"))
+        self._button(page, "Virtual desktops", "Create and arrange workspaces for Development, School, Gaming or Presentation.",
+                     lambda: self._open_settings("kcm_virtualdesktops"))
+        self._button(page, "Task switcher", "Choose the Alt+Tab window-switching layout and behaviour.",
+                     lambda: self._open_settings("kcm_kwintabbox"))
+        self._button(page, "Desktop grid & overview", "Configure workspace overview and desktop navigation effects.",
+                     lambda: self._open_settings("kcm_kwin_effects"), PURPLE)
         self._button(page, "Fonts & workspace", "Open native KDE desktop settings.",
                      lambda: self._open_settings("kcm_desktop"))
 
