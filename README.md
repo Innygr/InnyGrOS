@@ -1,19 +1,19 @@
-# IntegerOS
+# InntegerOS
 
-**IntegerOS 0.7 — Desktop Edition**  
+**InntegerOS 0.7 — Desktop Edition**  
 An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 
 > Early development: this repository is not yet a standalone operating system or installable ISO.
 
 ## Current features
 - Guided setup script and optional developer-tool installer
-- Graphical software updater in the Welcome Center for IntegerOS source updates, with a separate terminal workflow for user-approved Ubuntu/Kubuntu APT upgrades
+- Graphical software updater in the Welcome Center for InntegerOS source updates, with a separate terminal workflow for user-approved Ubuntu/Kubuntu APT upgrades
 - Dark violet/cyan KDE color scheme
 - Original 1920×1080 vector wallpaper with InnyGr and Team Blacklight identity
 - Custom Konsole profile with Fira Code, violet/cyan terminal colors, and scrollback
 - Welcome Center for desktop settings, wallpaper, terminal setup, read-only diagnostics, and Deep Space Boot Studio for installing/removing safe GRUB menu styling
 - Image-viewer compatibility report available from the Welcome Center, with a local inventory of Gwenview, image-format packages, and Qt plugins (not a substitute for visual format testing)
-- Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile, optional IntegerOS startup splash) with snapshots and one-click restore
+- Reversible KDE desktop profile (colors, wallpaper, animation speed, default Konsole profile, optional InntegerOS startup splash) with snapshots and one-click restore
 - Read-only performance snapshot (boot time, memory, power, battery, graphics, rough CPU timing) with optional saved reports for before/after comparison
 - Power mode switcher (power saver / balanced / performance) using the standard power-profiles interface, and an optional "show Welcome Center at login" setting
 - Read-only laptop hardware check (Wi-Fi, Bluetooth, audio, backlight, touchpad/TrackPoint, batteries, suspend mode, thermals) plus a ThinkPad T580 test plan
@@ -26,9 +26,9 @@ An Ubuntu-based desktop customization project built on Kubuntu + KDE Plasma.
 - Optional fullscreen **Blacklight Matrix screensaver** with animated code rain; manual launcher works independently, and automatic five-minute idle activation is opt-in for X11 sessions only ([docs](docs/blacklight-screensaver.md))
 - Experimental, reversible **native Plasma lock-screen Matrix overlay** that adds animated code rain and disables the wallpaper blur/fader while preserving KDE's native authentication ([docs](docs/blacklight-lockscreen.md))
 - **Blacklight Control** user-scoped systemd service with heartbeat status, native KDE session-lock request, visible message dialog, install/uninstall helper, and generated KDE Connect Run Commands setup instructions; GUI and consent-based screen viewing remain planned ([setup and security boundaries](docs/blacklight-control.md))
-- **IntegerOS Control Center** combines the former Welcome Center with system maintenance, updates, personalization, Quick Settings, Theme Studio, Wallpaper Studio, and Blacklight tools in one tabbed application ([documentation](docs/control-center.md))
-- **IntegerOS Theme Studio** GUI for the existing colour scheme, wallpaper chooser, and KDE icon/cursor/global-theme/font settings ([documentation](docs/theme-studio.md))
-- **IntegerOS Quick Settings** compact GUI for Wi-Fi, Bluetooth, audio mute, and power profiles, complementing (not duplicating) the system-monitor side panel ([documentation](docs/quick-settings.md))
+- **InntegerOS Control Center** combines the former Welcome Center with system maintenance, updates, personalization, Quick Settings, Theme Studio, Wallpaper Studio, and Blacklight tools in one tabbed application ([documentation](docs/control-center.md))
+- **InntegerOS Theme Studio** GUI for the existing colour scheme, wallpaper chooser, and KDE icon/cursor/global-theme/font settings ([documentation](docs/theme-studio.md))
+- **InntegerOS Quick Settings** compact GUI for Wi-Fi, Bluetooth, audio mute, and power profiles, complementing (not duplicating) the system-monitor side panel ([documentation](docs/quick-settings.md))
 - **Blacklight Desktop Suite** with a Fish-compatible terminal launcher, task profiles, Plasma animation controls, and native notification settings shortcuts ([documentation](docs/blacklight-desktop-suite.md))
 - User-scoped configuration installation with timestamped backups for existing same-named Konsole files
 - Conservative performance diagnostics and GitHub Actions validation
@@ -44,15 +44,15 @@ chmod +x install.sh scripts/*.sh
 ./install.sh
 ```
 
-Open **IntegerOS Control Center** and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the IntegerOS Control Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. IntegerOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.
+Open **InntegerOS Control Center** and choose **Software updater** for a graphical source-update check and confirmation. The GUI updater is installed with the InntegerOS Control Center. For terminal use, run `bash scripts/software-updater.sh --check` to check source updates without changing files, or `bash scripts/software-updater.sh` for the interactive updater. InntegerOS source updates require a clean Git checkout on `main`; APT upgrades are a separate, explicitly approved action. The GUI updater does not silently apply desktop settings after a source update.
 
-To undo IntegerOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
+To undo InntegerOS changes, run `./scripts/restore-defaults.sh` or see [docs/recovery.md](docs/recovery.md).
 
 The installer checks the distribution first, then asks before each step: package groups (required, diagnostics, KDE apps, developer tools), the Welcome Center, and the reversible desktop profile. It prints a summary of what was done, skipped, or failed. The Welcome Center can install the wallpaper and Konsole profile, and run a read-only game-readiness report. The report checks tools and graphics diagnostics already available on the system; it does not install anything or change settings.
 
-## IntegerOS Quick Settings
+## InntegerOS Quick Settings
 
-Install the optional compact controls panel with `bash scripts/install-quick-settings.sh`. Search the application launcher for **IntegerOS Quick Settings**. It uses the existing NetworkManager, Bluetooth, audio, and power-profile services; missing tools are reported rather than installed automatically. See [Quick Settings documentation](docs/quick-settings.md).
+Install the optional compact controls panel with `bash scripts/install-quick-settings.sh`. Search the application launcher for **InntegerOS Quick Settings**. It uses the existing NetworkManager, Bluetooth, audio, and power-profile services; missing tools are reported rather than installed automatically. See [Quick Settings documentation](docs/quick-settings.md).
 
 ## Blacklight Desktop Suite
 
@@ -115,7 +115,7 @@ For the in-session lock screen, check compatibility with bash scripts/blacklight
 
 Check the SDDM theme helper with `bash scripts/login-theme.sh status`. To install the optional green-on-black login screen, run `sudo bash scripts/login-theme.sh install` and type `INSTALL` when prompted. To remove it, run `sudo bash scripts/login-theme.sh uninstall` and type `REMOVE`. This is for SDDM systems such as Kubuntu; it does not apply to GDM. Read [docs/login-theme.md](docs/login-theme.md) first and keep a recovery path available. The installer does not restart SDDM, so log out only when ready to test.
 
-## IntegerOS Boot Manager (experimental)
+## InntegerOS Boot Manager (experimental)
 
 Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. To install the optional GRUB theme and Random Boot shutdown hook, use `sudo bash scripts/boot-manager.sh install` and type `INSTALL` when prompted. Random Boot is off by default; enable it with `sudo bash scripts/boot-manager.sh random-on` and disable it with `sudo bash scripts/boot-manager.sh random-off`. Read [docs/boot-manager.md](docs/boot-manager.md) first. This changes system boot configuration, has not been validated on the laptop, and should only be enabled after reviewing the detected entries and confirming a recovery path.
 
@@ -130,7 +130,7 @@ Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. T
 ## Roadmap
 - [ ] **0.8:** broad image-format support with animated GIF/WebP/APNG testing; see the [image viewer plan](docs/IMAGE-VIEWER.md) and [compatibility results ledger](docs/IMAGE-VIEWER-RESULTS.md)
 - [ ] **Blacklight Control:** remote management through paired KDE Connect devices; see the [design and security plan](docs/blacklight-control.md)
-- [ ] **December 2026–January 2027:** bootable IntegerOS ISO or equivalent; see [ISO roadmap](docs/ISO-ROADMAP.md)
+- [ ] **December 2026–January 2027:** bootable InntegerOS ISO or equivalent; see [ISO roadmap](docs/ISO-ROADMAP.md)
 - [x] Initial scaffold, KDE color scheme, and performance diagnostics
 - [x] Graphical Welcome Center prototype
 - [x] Branded wallpaper and application helper
@@ -143,7 +143,7 @@ Preview your existing GRUB entries with `bash scripts/boot-manager.sh status`. T
 - [ ] Richer KDE desktop layout
 - [x] Quick Settings GUI for connectivity, audio, and power controls
 - [x] Blacklight Desktop Suite: terminal, profiles, animation controls, and notification shortcuts
-- [x] First IntegerOS Theme Studio GUI for common appearance settings
+- [x] First InntegerOS Theme Studio GUI for common appearance settings
 - [ ] Automated tests and Kubuntu VM validation
 - [x] Hardware check and ThinkPad T580 test plan
 - [x] Network & VPN diagnostics in the Welcome Center ([docs/thinkpad-t580-test-plan.md](docs/thinkpad-t580-test-plan.md))
