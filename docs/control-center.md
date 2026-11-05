@@ -23,3 +23,7 @@ bash scripts/install-control-center.sh
 Run as the normal desktop user, without `sudo`. Search the application launcher for **InntegerOS Control Center**.
 
 The installer reuses the existing Welcome Center installer to deploy its mature helper scripts, then installs the unified hub and removes the separate InntegerOS menu entries. It does not remove the underlying tools or their data.
+
+## Official identity
+
+The official vector assets are `branding/logo/inntegeros-logo.svg` (wordmark) and `branding/logo/inntegeros-icon.svg` (application icon). The Control Center installer installs the icon into the user's hicolor icon theme and uses it for the launcher.
