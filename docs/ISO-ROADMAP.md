@@ -41,6 +41,11 @@ Prefer a reproducible, documented build process over a one-off manually modified
 
 The next concrete deliverable is a reproducible build proof-of-concept: choose and document the supported Kubuntu/Ubuntu base and build tooling, automate package/branding integration, and generate a bootable test image. Only after an image exists can live-session and installer testing begin.
 
+
+## True installation preparation
+
+The initial installation architecture and safety gates are documented in [Installation Design](INSTALLATION-DESIGN.md). This is a design/preparation milestone only: it does not mean an installer or installable ISO has been built or tested.
+
 ## 0.8 image-viewer track
 
 In parallel with ISO planning, 0.8 targets a broad-format image-viewing experience, including animated formats. See [Image Viewer Compatibility](IMAGE-VIEWER.md) for scope and test gates. The ISO should include the same tested viewer setup, but the image build is not blocked on supporting every obscure format.
