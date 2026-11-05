@@ -9,14 +9,25 @@ InntegerOS is intended to become an independently developed Linux distribution�
 
 The project will build its own integrated desktop experience, system identity, Control Center, first-run flow, package/configuration manifest, update and recovery experience, live image, and installation workflow. It may reuse upstream components such as the Linux kernel, Ubuntu package infrastructure, and KDE Plasma. Reusing components is good engineering; outsourcing the entire product identity and experience to another distribution is not the goal.
 
-Kubuntu 26.04.1 is a useful reference environment and possible technical starting point, not a permanently decided product base. The base release, image-building method, and installer engine must be evaluated and documented before the first image is frozen.
+## Desktop editions
+
+InntegerOS will have a shared system foundation with a choice of desktop environments:
+
+- **KDE Plasma — flagship and default.** Primary development target and the most complete InntegerOS desktop experience.
+- **GNOME — alternative.** A GNOME-native workflow with InntegerOS identity and shared core utilities.
+- **Xfce — lightweight alternative.** A leaner edition intended for modest or older hardware, subject to performance testing.
+
+Users should select one desktop edition during installation. The default image and first release focus on Plasma; GNOME and Xfce become supported editions only after the shared base and installer are stable and each has passed its own VM tests. Do not install all desktop environments by default or mix their settings applications unnecessarily.
+
+The base release, image-building method, and installer engine must be evaluated and documented before the first image is frozen. Kubuntu 26.04.1 is a useful Plasma reference environment and possible technical starting point, not a permanently decided product base.
 
 ## Milestones
 
-- **Nov 15–21 — architecture and image proof of concept:** define which parts InntegerOS owns, compare supported bases and build tooling, document package/licensing requirements, and produce a minimal repeatable live-image build.
-- **Nov 22–26 — InntegerOS live session:** boot the image in a VM; test the InntegerOS desktop identity, networking, display scaling, audio, first-run flow, and offline usability.
+- **Nov 15–21 — architecture and image proof of concept:** define which parts InntegerOS owns, compare supported bases and build tooling, document package/licensing requirements, and produce a minimal repeatable Plasma live-image build.
+- **Nov 22–26 — InntegerOS live session:** boot the image in a VM; test the Plasma edition's identity, networking, display scaling, audio, first-run flow, and offline usability.
 - **Nov 27–30 — installation gate:** evaluate a proven installer backend and integrate an InntegerOS-branded workflow. Test clean-disk and manual installation in disposable VMs. Test alongside installation only when it can be safely validated. Otherwise, keep the image as a non-installing preview.
-- **December–January — hardware and release testing:** test on spare hardware, then assess the ThinkPad T580 without touching its existing Windows/Kubuntu installation. Verify checksums, update/recovery behaviour, documentation, and known limitations before publishing.
+- **December–January — hardware and release testing:** test on spare hardware, then assess the ThinkPad T580 without touching its existing Windows/Kubuntu installation. Verify checksums, update/recovery behaviour, documentation, and known limitations.
+- **After the shared foundation stabilizes:** add GNOME and Xfce edition profiles and run separate VM compatibility tests for each.
 
 ## Release gates
 
@@ -28,11 +39,12 @@ Kubuntu 26.04.1 is a useful reference environment and possible technical startin
 6. The installer is tested in disposable VMs and never silently partitions a disk.
 7. Updates and basic recovery procedures are documented.
 8. The published image has a checksum and clear hardware/support notes.
+9. Every desktop edition advertised as supported has passed its own live-session, install, update, and post-install VM tests.
 
 ## Scope boundaries
 
 - The November 14 **1.0 desktop edition** is not dependent on the installable distribution being ready.
-- The first prototype should prioritize a reliable live system and safe installation over a custom partitioning engine.
+- The first prototype should prioritize a reliable Plasma live system and safe installation over a custom partitioning engine or multiple desktop environments.
 - Do not test installation on the user's daily-use dual-boot laptop until the image has passed VM testing and a separate backup/recovery plan is confirmed.
 - If installation testing is not complete by the end of November, December's deliverable can be a live-image preview rather than an unsafe or untested installer.
 
@@ -40,11 +52,11 @@ Kubuntu 26.04.1 is a useful reference environment and possible technical startin
 
 **Stage: architecture preparation; no ISO build proof-of-concept yet.** The repository contains the desktop customization project and design documents, but no `iso/` build configuration, image-generation script, live image artifact, or VM boot-test report. The build-system milestone has not started.
 
-The next concrete deliverable is a documented base/tooling decision and a reproducible InntegerOS live-image proof of concept. Only after that image exists can live-session and installer testing begin.
+The next concrete deliverable is a documented base/tooling decision and a reproducible InntegerOS Plasma live-image proof of concept. Only after that image exists can live-session and installer testing begin.
 
 ## Installation architecture
 
-The product identity, base-system strategy, installer requirements, and safety gates are documented in [Installation Design](INSTALLATION-DESIGN.md).
+The product identity, desktop edition strategy, base-system strategy, installer requirements, and safety gates are documented in [Installation Design](INSTALLATION-DESIGN.md).
 
 ## 0.8 image-viewer track
 
