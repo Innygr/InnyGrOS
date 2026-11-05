@@ -30,7 +30,21 @@ Plasma is a desktop environment component, not the operating system's identity. 
 
 Do not fork Plasma immediately just to claim independence. Prefer upstream-compatible extensions and maintained InntegerOS components. A deeper desktop-shell fork or replacement should be considered only if a concrete product requirement justifies its long-term maintenance cost.
 
-## 3. Base system strategy
+## 3. Desktop editions
+
+InntegerOS should offer a small number of supported desktop choices while keeping one shared operating-system foundation.
+
+- **InntegerOS Desktop — KDE Plasma (default):** the flagship edition and primary development target. Existing InntegerOS desktop integration, Control Center, workspace design, Blacklight features, and visual customization are developed and validated here first.
+- **InntegerOS GNOME:** an alternative edition for users who prefer GNOME's workflow. It should receive the same system identity, core utilities, update/recovery support, and first-run essentials, with a GNOME-appropriate layout rather than copying Plasma-specific settings.
+- **InntegerOS Lightweight — Xfce:** an optional lower-resource edition for older or modest hardware. Keep its package selection lean and do not promise specific performance gains until tested.
+
+All editions share the same base system, package/update policy, security maintenance, branding, and first-party core applications. Desktop-specific configuration and optional applications should be separated into edition profiles so that one desktop does not install another desktop's settings modules or duplicate applications unnecessarily.
+
+**Default recommendation:** Plasma. GNOME and Xfce are optional choices, not separate operating systems with divergent support policies.
+
+The first installable prototype should focus on making the Plasma edition reliable. Add GNOME and Xfce only after the shared base, installer, and first-boot architecture are stable. Each edition must have its own VM test coverage before being advertised as supported.
+
+## 4. Base system strategy
 
 For the first installable prototype, use Ubuntu package infrastructure as a possible foundation while creating an InntegerOS-controlled image and integration layer. Kubuntu 26.04.1 is a candidate reference environment because the current desktop project is developed on it; it is not a final product-identity decision and must not be assumed to be the permanent base.
 
@@ -65,7 +79,7 @@ The installer must:
 
 If safe alongside installation cannot be verified, disable or defer that option rather than claiming it works.
 
-## 5. First-boot experience
+## 6. First-boot experience
 
 The installed system should:
 1. complete the account creation and system setup selected during installation;
@@ -77,7 +91,7 @@ The installed system should:
 
 No personal account, home directory, SSH key, Wi-Fi password, Tailscale identity, browser profile, OneDrive token, or machine-specific configuration may be included in the image.
 
-## 6. Image composition and package ownership
+## 7. Image composition and package ownership
 
 Create a declarative package and configuration manifest rather than copying a developer's home directory. Separate the image into:
 - **Base system:** kernel, init, core utilities, hardware enablement, and package infrastructure;
@@ -90,7 +104,7 @@ Over time, establish an InntegerOS package repository and signed release/update 
 
 Avoid automatically installing large or proprietary game launchers, personal applications, or optional developer stacks in the base image. Offer them after installation instead.
 
-## 7. Build and test gates
+## 8. Build and test gates
 
 ### Gate A — upstream and base evaluation
 - Compare supported Ubuntu/Kubuntu bases and image-building tools.
@@ -116,7 +130,7 @@ Avoid automatically installing large or proprietary game launchers, personal app
 ### Gate D — physical hardware
 Only after all VM gates pass, test on spare hardware. The ThinkPad T580 is a later compatibility target, not the first installer test machine. Its existing Windows/Kubuntu layout must not be used for destructive installer experiments.
 
-## 8. Current blockers
+## 9. Current blockers
 
 - No ISO build configuration or reproducible image-generation script exists yet.
 - The final base distribution and installer engine have not been selected.
@@ -124,7 +138,7 @@ Only after all VM gates pass, test on spare hardware. The ThinkPad T580 is a lat
 - No installation, dual-boot, recovery, or post-install test has been completed.
 - Package ownership, update policy, and first-boot behaviour still need to be made declarative.
 
-## 9. Immediate next tasks
+## 10. Immediate next tasks
 
 1. Define the InntegerOS product identity and the components the project will maintain.
 2. Compare candidate base systems and image-building tools instead of assuming a Kubuntu respin.
