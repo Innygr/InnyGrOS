@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="460" viewBox="0 0 1400 460">
+  <title>InntegerOS — Explore, Create, Innovate</title>
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9a1ff"/><stop offset=".5" stop-color="#596cff"/><stop offset="1" stop-color="#28e5ff"/></linearGradient>
+    <linearGradient id="orbit" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a77aff"/><stop offset="1" stop-color="#55eaff"/></linearGradient>
+  </defs>
+  <g transform="translate(40 25) scale(.72)">
+    <rect x="18" y="18" width="476" height="476" rx="112" fill="#080f21"/>
+    <circle cx="256" cy="256" r="176" fill="none" stroke="#294c85" stroke-width="3"/>
+    <path d="M110 287 C143 130 360 105 416 223 C463 323 295 410 145 330" fill="none" stroke="url(#orbit)" stroke-width="15" stroke-linecap="round" transform="rotate(-16 256 256)"/>
+    <path d="M180 145 H342 L310 197 H259 L222 365 H156 L193 197 H148 Z" fill="url(#mark)"/>
+    <path d="M291 250 L357 250 L331 289 L274 289 Z" fill="#55eaff"/>
+  </g>
+  <text x="430" y="250" fill="#edf5ff" font-family="DejaVu Sans, Arial, sans-serif" font-size="142" font-weight="700" letter-spacing="-7">Innteger<tspan fill="#35dfff">OS</tspan></text>
+  <path d="M435 300 H1290" stroke="url(#orbit)" stroke-width="4"/>
+  <text x="438" y="370" fill="#55eaff" font-family="DejaVu Sans, Arial, sans-serif" font-size="30" letter-spacing="12">EXPLORE  •  CREATE  •  INNOVATE</text>
+</svg>
