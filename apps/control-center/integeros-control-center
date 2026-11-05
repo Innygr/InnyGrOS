@@ -163,6 +163,18 @@ class ControlCenter:
                      lambda: self._open_app("plasma-discover", "Discover"))
         self._button(page, "System Settings", "Open KDE's full settings application.",
                      lambda: self._open_settings())
+        self._button(page, "Apply IntegerOS colours", "Apply the installed IntegerOS colour scheme.",
+                     lambda: self._run_script("apply-theme.sh"))
+        self._button(page, "Choose wallpaper", "Open the IntegerOS wallpaper chooser.",
+                     lambda: self._run_script("apply-wallpaper.sh", "--choose"))
+        self._button(page, "Terminal theme", "Install or refresh the IntegerOS Konsole profile.",
+                     lambda: self._run_script("apply-terminal-profile.sh"))
+        self._button(page, "Welcome Center at login", "Toggle the optional welcome experience.",
+                     self._toggle_autostart, PURPLE)
+        self._button(page, "System diagnostics", "View a read-only summary of the operating system and hardware.",
+                     self._diagnostics)
+        self._button(page, "IntegerOS project page", "Open the project's GitHub repository.",
+                     lambda: self._launch(["xdg-open", "https://github.com/Innygr/InntegerOS"], "IntegerOS project"))
 
     def _first_steps(self) -> None:
         choice = messagebox.askyesnocancel(
@@ -255,6 +267,58 @@ class ControlCenter:
                      lambda: self._run_script("blacklight-lockscreen.sh", "--gui"), PURPLE)
         self._button(page, "About IntegerOS", "View the project version and installation details.",
                      self._about)
+
+
+    def _toggle_autostart(self) -> None:
+        path = HOME / ".config/autostart/innygros-welcome.desktop"
+        marker = "X-InnyGrOS-Autostart=true"
+        if path.is_file():
+            content = path.read_text(encoding="utf-8", errors="replace")
+            if marker not in content:
+                messagebox.showwarning(TITLE, "The existing autostart file was not created by IntegerOS, so it was left unchanged.")
+                return
+            path.unlink()
+            messagebox.showinfo(TITLE, "The Welcome Center will no longer open automatically at login.")
+            return
+        path.parent.mkdir(parents=True, exist_ok=True)
+        executable = HOME / ".local/bin/integeros-control-center"
+        path.write_text(
+            "[Desktop Entry]\\nType=Application\\nName=IntegerOS Control Center\\n"
+            "Comment=Open IntegerOS Control Center at login\\n"
+            f"Exec={executable}\\nIcon=innygros\\nTerminal=false\\n{marker}\\n",
+            encoding="utf-8")
+        messagebox.showinfo(TITLE, "IntegerOS Control Center will open automatically at login.")
+
+    def _diagnostics(self) -> None:
+        import platform
+        from datetime import datetime
+        from tkinter import scrolledtext
+        report = [
+            "IntegerOS system diagnostics",
+            f"Generated: {datetime.now().astimezone().isoformat(timespec='seconds')}",
+            f"System: {platform.platform()}",
+            f"Kernel: {platform.release()}",
+            f"Python: {platform.python_version()}",
+        ]
+        for command, title in ((["lscpu"], "CPU"), (["free", "-h"], "Memory"),
+                               (["df", "-h", "-x", "tmpfs", "-x", "devtmpfs"], "Storage")):
+            report.append(f"\\n=== {title} ===")
+            if shutil.which(command[0]):
+                try:
+                    result = subprocess.run(command, capture_output=True, text=True, timeout=8, check=False)
+                    report.append(result.stdout.strip() or result.stderr.strip() or "No output.")
+                except (OSError, subprocess.TimeoutExpired) as exc:
+                    report.append(str(exc))
+            else:
+                report.append(f"{command[0]} is not installed.")
+        window = tk.Toplevel(self.root)
+        window.title("IntegerOS System Diagnostics")
+        window.geometry("760x560")
+        text = scrolledtext.ScrolledText(window, wrap="word", bg="#0b1222", fg=FG,
+                                         insertbackground=FG, font=("DejaVu Sans Mono", 9))
+        text.pack(fill="both", expand=True, padx=10, pady=10)
+        text.insert("1.0", "\\n".join(report))
+        text.configure(state="disabled")
 
     def _about(self) -> None:
         version_file = DATA / "VERSION"
