@@ -21,6 +21,9 @@ install -m 0755 "${ROOT_DIR}/apps/theme-studio/integeros-theme-studio" "${INT_DI
 install -m 0755 "${ROOT_DIR}/apps/quick-settings/integeros-quick-settings" "${INT_DIR}/quick-settings/integeros-quick-settings"
 install -m 0755 "${ROOT_DIR}/apps/blacklight-suite/blacklight-desktop-suite" "${INT_DIR}/blacklight-suite/blacklight-desktop-suite"
 install -m 0755 "${ROOT_DIR}/apps/blacklight-control/blacklight-control" "${INT_DIR}/blacklight-control/blacklight-control"
+for helper in blacklight-screensaver.sh blacklight-lockscreen.sh network-health.sh battery-power-report.sh; do
+  install -m 0755 "${ROOT_DIR}/scripts/${helper}" "${DATA_DIR}/scripts/${helper}"
+done
 cat > "${APPS_DIR}/integeros-control-center.desktop" <<EOF
 [Desktop Entry]
 Type=Application
@@ -34,6 +37,16 @@ Categories=Settings;System;
 StartupNotify=true
 EOF
 chmod 0644 "${APPS_DIR}/integeros-control-center.desktop"
+# Hide specialist launchers from the application menu; the Control Center is the main entry point.
+for entry in innygros-welcome.desktop integeros-personalization-center.desktop integeros-quick-settings.desktop integeros-theme-studio.desktop integeros-wallpaper-studio.desktop blacklight-desktop-suite.desktop; do
+  file="${APPS_DIR}/${entry}"
+  if [[ -f "${file}" ]] && ! grep -q '^NoDisplay=trueecho "IntegerOS Control Center installed."
+echo "Search the application launcher for 'IntegerOS Control Center'."
+echo "The former applications remain installed as components; use this hub as the main entry point."
+ "${file}"; then
+    sed -i '/^Type=Application$/a NoDisplay=true' "${file}"
+  fi
+done
 echo "IntegerOS Control Center installed."
 echo "Search the application launcher for 'IntegerOS Control Center'."
 echo "The former applications remain installed as components; use this hub as the main entry point."
