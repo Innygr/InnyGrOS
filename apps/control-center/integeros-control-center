@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""IntegerOS Control Center: unified entry point for IntegerOS desktop tools."""
+"""InntegerOS Control Center: unified entry point for InntegerOS desktop tools."""
 from __future__ import annotations
 
 import os
@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from pathlib import Path
 
-TITLE = "IntegerOS Control Center"
+TITLE = "InntegerOS Control Center"
 BG, CARD, CARD2 = "#080d1c", "#111b31", "#172541"
 CYAN, BLUE, PURPLE = "#55eaff", "#388bff", "#a78bfa"
 FG, MUTED = "#edf5ff", "#a7b9d5"
@@ -43,7 +43,7 @@ class ControlCenter:
         root.geometry("940x720")
         root.minsize(780, 610)
         root.configure(bg=BG)
-        self.status = tk.StringVar(value="IntegerOS is ready.")
+        self.status = tk.StringVar(value="InntegerOS is ready.")
         self._style()
         self._header()
         self.tabs = ttk.Notebook(root)
@@ -118,7 +118,7 @@ class ControlCenter:
     def _run_script(self, name: str, *args: str) -> None:
         script = find_script(name)
         if not script:
-            messagebox.showwarning(TITLE, f"Required IntegerOS component not found: {name}\n\nRun the Control Center installer again.")
+            messagebox.showwarning(TITLE, f"Required InntegerOS component not found: {name}\n\nRun the Control Center installer again.")
             return
         LOG.parent.mkdir(parents=True, exist_ok=True)
         try:
@@ -157,38 +157,38 @@ class ControlCenter:
         self._launch([command] + ([module] if module else []), "KDE System Settings")
 
     def _build_home(self, page: tk.Frame) -> None:
-        self._section(page, "Welcome to IntegerOS",
+        self._section(page, "Welcome to InntegerOS",
                       "Your old Welcome Center now lives here. Start with a baseline, check the laptop, then apply the desktop profile if you want it.")
-        self._button(page, "First steps guide", "A guided checklist for setting up IntegerOS safely.",
+        self._button(page, "First steps guide", "A guided checklist for setting up InntegerOS safely.",
                      self._first_steps, PURPLE)
-        self._button(page, "Apply IntegerOS desktop profile", "Save a restore point, then apply the IntegerOS desktop appearance.",
+        self._button(page, "Apply InntegerOS desktop profile", "Save a restore point, then apply the InntegerOS desktop appearance.",
                      lambda: self._run_script("desktop-profile.sh", "apply", "--gui"))
         self._button(page, "Restore previous desktop settings", "Roll back the last saved desktop profile.",
                      lambda: self._run_script("desktop-profile.sh", "restore", "--gui"), PURPLE)
         self._section(page, "Quick launch", "Frequently used system destinations.")
-        self._button(page, "Software updates", "Open the IntegerOS updater for project and system package updates.",
+        self._button(page, "Software updates", "Open the InntegerOS updater for project and system package updates.",
                      lambda: self._run_script("software-updater-gui.sh"))
         self._button(page, "Discover", "Browse and install software using KDE Discover.",
                      lambda: self._open_app("plasma-discover", "Discover"))
         self._button(page, "System Settings", "Open KDE's full settings application.",
                      lambda: self._open_settings())
-        self._button(page, "Apply IntegerOS colours", "Apply the installed IntegerOS colour scheme.",
+        self._button(page, "Apply InntegerOS colours", "Apply the installed InntegerOS colour scheme.",
                      lambda: self._run_script("apply-theme.sh"))
-        self._button(page, "Choose wallpaper", "Open the IntegerOS wallpaper chooser.",
+        self._button(page, "Choose wallpaper", "Open the InntegerOS wallpaper chooser.",
                      lambda: self._run_script("apply-wallpaper.sh", "--choose"))
-        self._button(page, "Terminal theme", "Install or refresh the IntegerOS Konsole profile.",
+        self._button(page, "Terminal theme", "Install or refresh the InntegerOS Konsole profile.",
                      lambda: self._run_script("apply-terminal-profile.sh"))
         self._button(page, "Welcome Center at login", "Toggle the optional welcome experience.",
                      self._toggle_autostart, PURPLE)
         self._button(page, "System diagnostics", "View a read-only summary of the operating system and hardware.",
                      self._diagnostics)
-        self._button(page, "IntegerOS project page", "Open the project's GitHub repository.",
-                     lambda: self._launch(["xdg-open", "https://github.com/Innygr/InntegerOS"], "IntegerOS project"))
+        self._button(page, "InntegerOS project page", "Open the project's GitHub repository.",
+                     lambda: self._launch(["xdg-open", "https://github.com/Innygr/InntegerOS"], "InntegerOS project"))
 
     def _first_steps(self) -> None:
         choice = messagebox.askyesnocancel(
             TITLE,
-            "IntegerOS first steps\n\nYES: save a baseline performance snapshot now.\n"
+            "InntegerOS first steps\n\nYES: save a baseline performance snapshot now.\n"
             "NO: skip the snapshot and continue to the hardware check.\n"
             "CANCEL: close this guide.")
         if choice is None:
@@ -197,7 +197,7 @@ class ControlCenter:
             self._run_script("performance-benchmark.sh", "--gui", "--save")
         if messagebox.askyesno(TITLE, "Run the read-only laptop hardware check?"):
             self._run_script("hardware-check.sh", "--gui")
-        if messagebox.askyesno(TITLE, "Apply the reversible IntegerOS desktop profile?"):
+        if messagebox.askyesno(TITLE, "Apply the reversible InntegerOS desktop profile?"):
             self._run_script("desktop-profile.sh", "apply", "--gui")
         if messagebox.askyesno(TITLE, "Open the terminal theme installer?"):
             self._run_script("apply-terminal-profile.sh")
@@ -206,9 +206,9 @@ class ControlCenter:
     def _build_system(self, page: tk.Frame) -> None:
         self._section(page, "Maintenance & updates", "System utilities formerly listed in the Welcome Center.")
         items = [
-            ("Software updater", "Update IntegerOS components and optionally system packages.", lambda: self._run_script("software-updater-gui.sh")),
+            ("Software updater", "Update InntegerOS components and optionally system packages.", lambda: self._run_script("software-updater-gui.sh")),
             ("Deep Space Boot Studio", "Configure the GRUB theme and boot options.", lambda: self._run_script("boot-studio.sh")),
-            ("Installation doctor", "Check the IntegerOS installation for missing or inconsistent components.", lambda: self._run_script("doctor.sh", "--gui")),
+            ("Installation doctor", "Check the InntegerOS installation for missing or inconsistent components.", lambda: self._run_script("doctor.sh", "--gui")),
             ("Laptop hardware check", "Read-only hardware and compatibility report.", lambda: self._run_script("hardware-check.sh", "--gui")),
             ("Performance snapshot", "Capture a read-only performance report.", lambda: self._run_script("performance-benchmark.sh", "--gui")),
             ("Compare performance snapshots", "Compare the two most recent saved reports.", lambda: self._run_script("compare-reports.sh", "--gui")),
@@ -234,20 +234,22 @@ class ControlCenter:
                          REPO / "apps/integeros-wallpaper-studio.py"))
         self._button(page, "Choose desktop wallpaper", "Open KDE wallpaper settings to choose an installed still or animated wallpaper.",
                      lambda: self._open_settings("kcm_wallpaper"))
-        self._button(page, "Theme Studio", "Customize IntegerOS colours, icons, cursors, global theme and fonts.",
+        self._button(page, "Theme Studio", "Customize InntegerOS colours, icons, cursors, global theme and fonts.",
                      lambda: self._open_app("integeros-theme-studio", "Theme Studio",
                          INT_DATA / "theme-studio/integeros-theme-studio",
                          REPO / "apps/theme-studio/integeros-theme-studio"), CYAN)
         self._button(page, "Dock & panel layout", "Use Plasma's panel edit mode to adjust dock alignment, size, visibility and screen edge.",
                      lambda: messagebox.showinfo(TITLE, "Right-click an empty area of the dock and choose Enter Edit Mode / Show Panel Configuration. Adjust alignment, length, icon size, visibility and screen edge, then exit Edit Mode."), PURPLE)
-        self._button(page, "Desktop effects", "Open KDE's compositor and desktop effects controls.",
+        self._button(page, "Destroy Windows effect", "Open Plasma's desktop-effects list to review or adjust the Destroy Windows animation.",
+                     lambda: self._open_settings("kcm_kwin_effects"), PURPLE)
+        self._button(page, "All desktop effects", "Open KDE's compositor and desktop effects controls.",
                      lambda: self._open_settings("kcm_kwin_effects"), PURPLE)
         self._button(page, "Fonts & workspace", "Open native KDE desktop settings.",
                      lambda: self._open_settings("kcm_desktop"))
 
     def _build_quick(self, page: tk.Frame) -> None:
         self._section(page, "Quick settings", "Fast controls for common laptop settings. Advanced controls stay in KDE's native settings.")
-        self._button(page, "IntegerOS Quick Settings", "Open the existing compact control panel for Wi-Fi, Bluetooth, audio and power presets.",
+        self._button(page, "InntegerOS Quick Settings", "Open the existing compact control panel for Wi-Fi, Bluetooth, audio and power presets.",
                      lambda: self._open_app("integeros-quick-settings", "Quick Settings",
                          INT_DATA / "quick-settings/integeros-quick-settings",
                          REPO / "apps/quick-settings/integeros-quick-settings"))
@@ -274,7 +276,7 @@ class ControlCenter:
                      lambda: self._run_script("blacklight-screensaver.sh", "status"), PURPLE)
         self._button(page, "Lockscreen controls", "Check the native Plasma lockscreen overlay and backup status (read-only).",
                      lambda: self._run_script("blacklight-lockscreen.sh", "status"), PURPLE)
-        self._button(page, "About IntegerOS", "View the project version and installation details.",
+        self._button(page, "About InntegerOS", "View the project version and installation details.",
                      self._about)
 
 
@@ -284,7 +286,7 @@ class ControlCenter:
         if path.is_file():
             content = path.read_text(encoding="utf-8", errors="replace")
             if marker not in content:
-                messagebox.showwarning(TITLE, "The existing autostart file was not created by IntegerOS, so it was left unchanged.")
+                messagebox.showwarning(TITLE, "The existing autostart file was not created by InntegerOS, so it was left unchanged.")
                 return
             path.unlink()
             messagebox.showinfo(TITLE, "The Welcome Center will no longer open automatically at login.")
@@ -292,18 +294,18 @@ class ControlCenter:
         path.parent.mkdir(parents=True, exist_ok=True)
         executable = HOME / ".local/bin/integeros-control-center"
         path.write_text(
-            "[Desktop Entry]\nType=Application\nName=IntegerOS Control Center\n"
-            "Comment=Open IntegerOS Control Center at login\n"
+            "[Desktop Entry]\nType=Application\nName=InntegerOS Control Center\n"
+            "Comment=Open InntegerOS Control Center at login\n"
             f"Exec={executable}\nIcon=innygros\nTerminal=false\n{marker}\n",
             encoding="utf-8")
-        messagebox.showinfo(TITLE, "IntegerOS Control Center will open automatically at login.")
+        messagebox.showinfo(TITLE, "InntegerOS Control Center will open automatically at login.")
 
     def _diagnostics(self) -> None:
         import platform
         from datetime import datetime
         from tkinter import scrolledtext
         report = [
-            "IntegerOS system diagnostics",
+            "InntegerOS system diagnostics",
             f"Generated: {datetime.now().astimezone().isoformat(timespec='seconds')}",
             f"System: {platform.platform()}",
             f"Kernel: {platform.release()}",
@@ -321,7 +323,7 @@ class ControlCenter:
             else:
                 report.append(f"{command[0]} is not installed.")
         window = tk.Toplevel(self.root)
-        window.title("IntegerOS System Diagnostics")
+        window.title("InntegerOS System Diagnostics")
         window.geometry("760x560")
         text = scrolledtext.ScrolledText(window, wrap="word", bg="#0b1222", fg=FG,
                                          insertbackground=FG, font=("DejaVu Sans Mono", 9))
@@ -334,7 +336,7 @@ class ControlCenter:
         if not version_file.is_file():
             version_file = REPO / "VERSION"
         version = version_file.read_text(encoding="utf-8").strip() if version_file.is_file() else "unknown"
-        messagebox.showinfo(TITLE, f"IntegerOS {version} — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nAll major IntegerOS tools are collected in this Control Center.")
+        messagebox.showinfo(TITLE, f"InntegerOS {version} — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nAll major InntegerOS tools are collected in this Control Center.")
 
 if __name__ == "__main__":
     root = tk.Tk()
