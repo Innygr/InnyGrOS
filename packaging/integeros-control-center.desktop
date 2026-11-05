@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=IntegerOS Control Center
+GenericName=System and desktop control center
+Comment=Welcome, system maintenance, personalization and Blacklight tools
+Exec=integeros-control-center
+Icon=innygros
+Terminal=false
+Categories=Settings;System;
+StartupNotify=true
