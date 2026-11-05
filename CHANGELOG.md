@@ -1,21 +1,23 @@
 ## Unreleased
+- Added official InntegerOS vector wordmark and application icon; the Control Center installer now installs and uses the new icon.
+- Added a live Control Center overview for OS, kernel, memory, root storage, battery, power profile, network connectivity and uptime, refreshing every 15 seconds.
 - Confirmed **InntegerOS** as the official public product spelling; legacy internal identifiers and paths remain unchanged for compatibility.
-- Added IntegerOS Control Center, a unified tabbed application that brings Welcome Center workflows, system maintenance, personalization, Quick Settings and Blacklight tools behind one main application entry.
+- Added InntegerOS Control Center, a unified tabbed application that brings Welcome Center workflows, system maintenance, personalization, Quick Settings and Blacklight tools behind one main application entry.
 - Added a user-scoped installer and documentation for the consolidated Control Center; specialist tools remain modular components and may open focused windows.
-- Add the IntegerOS Personalization Center, a user-scoped hub for wallpaper, appearance, KDE effects, and Plasma dock guidance.
+- Add the InntegerOS Personalization Center, a user-scoped hub for wallpaper, appearance, KDE effects, and Plasma dock guidance.
 
-# IntegerOS — Changelog
+# InntegerOS — Changelog
 
-> Public-facing product name: IntegerOS. Internal project identifiers and repository paths may still use InnyGrOS.
+> Public-facing product name: InntegerOS. Internal project identifiers and repository paths may still use InnyGrOS.
 
-All notable changes in IntegerOS. The current version is in the `VERSION` file; scripts and the Welcome Center read it from there.
+All notable changes in InntegerOS. The current version is in the `VERSION` file; scripts and the Welcome Center read it from there.
 
 Nothing in this project has been tested on real hardware yet unless an entry says so. "CI" means GitHub Actions on an Ubuntu runner with no desktop session.
 
 ## Unreleased
 - Added Blacklight Desktop Suite: Fish-first/Bash-fallback Konsole launcher, task presets with saved-setting restore, Plasma animation controls, and shortcuts to native KDE notification settings.
 - Added user-scoped installer, launcher, documentation, and headless smoke tests. KDE remains responsible for notification history and Do Not Disturb.
-- Added IntegerOS Quick Settings, a compact GUI for Wi-Fi, Bluetooth, default-output mute, and power profiles, with direct links to KDE settings.
+- Added InntegerOS Quick Settings, a compact GUI for Wi-Fi, Bluetooth, default-output mute, and power profiles, with direct links to KDE settings.
 - Added a user-scoped installer, launcher, usage documentation, and headless smoke tests.
 
 - Added an experimental, reversible Plasma lock-screen QML patch for animated Matrix rain, a sharp background, and green-on-black styling for KDE's native password field and unlock button.
@@ -30,7 +32,7 @@ Nothing in this project has been tested on real hardware yet unless an entry say
 - Optional SDDM Blacklight Matrix login theme with animated green code rain, an authentication panel, and session selection.
 - Guarded `scripts/login-theme.sh` installer/uninstaller; it refuses to overwrite existing theme files/configuration and only removes its own dedicated config drop-in.
 - `docs/login-theme.md` and a login-theme smoke test. Actual SDDM/Qt greeter rendering remains to be validated on a real Kubuntu login screen.
-- Optional native Plymouth Blacklight Matrix boot theme with animated green code rain, IntegerOS/Blacklight branding, progress indicator, and password-prompt callback.
+- Optional native Plymouth Blacklight Matrix boot theme with animated green code rain, InntegerOS/Blacklight branding, progress indicator, and password-prompt callback.
 - Guarded `scripts/boot-animation.sh` installer/uninstaller that backs up the previous Plymouth theme, requires explicit confirmation, and rebuilds initramfs after changes.
 - `docs/boot-animation.md` and a boot-theme smoke test. The theme remains experimental pending real-hardware validation.
 
