@@ -6,7 +6,7 @@ The Control Center is the single application-menu entry for InntegerOS. It bring
 
 - **Overview:** first-steps guide, desktop profile apply/restore, updater and Discover.
 - **System:** boot studio, diagnostics, hardware, performance, game readiness, power, network, battery and image-viewer reports.
-- **Desktop:** Wallpaper Studio, wallpaper settings, Theme Studio, dock/panel guidance, Destroy Windows and desktop effects.
+- **Desktop:** Wallpaper Studio, wallpaper settings, Theme Studio, dock/panel guidance, Destroy Windows, desktop effects, window decorations and behaviour, virtual desktops, and task-switcher settings.
 - **Quick Settings:** Wi-Fi, Bluetooth, audio, notifications and the existing compact Quick Settings panel.
 - **Blacklight:** Desktop Suite, Blacklight Control, screensaver and lockscreen helpers.
 
@@ -27,3 +27,8 @@ The installer reuses the existing Welcome Center installer to deploy its mature 
 ## Official identity
 
 The official vector assets are `branding/logo/inntegeros-logo.svg` (wordmark) and `branding/logo/inntegeros-icon.svg` (application icon). The Control Center installer installs the icon into the user's hicolor icon theme and uses it for the launcher.
+
+
+## Workspace customization
+
+The Desktop tab includes shortcuts to KDE's native modules for window decorations, window behaviour, virtual desktops, task switching, and desktop effects. These open KDE System Settings rather than writing undocumented Plasma configuration keys, so the user can review and apply each change using KDE's own interface. The dock's audio-reactive visualizer remains part of the existing dock widget; visualizer-specific style controls are not yet exposed by InntegerOS.
