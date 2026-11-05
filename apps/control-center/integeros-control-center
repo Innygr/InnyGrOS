@@ -1,0 +1,269 @@
+#!/usr/bin/env python3
+"""IntegerOS Control Center: unified entry point for IntegerOS desktop tools."""
+from __future__ import annotations
+
+import os
+import shutil
+import subprocess
+import threading
+import tkinter as tk
+from tkinter import messagebox, ttk
+from pathlib import Path
+
+TITLE = "IntegerOS Control Center"
+BG, CARD, CARD2 = "#080d1c", "#111b31", "#172541"
+CYAN, BLUE, PURPLE = "#55eaff", "#388bff", "#a78bfa"
+FG, MUTED = "#edf5ff", "#a7b9d5"
+HOME = Path.home()
+DATA = HOME / ".local/share/innygros"
+INT_DATA = HOME / ".local/share/integeros"
+LOG = HOME / ".cache/integeros/control-center.log"
+REPO = Path(__file__).resolve().parents[2]
+
+
+def find_script(name: str) -> Path | None:
+    for base in (REPO / "scripts", DATA / "scripts"):
+        candidate = base / name
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def find_app(name: str, *candidates: Path) -> Path | None:
+    command = shutil.which(name)
+    if command:
+        return Path(command)
+    return next((p for p in candidates if p.is_file()), None)
+
+
+class ControlCenter:
+    def __init__(self, root: tk.Tk) -> None:
+        self.root = root
+        root.title(TITLE)
+        root.geometry("940x720")
+        root.minsize(780, 610)
+        root.configure(bg=BG)
+        self.status = tk.StringVar(value="IntegerOS is ready.")
+        self._style()
+        self._header()
+        self.tabs = ttk.Notebook(root)
+        self.tabs.pack(fill="both", expand=True, padx=20, pady=(4, 10))
+        self._build_home(self._page("OVERVIEW"))
+        self._build_system(self._page("SYSTEM"))
+        self._build_personalization(self._page("DESKTOP"))
+        self._build_quick(self._page("QUICK SETTINGS"))
+        self._build_blacklight(self._page("BLACKLIGHT"))
+        footer = tk.Frame(root, bg=BG)
+        footer.pack(fill="x", padx=24, pady=(0, 12))
+        tk.Label(footer, textvariable=self.status, bg=BG, fg=MUTED,
+                 font=("DejaVu Sans", 8)).pack(side="left")
+        tk.Label(footer, text="INTEGEROS • ONE CONTROL CENTER", bg=BG, fg="#7186a8",
+                 font=("DejaVu Sans", 8, "bold")).pack(side="right")
+
+    def _style(self) -> None:
+        style = ttk.Style()
+        style.theme_use("clam")
+        style.configure("TNotebook", background=BG, borderwidth=0)
+        style.configure("TNotebook.Tab", background=CARD, foreground=MUTED,
+                        padding=(16, 10), font=("DejaVu Sans", 9, "bold"))
+        style.map("TNotebook.Tab", background=[("selected", "#263957")],
+                  foreground=[("selected", CYAN)])
+
+    def _header(self) -> None:
+        head = tk.Frame(self.root, bg=BG)
+        head.pack(fill="x", padx=28, pady=(20, 8))
+        tk.Label(head, text="INTEGEROS // CONTROL CENTER", bg=BG, fg=CYAN,
+                 font=("DejaVu Sans", 10, "bold")).pack(anchor="w")
+        tk.Label(head, text="Everything in one place.", bg=BG, fg=FG,
+                 font=("DejaVu Sans", 24, "bold")).pack(anchor="w", pady=(2, 0))
+        tk.Label(head, text="Welcome, customization, system tools and Blacklight controls.",
+                 bg=BG, fg=MUTED, font=("DejaVu Sans", 9)).pack(anchor="w")
+
+    def _page(self, title: str) -> tk.Frame:
+        page = tk.Frame(self.tabs, bg=BG)
+        self.tabs.add(page, text=title)
+        return page
+
+    def _section(self, page: tk.Widget, title: str, detail: str = "") -> None:
+        tk.Label(page, text=title.upper(), bg=BG, fg=CYAN,
+                 font=("DejaVu Sans", 10, "bold")).pack(anchor="w", padx=16, pady=(17, 3))
+        if detail:
+            tk.Label(page, text=detail, bg=BG, fg=MUTED, wraplength=820,
+                     justify="left", font=("DejaVu Sans", 8)).pack(anchor="w", padx=17, pady=(0, 7))
+
+    def _button(self, page: tk.Widget, title: str, detail: str, callback,
+                accent: str = BLUE) -> None:
+        row = tk.Frame(page, bg=CARD, highlightbackground="#263957", highlightthickness=1)
+        row.pack(fill="x", padx=14, pady=4)
+        info = tk.Frame(row, bg=CARD)
+        info.pack(side="left", fill="both", expand=True, padx=13, pady=8)
+        tk.Label(info, text=title, bg=CARD, fg=FG,
+                 font=("DejaVu Sans", 9, "bold")).pack(anchor="w")
+        tk.Label(info, text=detail, bg=CARD, fg=MUTED, wraplength=610,
+                 justify="left", font=("DejaVu Sans", 8)).pack(anchor="w", pady=(2, 0))
+        tk.Button(row, text="OPEN", command=callback, bg=CARD2, fg=accent,
+                  activebackground="#263957", activeforeground=FG, relief="flat",
+                  padx=15, pady=7, cursor="hand2",
+                  font=("DejaVu Sans", 8, "bold")).pack(side="right", padx=12, pady=10)
+
+    def _run_script(self, name: str, *args: str) -> None:
+        script = find_script(name)
+        if not script:
+            messagebox.showwarning(TITLE, f"Required IntegerOS component not found: {name}\n\nRun the Control Center installer again.")
+            return
+        LOG.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with LOG.open("a", encoding="utf-8") as log:
+                log.write(f"\n=== {name} {' '.join(args)} ===\n")
+                subprocess.Popen(["bash", str(script), *args], stdin=subprocess.DEVNULL,
+                                 stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            self.status.set(f"Started {name}.")
+        except OSError as exc:
+            messagebox.showerror(TITLE, f"Could not start {name}:\n{exc}")
+
+    def _launch(self, command: list[str], label: str) -> None:
+        try:
+            subprocess.Popen(command, stdin=subprocess.DEVNULL,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                             start_new_session=True)
+            self.status.set(f"Opened {label}.")
+        except OSError as exc:
+            messagebox.showerror(TITLE, f"Could not open {label}:\n{exc}")
+
+    def _open_app(self, command: str, label: str, *paths: Path) -> None:
+        target = find_app(command, *paths)
+        if target is None:
+            messagebox.showinfo(TITLE, f"{label} is not installed. You can install it through Discover.")
+            return
+        if target.suffix == ".py":
+            self._launch(["python3", str(target)], label)
+        else:
+            self._launch([str(target)], label)
+
+    def _open_settings(self, module: str = "") -> None:
+        command = shutil.which("systemsettings")
+        if not command:
+            messagebox.showinfo(TITLE, "KDE System Settings was not found.")
+            return
+        self._launch([command] + ([module] if module else []), "KDE System Settings")
+
+    def _build_home(self, page: tk.Frame) -> None:
+        self._section(page, "Welcome to IntegerOS",
+                      "Your old Welcome Center now lives here. Start with a baseline, check the laptop, then apply the desktop profile if you want it.")
+        self._button(page, "First steps guide", "A guided checklist for setting up IntegerOS safely.",
+                     self._first_steps, PURPLE)
+        self._button(page, "Apply IntegerOS desktop profile", "Save a restore point, then apply the IntegerOS desktop appearance.",
+                     lambda: self._run_script("desktop-profile.sh", "apply", "--gui"))
+        self._button(page, "Restore previous desktop settings", "Roll back the last saved desktop profile.",
+                     lambda: self._run_script("desktop-profile.sh", "restore", "--gui"), PURPLE)
+        self._section(page, "Quick launch", "Frequently used system destinations.")
+        self._button(page, "Software updates", "Open the IntegerOS updater for project and system package updates.",
+                     lambda: self._run_script("software-updater-gui.sh"))
+        self._button(page, "Discover", "Browse and install software using KDE Discover.",
+                     lambda: self._open_app("plasma-discover", "Discover"))
+        self._button(page, "System Settings", "Open KDE's full settings application.",
+                     lambda: self._open_settings())
+
+    def _first_steps(self) -> None:
+        choice = messagebox.askyesnocancel(
+            TITLE,
+            "IntegerOS first steps\n\nYES: save a baseline performance snapshot now.\n"
+            "NO: skip the snapshot and continue to the hardware check.\n"
+            "CANCEL: close this guide.")
+        if choice is None:
+            return
+        if choice:
+            self._run_script("performance-benchmark.sh", "--gui", "--save")
+        if messagebox.askyesno(TITLE, "Run the read-only laptop hardware check?"):
+            self._run_script("hardware-check.sh", "--gui")
+        if messagebox.askyesno(TITLE, "Apply the reversible IntegerOS desktop profile?"):
+            self._run_script("desktop-profile.sh", "apply", "--gui")
+        if messagebox.askyesno(TITLE, "Open the terminal theme installer?"):
+            self._run_script("apply-terminal-profile.sh")
+        self.status.set("First steps guide completed.")
+
+    def _build_system(self, page: tk.Frame) -> None:
+        self._section(page, "Maintenance & updates", "System utilities formerly listed in the Welcome Center.")
+        items = [
+            ("Software updater", "Update IntegerOS components and optionally system packages.", lambda: self._run_script("software-updater-gui.sh")),
+            ("Deep Space Boot Studio", "Configure the GRUB theme and boot options.", lambda: self._run_script("boot-studio.sh")),
+            ("Installation doctor", "Check the IntegerOS installation for missing or inconsistent components.", lambda: self._run_script("doctor.sh", "--gui")),
+            ("Laptop hardware check", "Read-only hardware and compatibility report.", lambda: self._run_script("hardware-check.sh", "--gui")),
+            ("Performance snapshot", "Capture a read-only performance report.", lambda: self._run_script("performance-benchmark.sh", "--gui")),
+            ("Compare performance snapshots", "Compare the two most recent saved reports.", lambda: self._run_script("compare-reports.sh", "--gui")),
+            ("Game readiness", "Check Minecraft and Windows-game compatibility.", lambda: self._run_script("game-readiness.sh", "--gui")),
+            ("Power mode", "Choose battery saver, balanced or performance mode.", lambda: self._run_script("power-mode.sh", "choose", "--gui")),
+            ("Network & VPN report", "Read-only network and VPN diagnostic.", lambda: self._run_script("network-check.sh", "--gui")),
+            ("Connectivity check", "Quick connectivity and Tailscale status check.", lambda: self._run_script("network-health.sh")),
+            ("Battery health", "Battery and power health report.", lambda: self._run_script("battery-power-report.sh")),
+            ("Image viewer compatibility", "Read-only report for supported image viewers.", lambda: self._run_script("image-viewer-report.sh", "--gui")),
+        ]
+        for title, detail, callback in items:
+            self._button(page, title, detail, callback)
+        self._section(page, "System applications")
+        self._button(page, "File manager", "Browse your files.", lambda: self._open_app("dolphin", "Dolphin"))
+        self._button(page, "Image viewer", "Open Gwenview.", lambda: self._open_app("gwenview", "Gwenview"))
+        self._button(page, "Terminal", "Open Konsole for advanced tasks.", lambda: self._open_app("konsole", "Konsole"))
+
+    def _build_personalization(self, page: tk.Frame) -> None:
+        self._section(page, "Desktop & wallpaper", "Your blue black-hole wallpaper and Plasma dock remain yours; these are tools for changing or configuring them.")
+        self._button(page, "Wallpaper Studio", "Create branded MP4 wallpapers with adjustable logo and text placement.",
+                     lambda: self._open_app("integeros-wallpaper-studio", "Wallpaper Studio",
+                         INT_DATA / "personalization/integeros-wallpaper-studio.py",
+                         REPO / "apps/integeros-wallpaper-studio.py"))
+        self._button(page, "Choose desktop wallpaper", "Open KDE wallpaper settings to choose an installed still or animated wallpaper.",
+                     lambda: self._open_settings("kcm_wallpaper"))
+        self._button(page, "Theme Studio", "Customize IntegerOS colours, icons, cursors, global theme and fonts.",
+                     lambda: self._open_app("integeros-theme-studio", "Theme Studio",
+                         INT_DATA / "theme-studio/integeros-theme-studio",
+                         REPO / "apps/theme-studio/integeros-theme-studio"), CYAN)
+        self._button(page, "Dock & panel layout", "Use Plasma's panel edit mode to adjust dock alignment, size, visibility and screen edge.",
+                     lambda: messagebox.showinfo(TITLE, "Right-click an empty area of the dock and choose Enter Edit Mode / Show Panel Configuration. Adjust alignment, length, icon size, visibility and screen edge, then exit Edit Mode."), PURPLE)
+        self._button(page, "Desktop effects", "Open KDE's compositor and desktop effects controls.",
+                     lambda: self._open_settings("kcm_kwin_effects"), PURPLE)
+        self._button(page, "Fonts & workspace", "Open native KDE desktop settings.",
+                     lambda: self._open_settings("kcm_desktop"))
+
+    def _build_quick(self, page: tk.Frame) -> None:
+        self._section(page, "Quick settings", "Fast controls for common laptop settings. Advanced controls stay in KDE's native settings.")
+        self._button(page, "IntegerOS Quick Settings", "Open the existing compact control panel for Wi-Fi, Bluetooth, audio and power presets.",
+                     lambda: self._open_app("integeros-quick-settings", "Quick Settings",
+                         INT_DATA / "quick-settings/integeros-quick-settings",
+                         REPO / "apps/quick-settings/integeros-quick-settings"))
+        self._button(page, "Wi-Fi & network", "Open KDE network settings.",
+                     lambda: self._open_settings("kcm_networkmanagement"))
+        self._button(page, "Bluetooth", "Open KDE Bluetooth settings.",
+                     lambda: self._open_settings("kcm_bluetooth"))
+        self._button(page, "Audio", "Open KDE audio settings.",
+                     lambda: self._open_settings("kcm_pulseaudio"))
+        self._button(page, "Notifications & quiet mode", "Configure notification rules and Do Not Disturb.",
+                     lambda: self._open_settings("kcm_notifications"))
+
+    def _build_blacklight(self, page: tk.Frame) -> None:
+        self._section(page, "Blacklight suite", "Blacklight tools are grouped here so they are easy to find without separate launcher clutter.")
+        self._button(page, "Blacklight Desktop Suite", "Terminal styling, desktop profiles, animation timing and notification shortcuts.",
+                     lambda: self._open_app("blacklight-desktop-suite", "Blacklight Desktop Suite",
+                         INT_DATA / "blacklight-suite/blacklight-desktop-suite",
+                         REPO / "apps/blacklight-suite/blacklight-desktop-suite"), PURPLE)
+        self._button(page, "Blacklight Control", "Open the Blacklight desktop control application.",
+                     lambda: self._open_app("blacklight-control", "Blacklight Control",
+                         INT_DATA / "blacklight-control/blacklight-control",
+                         REPO / "apps/blacklight-control/blacklight-control"), PURPLE)
+        self._button(page, "Screensaver settings", "Open the IntegerOS Blacklight screensaver controls.",
+                     lambda: self._run_script("blacklight-screensaver.sh", "--gui"), PURPLE)
+        self._button(page, "Lockscreen controls", "Open the Blacklight lockscreen configuration helper.",
+                     lambda: self._run_script("blacklight-lockscreen.sh", "--gui"), PURPLE)
+        self._button(page, "About IntegerOS", "View the project version and installation details.",
+                     self._about)
+
+    def _about(self) -> None:
+        version_file = DATA / "VERSION"
+        if not version_file.is_file():
+            version_file = REPO / "VERSION"
+        version = version_file.read_text(encoding="utf-8").strip() if version_file.is_file() else "unknown"
+        messagebox.showinfo(TITLE, f"IntegerOS {version} — Desktop Edition\n\nKubuntu + KDE Plasma customization project.\n\nAll major IntegerOS tools are collected in this Control Center.")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    ControlCenter(root)
+    root.mainloop()
