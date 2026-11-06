@@ -1,0 +1,7 @@
+# InntegerOS optional Gaming bundle
+# Status: PROPOSAL ONLY. Some packages may require additional Ubuntu
+# components or third-party repositories; do not enable those silently.
+# Verify licensing, architecture, repository availability, and GPU support.
+gamemode
+mangohud
+steam-installer
