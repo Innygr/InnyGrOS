@@ -1,0 +1,1 @@
+Document shared InntegerOS architecture
