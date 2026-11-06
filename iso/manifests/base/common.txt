@@ -1,0 +1,17 @@
+# InntegerOS shared base package candidates
+# Status: PROPOSAL ONLY. Not yet validated in a built image.
+# One APT package per line. Keep desktop-specific packages out of this list.
+# The selected image builder may provide some boot/live components itself.
+ca-certificates
+curl
+dbus
+dbus-user-session
+efibootmgr
+linux-firmware
+network-manager
+polkitd
+sudo
+systemd
+systemd-sysv
+udisks2
+xz-utils
