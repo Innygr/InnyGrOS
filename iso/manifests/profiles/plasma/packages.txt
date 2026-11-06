@@ -1,0 +1,16 @@
+# InntegerOS Plasma Edition package candidates
+# Status: PROPOSAL ONLY. Validate package names and dependencies against
+# the selected Ubuntu 26.04 repositories before using this in an image build.
+# Do not add kubuntu-desktop: this profile should own an explicit package set.
+fonts-firacode
+kdialog
+plasma-desktop
+plasma-discover
+plasma-systemmonitor
+sddm
+dolphin
+gwenview
+kate
+konsole
+kimageformat-plugins
+qt6-image-formats-plugins
