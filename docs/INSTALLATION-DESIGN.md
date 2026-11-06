@@ -134,7 +134,11 @@ Only after all VM gates pass, test on spare hardware. The ThinkPad T580 is a lat
 - No installation, dual-boot, recovery, or post-install test has been completed.
 - Package ownership, update policy, and first-boot behaviour still need to be made declarative.
 
-## 10. Immediate next tasks
+## 10. Image-build tooling
+
+The initial comparison of `livecd-rootfs`, Debian `live-build`, and `mkosi` is recorded in [Image-Build Tool Evaluation](IMAGE-BUILD-TOOLS.md). The Ubuntu image pipeline is the first candidate for a technical spike because Ubuntu 26.04 is the current base candidate, but no tool has been selected. Selection depends on a reproducible project-owned build and successful disposable-VM live boot.
+
+## 11. Immediate next tasks
 
 1. Define the InntegerOS product identity and the components the project will maintain.
 2. Compare candidate base systems and image-building tools instead of assuming a Kubuntu respin.
