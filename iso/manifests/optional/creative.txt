@@ -1,0 +1,6 @@
+# InntegerOS optional Creative bundle
+# Status: PROPOSAL ONLY. Review disk footprint and repository availability.
+# Keep creative applications opt-in rather than expanding the base image.
+blender
+inkscape
+krita
