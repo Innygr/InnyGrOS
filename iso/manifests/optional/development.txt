@@ -1,0 +1,18 @@
+# InntegerOS optional Development bundle
+# Status: PROPOSAL ONLY. Never included in the minimal base image by default.
+build-essential
+clang
+cmake
+curl
+gdb
+git
+ninja-build
+nodejs
+npm
+pipx
+pkg-config
+python3
+python3-pip
+python3-venv
+sqlitebrowser
+wget
