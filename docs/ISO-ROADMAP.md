@@ -48,7 +48,7 @@ The base release, image-building method, and installer engine must be evaluated 
 
 ## Current status — November 5, 2026
 
-**Stage: architecture preparation; no ISO build proof-of-concept yet.** The repository contains the desktop customization project and design documents, but no `iso/` build configuration, image-generation script, live image artifact, or VM boot-test report. The build-system milestone has not started.
+**Stage: architecture preparation and build-tool evaluation; no ISO build proof-of-concept yet.** The repository now contains an ISO build-area scaffold and a preliminary comparison of `livecd-rootfs`, `live-build`, and `mkosi`. No builder is selected and no image has been built. The repository contains the desktop customization project and design documents, but no `iso/` build configuration, image-generation script, live image artifact, or VM boot-test report. The build-system milestone has not started.
 
 The next concrete deliverable is a documented base/tooling decision and a reproducible InntegerOS Plasma live-image proof of concept. Only after that image exists can live-session and installer testing begin.
 
